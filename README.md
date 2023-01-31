@@ -18,7 +18,7 @@ First, make sure that you have [Node.js](https://nodejs.org/en/), the [Angular C
 
 Then, clone the repository with this command in the command line:
 ```
-git clone https://github.com/mayajenk/CEN3031
+git clone https://github.com/mayajenk/CEN3031.git
 ```
 Navigate to the folder containing the project.
 ```
@@ -37,7 +37,7 @@ ng serve
 You can now visit the website at http://localhost:4200/ in your browser.
 
 ## Starting the backend
-Now, in another command line window, navigate to the backend folder:
+Now, in another command line window, navigate to the `backend` folder:
 ```
 cd backend
 ```
