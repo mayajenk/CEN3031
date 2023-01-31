@@ -12,6 +12,7 @@ func main() {
 	r.HandleFunc("/", HomeHandler)
 
 	http.Handle("/", r)
+	fmt.Println("Starting on http://localhost:8080/")
 	http.ListenAndServe(":8080", r)
 }
 
