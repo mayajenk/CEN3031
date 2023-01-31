@@ -17,9 +17,12 @@
 # Sprint 1
 
 **goals**:
+
   user stories:
   set of issues:
     - complete the login/create account screen
+    
 **submit**:
   seperate front-end & back-end videos
+  
 **what went wrong**:
