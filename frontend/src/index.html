@@ -1,4 +1,4 @@
-<!doctype html>
+<!-- <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -13,4 +13,21 @@
 <body class="mat-typography">
   <app-root></app-root>
 </body>
-</html>
+</html> -->
+
+<h2>Welcome Back</h2>
+
+<div class="form-group">
+<label for="username">Username</label>
+<input type="text" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" />
+
+<div class="form-group">
+<label for="password">Password</label>
+<input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+
+<div class="form-group">
+<button [disabled]="loading" class="btn btn-primary">
+    <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+    Log-in
+</button>
+<a routerLink="/i" class="btn btn-link">Create Account</a>
