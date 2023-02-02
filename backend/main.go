@@ -15,6 +15,7 @@ type User struct {
 	gorm.Model
 	Username string
 	Password string
+	isTutor  bool
 }
 
 func allUsers(w http.ResponseWriter, r *http.Request) {
@@ -39,8 +40,8 @@ func newUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	vars := mux.Vars(r)
-	username := vars["Username"]
-	password := vars["Password"]
+	username := vars["username"]
+	password := vars["password"]
 
 	db.Create(&User{Username: username, Password: password})
 	fmt.Fprintf(w, "New User Successfully Created")
@@ -53,10 +54,10 @@ func deleteUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	vars := mux.Vars(r)
-	username := vars["Username"]
+	username := vars["username"]
 
 	var user User
-	db.Where("Username = ?", username).Find(&user)
+	db.Where("username = ?", username).Find(&user)
 	db.Delete(&user)
 
 	fmt.Fprintf(w, "Successfully Deleted User")
@@ -69,11 +70,11 @@ func updateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	vars := mux.Vars(r)
-	username := vars["Username"]
-	password := vars["Password"]
+	username := vars["username"]
+	password := vars["password"]
 
 	var user User
-	db.Where("Username = ?", username).Find(&user)
+	db.Where("username = ?", username).Find(&user)
 
 	user.Password = password
 
