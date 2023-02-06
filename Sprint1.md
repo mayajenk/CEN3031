@@ -8,7 +8,7 @@
     - As a tutor, I want to know what my students think of my tutoring so that I can better suit their needs.
 
 - Set of issues:
-    - complete the login/create account screen
+    - complete the login & create account screens
     - way to add and save an account
     - check to make sure account is unique
     - account manipulations (edit, delete, etc.)
