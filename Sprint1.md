@@ -18,3 +18,6 @@
 - seperate front-end & back-end videos
   
 **What went wrong**:
+Backend Issues: When we first started working on the backend, we were not able to get the account manipulations to work. We also had trouble figuring out the curl requests until we started using Postman. When we changed the formatting of our code and learned how to properly use Postman, we were able to figure it out. 
+
+Frontend Issues: 
