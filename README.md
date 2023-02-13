@@ -12,8 +12,7 @@ Our project will essentially create a website for a tutoring service. It will be
 
 **Back-end**: Manasi Patel & Mai Tran
 
-# Installation and Usage
-
+# Installation
 First, make sure that you have [Node.js](https://nodejs.org/en/), the [Angular CLI tool](https://angular.io/cli), and [Go](https://go.dev/) installed.
 
 Then, clone the repository with this command in the command line:
@@ -24,25 +23,44 @@ Navigate to the folder containing the project.
 ```
 cd CEN3031
 ```
-## Starting the frontend
-First, navigate to the `frontend` folder and install all dependencies:
+## Installing dependencies
+Navigate to the `frontend` folder and run `npm install`:
 ```
 cd frontend
 npm install
 ```
-Then start the server:
+
+# Usage
+## Running only the frontend
+If you just want to run the frontend, navigate to the frontend folder and run `ng serve`.
 ```
+cd frontend
 ng serve
 ```
-You can now visit the website at http://localhost:4200/ in your browser.
+The app will be live at `http://localhost:4200`
 
-## Starting the backend
-Now, in another command line window, navigate to the `backend` folder:
+## Running the frontend and the backend
+If you want to run both the frontend and the backend and see real-time updates of the frontend, first navigate to the frontend folder and run `ng serve`.
 ```
-cd backend
+cd frontend
+ng serve
 ```
-Then start the server:
+Then, navigate to the backend and run go with the debug tag.
 ```
+cd ../backend
+go run -tags debug .
+```
+Now, you can see the frontend at `http://localhost:8080` and also access the API at `http://localhost:8080` because the backend automatically forwards requests to the frontend.
+
+## Building the frontend and running the backend
+If you want to only work on the backend and have a static frontend, first navigate to the frontend folder and run `ng build`.
+```
+cd frontend
+ng build
+```
+Then navigate to the backend and run without tags.
+```
+cd ../backend
 go run .
 ```
 The server will now be running at http://localhost:8080/.
