@@ -12,9 +12,9 @@ import (
 
 type User struct {
 	gorm.Model
-	Username string
-	Password string
-	IsTutor  bool
+	Username string `json:"username"`
+	Password string `json:"password"`
+	IsTutor  bool   `json:"is_tutor"`
 }
 
 func getAllUsers(w http.ResponseWriter, req *http.Request) {
