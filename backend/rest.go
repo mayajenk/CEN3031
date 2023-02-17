@@ -11,11 +11,11 @@ import (
 func httpHandler() http.Handler {
 	router := mux.NewRouter()
 
-	router.HandleFunc("/users", getAllUsers).Methods("GET")
-	router.HandleFunc("/users", newUser).Methods("POST")
-	router.HandleFunc("/users/{id}", getUser).Methods("GET")
-	router.HandleFunc("/users/{id}", deleteUser).Methods("DELETE")
-	router.HandleFunc("/users/{id}", updateUser).Methods("PUT")
+	router.HandleFunc("/api/users", getAllUsers).Methods("GET")
+	router.HandleFunc("/api/users", newUser).Methods("POST")
+	router.HandleFunc("/api/users/{id}", getUser).Methods("GET")
+	router.HandleFunc("/api/users/{id}", deleteUser).Methods("DELETE")
+	router.HandleFunc("/api/users/{id}", updateUser).Methods("PUT")
 
 	router.PathPrefix("/").Handler(AngularHandler).Methods("GET")
 

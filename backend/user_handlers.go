@@ -25,7 +25,6 @@ func getAllUsers(w http.ResponseWriter, req *http.Request) {
 
 	var users []User
 	db.Find(&users)
-	fmt.Println("{}", users)
 
 	json.NewEncoder(w).Encode(users)
 }
@@ -45,7 +44,6 @@ func getUser(w http.ResponseWriter, req *http.Request) {
 
 	db.First(&user, userID)
 
-	fmt.Println(user)
 	json.NewEncoder(w).Encode(user)
 
 }

@@ -1,8 +1,8 @@
 # API Endpoints
-## GET `/users`
+## GET `/api/users`
 Returns a list of all users in JSON.
 
-## POST `/users`
+## POST `/api/users`
 Adds a new user to the database. JSON format should follow: 
 ```json
 {
@@ -12,11 +12,11 @@ Adds a new user to the database. JSON format should follow:
 }
 ```
 
-## GET `/users/{id}`
+## GET `/api/users/{id}`
 Returns data for a user with the corresponding `id`. 
 
-## PUT `/users/{id}`
+## PUT `/api/users/{id}`
 Updates user data for the user with the corresponding `id`. Follows same JSON format as above.
 
-## DELETE `/users/{id}`
+## DELETE `/api/users/{id}`
 Deletes the user with the corresponding `id`.
