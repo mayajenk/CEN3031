@@ -58,7 +58,7 @@ If you want to only work on the backend and have a static frontend, first naviga
 cd frontend
 ng build
 ```
-Then navigate to the backend and run without tags.
+Then open a new terminal and navigate to the backend and run without tags.
 ```
 cd ../backend
 go run .
