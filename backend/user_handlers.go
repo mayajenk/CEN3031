@@ -101,7 +101,7 @@ func updateUser(w http.ResponseWriter, req *http.Request) {
 	var user User
 	db.First(&user, userID)
 
-	var newUser User
+	newUser := user
 	decoder := json.NewDecoder(req.Body)
 	decoder.DisallowUnknownFields()
 
@@ -110,9 +110,7 @@ func updateUser(w http.ResponseWriter, req *http.Request) {
 		panic(err)
 	}
 
-	user.Username = newUser.Username
-	user.Password = newUser.Password
-	user.IsTutor = newUser.IsTutor
+	user = newUser
 
 	db.Save(&user)
 	fmt.Fprintf(w, "Successfully Updated User")
