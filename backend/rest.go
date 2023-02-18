@@ -10,7 +10,7 @@ import (
 
 func httpHandler() http.Handler {
 	router := mux.NewRouter()
-
+	router.Use(commonMiddleware)
 	router.HandleFunc("/api/users", getAllUsers).Methods("GET")
 	router.HandleFunc("/api/users", newUser).Methods("POST")
 	router.HandleFunc("/api/users/{id}", getUser).Methods("GET")
@@ -32,4 +32,11 @@ func httpHandler() http.Handler {
 				"Content-Type", "Content-Range", "Range", "Content-Disposition"}),
 			handlers.MaxAge(86400),
 		)(router))
+}
+
+func commonMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Content-Type", "application/json")
+		next.ServeHTTP(w, r)
+	})
 }
