@@ -4,26 +4,27 @@
     <h2 id="intro" style="text-align:center">Welcome Back</h2>
 
     <div class="form-group">
-    <label id="top" for="username">Username  </label>
+    <label for="username">Username  </label>
     <input type="text" formControlName="username" class="form-control"/>
 
     <div class="form-group">
-    <label id="bottom" for="password">Password  </label>
+    <label for="password">Password  </label>
     <input type="password" formControlName="password" class="form-control"/>
 
     <div class="form-group">
-    <button class="btn btn-primary">
+    <button id="b1" class="btn btn-primary">
         <span class="spinner-border spinner-border-sm mr-1"></span>
         Log-in
     </button>
 
     </div>
-    <button onclick="swtichToCreateAccount()">Create Account</button>
+    <button id="b2" onclick="swtichToCreateAccount()">Create Account</button>
     <script>
         
         function swtichToCreateAccount() {
             document.getElementByID("intro").innerHTML = "Welcome";
-
+            // switch button labels
+            // add teach or student check
         }
     </script>
 </body>
