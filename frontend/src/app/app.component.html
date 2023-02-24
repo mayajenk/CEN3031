@@ -1,43 +1,10 @@
-    <h2 style="text-align:center">Welcome!</h2>
-
-    <div class="form-group">
-    <label for="username">Username  </label>
-    <input type="text" formControlName="username" class="form-control"/>
-
-    <div class="form-group">
-    <label for="password">Password  </label>
-    <input type="password" formControlName="password" class="form-control"/>
-
-    <div class="form-group">
-    <button id="b1" class="btn btn-primary">
-        <span class="spinner-border spinner-border-sm mr-1"></span>
-        Log-in
-    </button>
-
-    </div>
-    <button id="b2" (click)="swtichIntroScreen()">Create Account</button>
-    <!-- <script>
-        function swtichIntroScreen() {
-            // if b2 == Create acount
-            document.getElementByID("intro").innerHTML = "Welcome";
-            // switch button labels
-            // add teacher or student check
-
-            // else switch to login screen
-        }
-    </script> -->
-
-
-
-<!-- attempt 1 -->
-<!-- </div>
-<a routerLink="createAccount.html">Create Account</a>
-</div>
-<router-outlet></router-outlet> -->
-
-<!-- attempt 2 -->
-<!-- <a href="createAccount.html" class="button">Create Account</a> -->
-
-<!-- attempt 3 -->
-<!-- </div>
-<button onclick="window.location.href = 'app.component2.html';">Create Account</button> -->
+<h1>Tutoring Website</h1>
+<!-- This nav gives you links to click, which tells the router which route to use (defined in the routes constant in  AppRoutingModule) -->
+<nav>
+  <ul>
+    <li><a routerLink="/first-component" routerLinkActive="active" ariaCurrentWhenActive="page">Home</a></li>
+    <li><a routerLink="/second-component" routerLinkActive="active" ariaCurrentWhenActive="page">Login</a></li>
+  </ul>
+</nav>
+<!-- The routed views render in the <router-outlet>-->
+<router-outlet></router-outlet>
