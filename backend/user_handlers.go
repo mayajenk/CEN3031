@@ -163,7 +163,7 @@ func login(store *gormstore.Store) http.HandlerFunc {
 		fmt.Printf(reqUser.Username)
 		fmt.Printf(reqUser.Password)
 
-		result := db.First(&user)
+		result := db.Where("username = ?", reqUser.Username).First(&user)
 		err = result.Error
 		if err != nil {
 			http.Error(w, "Error 1", http.StatusUnauthorized)
