@@ -23,6 +23,8 @@ type User struct {
 	Grade    string  `json:"grade"`
 }
 
+
+
 func getAllUsers(w http.ResponseWriter, req *http.Request) {
 	db, err := gorm.Open(sqlite.Open("users.db"), &gorm.Config{})
 	if err != nil {
