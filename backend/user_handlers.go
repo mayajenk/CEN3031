@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 
@@ -79,6 +80,16 @@ func newUser(w http.ResponseWriter, r *http.Request) {
 	err = decoder.Decode(&user)
 	if err != nil {
 		panic(err)
+	}
+
+	//Checking if a user is unique in the database
+	var existingUser User
+	result := db.Where("username = ?", user.Username).First(&existingUser)
+	if result.Error == nil {
+		fmt.Fprintf(w, "This username already exists. Please try a new one.")
+		return
+	} else if !errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		panic(result.Error)
 	}
 
 	password, err := bcrypt.GenerateFromPassword([]byte(user.Password), 10)
@@ -191,4 +202,5 @@ func login(store *gormstore.Store) http.HandlerFunc {
 
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
+
 }
