@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -27,6 +28,7 @@ func main() {
 	db.AutoMigrate(&User{})
 
 	host := "127.0.0.1:8080"
+	fmt.Println("Serving on http://localhost:8080")
 	if err := http.ListenAndServe(host, httpHandler(store)); err != nil {
 		log.Fatalf("Failed to listen on %s: %v", host, err)
 	}
