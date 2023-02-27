@@ -6,5 +6,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./search.component.sass']
 })
 export class SearchComponent {
-
+  search() {
+    // list available tutors based on search
+  }
 }
