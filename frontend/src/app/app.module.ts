@@ -9,12 +9,16 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { PathLocationStrategy, LocationStrategy } from '@angular/common';
 import { LoginService } from './login/login.service';
+import { ProfileComponent } from './profile/profile.component';
+import { SearchComponent } from './search/search.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    ProfileComponent,
+    SearchComponent
   ],
   imports: [
     BrowserModule,
