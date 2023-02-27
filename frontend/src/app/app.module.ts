@@ -11,6 +11,7 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { PathLocationStrategy, LocationStrategy } from '@angular/common';
 import { LoginService } from './login.service';
+import { RegisterService } from './register.service';
 import { ProfileComponent } from './profile/profile.component';
 import { SearchComponent } from './search/search.component';
 
@@ -27,9 +28,9 @@ import { SearchComponent } from './search/search.component';
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    FormsModule,
+    FormsModule
   ],
-  providers: [LoginService, {provide: LocationStrategy, useClass: PathLocationStrategy}],
+  providers: [LoginService, RegisterService, {provide: LocationStrategy, useClass: PathLocationStrategy}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
