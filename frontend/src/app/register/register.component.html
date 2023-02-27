@@ -1,17 +1,24 @@
-<div class="form-group">
-    <label for="username">Username  </label>
-    <input type="text" formControlName="username" class="form-control" />
-  
-<div class="form-group">
-    <label for="password">Password  </label>
-    <input  type="password" formControlName="password" class="form-control" />
+<form #myForm="ngForm" (ngSubmit)="register(myForm)">
+    <div>
+        <label for="username">
+            Username:
+            <input type="text" name="username" [(ngModel)]="formData.username"/>
+        </label>
+    </div>
+    <div>
+        <label for="password">
+            Password:
+            <input type="password" name="password" [(ngModel)]="formData.password"/>
+        </label>
+    </div>
+    <div>
+        <label class="switch" for="tutor">
+            <input id="tutor" type="checkbox" name="tutor" [(ngModel)]="formData.tutor">
+            <span class="slider round"></span>
+          Tutor </label>
+    </div>
+    <button type="submit">Go!</button>
+</form>
 
-
-</div>
-<label class="switch">
-    <input id="tutor" type="checkbox">
-    <span class="slider round"></span>
-  Tutor </label>
-
-<div></div>
-<button onclick="Register()">Go!</button>
+<!-- <div></div>
+<button onclick="register()">Go!</button> -->
