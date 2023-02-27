@@ -7,7 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { PathLocationStrategy, LocationStrategy } from '@angular/common';
-import { LoginService } from './login.service';
+import { LoginService } from './login/login.service';
 
 @NgModule({
   declarations: [
