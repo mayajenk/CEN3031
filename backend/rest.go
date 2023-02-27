@@ -13,11 +13,11 @@ import (
 func httpHandler(store *gormstore.Store, db *gorm.DB) http.Handler {
 	router := mux.NewRouter()
 	router.HandleFunc("/api/users", getAllUsers(db)).Methods("GET")
-	router.HandleFunc("/api/users", newUser).Methods("POST")
-	router.HandleFunc("/api/users/{id}", getUser).Methods("GET")
-	router.HandleFunc("/api/users/{id}", deleteUser).Methods("DELETE")
-	router.HandleFunc("/api/users/{id}", updateUser).Methods("PUT")
-	router.HandleFunc("/api/login", login(store)).Methods("POST")
+	router.HandleFunc("/api/users", newUser(db)).Methods("POST")
+	router.HandleFunc("/api/users/{id}", getUser(db)).Methods("GET")
+	router.HandleFunc("/api/users/{id}", deleteUser(db)).Methods("DELETE")
+	router.HandleFunc("/api/users/{id}", updateUser(db)).Methods("PUT")
+	router.HandleFunc("/api/login", login(store, db)).Methods("POST")
 
 	router.PathPrefix("/").Handler(AngularHandler).Methods("GET")
 
