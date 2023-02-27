@@ -7,12 +7,12 @@ import { Observable } from 'rxjs/internal/Observable';
   providedIn: 'root'
 })
 export class RegisterService {
-  private registerURL = "/api/register";
+  private registerURL = "/api/users";
 
   constructor(private http: HttpClient) { }
 
-  register(username: string, password: string, tutor: boolean) {
-    const body = {username, password, tutor};
+  register(username: string, password: string, is_tutor: boolean) {
+    const body = {username, password, is_tutor};
     const headers = new HttpHeaders().set('Content-Type', 'application/json')
     return this.http.post(this.registerURL, body, {headers});
   }

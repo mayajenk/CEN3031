@@ -174,8 +174,9 @@ func login(store *gormstore.Store) http.HandlerFunc {
 
 		var user User
 
-		fmt.Printf(reqUser.Username)
-		fmt.Printf(reqUser.Password)
+		fmt.Println("Incoming login request")
+		fmt.Println("Username: " + reqUser.Username)
+		fmt.Println("Password: " + reqUser.Password)
 
 		result := db.Where("username = ?", reqUser.Username).First(&user)
 		err = result.Error
