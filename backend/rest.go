@@ -7,11 +7,12 @@ import (
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/wader/gormstore/v2"
+	"gorm.io/gorm"
 )
 
-func httpHandler(store *gormstore.Store) http.Handler {
+func httpHandler(store *gormstore.Store, db *gorm.DB) http.Handler {
 	router := mux.NewRouter()
-	router.HandleFunc("/api/users", getAllUsers).Methods("GET")
+	router.HandleFunc("/api/users", getAllUsers(db)).Methods("GET")
 	router.HandleFunc("/api/users", newUser).Methods("POST")
 	router.HandleFunc("/api/users/{id}", getUser).Methods("GET")
 	router.HandleFunc("/api/users/{id}", deleteUser).Methods("DELETE")

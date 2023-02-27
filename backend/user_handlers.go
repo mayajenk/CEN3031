@@ -33,17 +33,14 @@ type Subject struct {
 	Name       string `json:"name"`
 }
 
-func getAllUsers(w http.ResponseWriter, r *http.Request) {
-	db, err := gorm.Open(sqlite.Open("users.db"), &gorm.Config{})
-	if err != nil {
-		panic("Failed to connect database")
+func getAllUsers(db *gorm.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var users []User
+		db.Model(&User{}).Preload("Subjects").Find(&users)
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(users)
 	}
-
-	var users []User
-	db.Model(&User{}).Preload("Subjects").Find(&users)
-
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(users)
 }
 
 func getUser(w http.ResponseWriter, r *http.Request) {

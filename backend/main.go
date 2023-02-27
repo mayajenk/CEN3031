@@ -33,7 +33,7 @@ func main() {
 
 	host := "127.0.0.1:8080"
 	fmt.Println("Serving on http://localhost:8080")
-	if err := http.ListenAndServe(host, httpHandler(store)); err != nil {
+	if err := http.ListenAndServe(host, httpHandler(store, db)); err != nil {
 		log.Fatalf("Failed to listen on %s: %v", host, err)
 	}
 }
