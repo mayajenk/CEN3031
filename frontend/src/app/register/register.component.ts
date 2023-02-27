@@ -7,7 +7,6 @@ import { Component } from '@angular/core';
 })
 export class RegisterComponent {
   Register() {
-    
     // check if username and password entered are valid
     // if username or password is invalid -> display message
     // check if username is already taken
