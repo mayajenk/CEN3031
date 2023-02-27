@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/wader/gormstore/v2"
 	"gorm.io/driver/sqlite"
@@ -18,12 +19,15 @@ func main() {
 	}
 
 	sessionDB, err := gorm.Open(sqlite.Open("sessions.db"), &gorm.Config{})
-
 	if err != nil {
 		panic(err)
 	}
 
 	store := gormstore.New(sessionDB, []byte(os.Getenv("SESSION_KEY")))
+
+	// Periodically clean up sessions
+	quit := make(chan struct{})
+	go store.PeriodicCleanup(1*time.Hour, quit)
 
 	db.AutoMigrate(&User{})
 

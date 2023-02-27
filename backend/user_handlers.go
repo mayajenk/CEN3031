@@ -59,11 +59,14 @@ func getUser(w http.ResponseWriter, r *http.Request) {
 
 	var user User
 
-	db.Model(&User{}).Preload("Subjects").First(&user, userID)
-
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(user)
-
+	err = db.Model(&User{}).Preload("Subjects").First(&user, userID).Error
+	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode("Error retrieving user.")
+	} else {
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(user)
+	}
 }
 
 func newUser(w http.ResponseWriter, r *http.Request) {
@@ -82,7 +85,7 @@ func newUser(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
-	//Checking if a user is unique in the database
+	// Checking if a user is unique in the database
 	var existingUser User
 	result := db.Where("username = ?", user.Username).First(&existingUser)
 	if result.Error == nil {
