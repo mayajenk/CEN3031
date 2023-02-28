@@ -13,6 +13,7 @@
 	- [Building the frontend and running the backend](#building-the-frontend-and-running-the-backend)
 - [Unit testing](#unit-testing)
 	- [Unit testing for the frontend](#unit-testing-for-the-frontend)
+	- [Testing the backend](#testing-the-backend)
 
 
 # Project Info
@@ -93,4 +94,7 @@ npx cypress open
 ```
 Click on "Component Testing" in the cypress window, and select angular for the frontend framework.
 Make sure you have all of the correct dependencies installed and continue.
+
+## Testing the backend
+Navigate to the backend folder and run `go test`. The unit tests will now run.
 
