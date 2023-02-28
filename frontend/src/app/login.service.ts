@@ -13,7 +13,7 @@ export class LoginService {
 
   login(username: string, password: string) {
     const body = {username, password};
-    const headers = new HttpHeaders().set('Content-Type', 'application/json')
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
     return this.http.post(this.loginURL, body, {headers});
   }
 

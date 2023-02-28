@@ -7,9 +7,11 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"testing"
 
 	"github.com/gorilla/mux"
+	"github.com/wader/gormstore/v2"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -337,5 +339,54 @@ func TestGetAllUsers(t *testing.T) {
 
 	if users[1].Username != "test2" || bcrypt.CompareHashAndPassword([]byte(users[1].Password), []byte("test3")) != nil {
 		t.Errorf("Incorrect user data returned for user2")
+	}
+}
+
+func TestLogin(t *testing.T) {
+	// Set up testing environment
+	db := setupTestEnv()
+	tx := db.Begin()
+	defer tx.Rollback()
+
+	// Set up session store
+	sessionDB, err := gorm.Open(sqlite.Open("sessions.db"), &gorm.Config{})
+	if err != nil {
+		panic(err)
+	}
+
+	store := gormstore.New(sessionDB, []byte(os.Getenv("SESSION_KEY")))
+
+	r := mux.NewRouter()
+	r.HandleFunc("/api/users", newUser(tx)).Methods("POST")
+	r.HandleFunc("/api/login", login(store, tx)).Methods("POST")
+
+	var testUser User = User{
+		Username: "foo",
+		Password: "bar",
+		IsTutor:  false,
+	}
+	reqBody, _ := json.Marshal(testUser)
+
+	req, _ := http.NewRequest("POST", "api/users", bytes.NewBuffer(reqBody))
+
+	rr := httptest.NewRecorder()
+	r.ServeHTTP(rr, req)
+
+	reqBody, _ = json.Marshal(map[string]any{
+		"username": "foo",
+		"password": "bar",
+	})
+
+	req, _ = http.NewRequest("POST", "api/login", bytes.NewBuffer(reqBody))
+	rr = httptest.NewRecorder()
+	r.ServeHTTP(rr, req)
+
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("Handler returned wrong status code: got %v want %v", status, http.StatusOK)
+	}
+
+	expected := `{"message": "Successfully logged in."}`
+	if rr.Body.String() != expected {
+		t.Errorf("Handler returned wrong body: got %v want %v", rr.Body.String(), expected)
 	}
 }

@@ -32,6 +32,7 @@ export class LoginComponent {
       }, error => {
         console.error(error);
       });
-    this.cookieValue = this.cookieService.get('session-name')
+    this.cookieValue = this.cookieService.get('session-name');
+    console.log(this.cookieValue);
   }
 }

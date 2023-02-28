@@ -76,6 +76,8 @@ func newUser(db *gorm.DB) http.HandlerFunc {
 			panic(err)
 		}
 
+		w.Header().Add("Content-Type", "application/json")
+
 		// Checking if a user is unique in the database
 		var existingUser User
 		result := db.Where("username = ?", user.Username).First(&existingUser)
@@ -94,7 +96,6 @@ func newUser(db *gorm.DB) http.HandlerFunc {
 
 		db.Create(&user)
 
-		w.Header().Add("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(user)
 	}
 }
