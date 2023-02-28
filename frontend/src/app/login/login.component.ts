@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginService } from '../login.service';
 import { NgForm } from '@angular/forms';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,9 @@ export class LoginComponent {
     password: ''
   };
 
-  constructor(private loginService : LoginService) {}
+  private cookieValue: string | undefined;
+
+  constructor(private loginService : LoginService, private cookieService: CookieService) {}
 
   login(form: NgForm) {
     // check if username and password entered are valid
@@ -29,5 +32,6 @@ export class LoginComponent {
       }, error => {
         console.error(error);
       });
+    this.cookieValue = this.cookieService.get('session-name')
   }
 }
