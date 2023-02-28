@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/gorilla/sessions"
 	"github.com/wader/gormstore/v2"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
@@ -174,6 +175,10 @@ func login(store *gormstore.Store, db *gorm.DB) http.HandlerFunc {
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
+		}
+
+		session.Options = &sessions.Options{
+			SameSite: http.SameSiteLaxMode,
 		}
 
 		session.Values["userID"] = user.ID
