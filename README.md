@@ -48,7 +48,8 @@ Open cypress in the terminal using:
 ```
 npx cypress open
 ```
-Click on "Component Testing" in the cypress window, and select angular for the frontend framework. Make sure you have all of the correct dependencies installed and continue.
+Click on "Component Testing" in the cypress window, and select angular for the frontend framework.
+Make sure you have all of the correct dependencies installed and continue.
 
 ## Running the frontend and the backend
 If you want to run both the frontend and the backend and see real-time updates of the frontend, first navigate to the frontend folder and run `ng serve`.
