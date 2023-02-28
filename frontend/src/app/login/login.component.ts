@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
 import { LoginService } from '../login.service';
 import { NgForm } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';

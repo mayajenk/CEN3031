@@ -31,7 +31,7 @@ import { SearchComponent } from './search/search.component';
     HttpClientModule,
     FormsModule
   ],
-  providers: [CookieService, LoginService, RegisterService, {provide: LocationStrategy, useClass: PathLocationStrategy}],
+  providers: [HttpClient, CookieService, LoginService, RegisterService, {provide: LocationStrategy, useClass: PathLocationStrategy}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
