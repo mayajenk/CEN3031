@@ -54,6 +54,7 @@ func getUser(db *gorm.DB) http.HandlerFunc {
 		err := db.Model(&User{}).Preload("Subjects").First(&user, userID).Error
 		if err != nil {
 			w.Header().Set("Content-Type", "application/json")
+
 			json.NewEncoder(w).Encode("Error retrieving user.")
 		} else {
 			w.Header().Set("Content-Type", "application/json")
@@ -92,7 +93,9 @@ func newUser(db *gorm.DB) http.HandlerFunc {
 		user.Password = string(password)
 
 		db.Create(&user)
-		fmt.Fprintf(w, "New User Successfully Created")
+
+		w.Header().Add("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(user)
 	}
 }
 
@@ -105,7 +108,8 @@ func deleteUser(db *gorm.DB) http.HandlerFunc {
 
 		db.Delete(&user)
 
-		fmt.Fprintf(w, "Successfully Deleted User")
+		w.Header().Add("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(user)
 	}
 }
 
@@ -136,7 +140,9 @@ func updateUser(db *gorm.DB) http.HandlerFunc {
 		user = newUser
 
 		db.Save(&user)
-		fmt.Fprintf(w, "Successfully Updated User")
+
+		w.Header().Add("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(user)
 	}
 }
 
@@ -159,21 +165,30 @@ func login(store *gormstore.Store, db *gorm.DB) http.HandlerFunc {
 		fmt.Println("Password: " + reqUser.Password)
 
 		result := db.Where("username = ?", reqUser.Username).First(&user)
+
+		res := make(map[string]any)
+
 		err = result.Error
 		if err != nil {
-			http.Error(w, "Error 1", http.StatusUnauthorized)
+			res["message"] = err.Error()
+			res["status"] = http.StatusUnauthorized
+			json.NewEncoder(w).Encode(res)
 			return
 		}
 
 		err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(reqUser.Password))
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusUnauthorized)
+			res["message"] = err.Error()
+			res["status"] = http.StatusUnauthorized
+			json.NewEncoder(w).Encode(res)
 			return
 		}
 
 		session, err := store.New(r, "session-name")
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			res["message"] = err.Error()
+			res["status"] = http.StatusInternalServerError
+			json.NewEncoder(w).Encode(res)
 			return
 		}
 
@@ -184,11 +199,16 @@ func login(store *gormstore.Store, db *gorm.DB) http.HandlerFunc {
 		session.Values["userID"] = user.ID
 		err = session.Save(r, w)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			res["message"] = err.Error()
+			res["status"] = http.StatusInternalServerError
+			json.NewEncoder(w).Encode(res)
 			return
 		}
 
-		http.Redirect(w, r, "/", http.StatusSeeOther)
+		w.Header().Set("Content-Type", "application/json")
+
+		res["message"] = "Successfully logged in."
+		json.NewEncoder(w).Encode(res)
 	}
 
 }

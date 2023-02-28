@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
-	"strconv"
 	"testing"
 
 	"github.com/gorilla/mux"
@@ -85,26 +84,43 @@ func TestDeleteUserHandler(t *testing.T) {
 	tx := db.Begin()
 	defer tx.Rollback() // Resets the database on function exit
 
-	// Insert a new user into the database
-	testUser := User{
-		Username: "foo",
-		Password: "bar",
-		IsTutor:  false,
-	}
-	result := tx.Create(&testUser)
-	if result.Error != nil {
-		t.Fatalf("Error inserting test user: %s", result.Error)
-	}
-
-	// Set up a new router with the user deletion handler
+	// Set up a new router with the user creation and deletion handler
 	r := mux.NewRouter()
+	r.HandleFunc("/api/users", newUser(tx)).Methods("POST")
 	r.HandleFunc("/api/users/{id}", deleteUser(tx)).Methods("DELETE")
 
+	// Insert a new user into the database
+	reqBody, _ := json.Marshal(map[string]any{
+		"username": "foo",
+		"password": "bar",
+		"is_tutor": false,
+	})
+
+	req, _ := http.NewRequest("POST", "/api/users", bytes.NewBuffer(reqBody))
+	req.Header.Set("Content-Type", "application/json")
+
+	rr := httptest.NewRecorder()
+	r.ServeHTTP(rr, req)
+
+	// Verify that the response status code is 200 OK
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("Handler returned wrong status code: got %v want %v", status, http.StatusCreated)
+	}
+
+	// Verify that the new user was created in the database
+	var user User
+	result := tx.Where("username = ?", "foo").First(&user)
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			t.Errorf("User was not added to the database")
+		}
+	}
+
 	// Create a new test request to delete the user
-	req, _ := http.NewRequest("DELETE", "/api/users/"+strconv.Itoa(int(testUser.ID)), nil)
+	req, _ = http.NewRequest("DELETE", fmt.Sprintf("/api/users/%d", user.ID), nil)
 
 	// Send the request to the handler
-	rr := httptest.NewRecorder()
+	rr = httptest.NewRecorder()
 	r.ServeHTTP(rr, req)
 
 	// Verify that the response status code is 200 OK
@@ -113,7 +129,6 @@ func TestDeleteUserHandler(t *testing.T) {
 	}
 
 	// Verify that the user was deleted from the database
-	var user User
 	result = tx.Where("username = ?", "foo").First(&user)
 	if !errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		t.Errorf("User was not deleted from the database")
@@ -128,20 +143,44 @@ func TestUpdateUserHandler(t *testing.T) {
 
 	// Set up a new router with the user update handler
 	r := mux.NewRouter()
+	r.HandleFunc("/api/users", newUser(tx)).Methods("POST")
 	r.HandleFunc("/api/users/{id}", updateUser(tx)).Methods("PUT")
 
-	// Create a new test user to update
-	user := User{Username: "foo", Password: "bar", IsTutor: false}
-	tx.Create(&user)
+	// Insert a new user into the database
+	reqBody, _ := json.Marshal(map[string]any{
+		"username": "foo",
+		"password": "bar",
+		"is_tutor": false,
+	})
+
+	req, _ := http.NewRequest("POST", "/api/users", bytes.NewBuffer(reqBody))
+	req.Header.Set("Content-Type", "application/json")
+
+	rr := httptest.NewRecorder()
+	r.ServeHTTP(rr, req)
+
+	// Verify that the response status code is 200 OK
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("Handler returned wrong status code: got %v want %v", status, http.StatusCreated)
+	}
+
+	// Verify that the new user was created in the database
+	var user User
+	result := tx.Where("username = ?", "foo").First(&user)
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			t.Errorf("User was not added to the database")
+		}
+	}
 
 	// Create a new test request with updated user data
 	newUserData := User{Username: "updated_foo", Password: "updated_bar", IsTutor: true}
-	reqBody, _ := json.Marshal(newUserData)
-	req, _ := http.NewRequest("PUT", fmt.Sprintf("/api/users/%d", user.ID), bytes.NewBuffer(reqBody))
+	reqBody, _ = json.Marshal(newUserData)
+	req, _ = http.NewRequest("PUT", fmt.Sprintf("/api/users/%d", user.ID), bytes.NewBuffer(reqBody))
 	req.Header.Set("Content-Type", "application/json")
 
 	// Send the request to the handler
-	rr := httptest.NewRecorder()
+	rr = httptest.NewRecorder()
 	r.ServeHTTP(rr, req)
 
 	// Verify that the response status code is 200 OK
@@ -176,19 +215,38 @@ func TestGetUserHandler(t *testing.T) {
 	r.HandleFunc("/api/users", newUser(tx)).Methods("POST")
 	r.HandleFunc("/api/users/{id}", getUser(tx)).Methods("GET")
 
-	// Create a new test user in the database
-	newUser := User{
-		Username: "foo",
-		Password: "bar",
-		IsTutor:  false,
+	// Insert a new user into the database
+	reqBody, _ := json.Marshal(map[string]any{
+		"username": "foo",
+		"password": "bar",
+		"is_tutor": false,
+	})
+
+	req, _ := http.NewRequest("POST", "/api/users", bytes.NewBuffer(reqBody))
+	req.Header.Set("Content-Type", "application/json")
+
+	rr := httptest.NewRecorder()
+	r.ServeHTTP(rr, req)
+
+	// Verify that the response status code is 200 OK
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("Handler returned wrong status code: got %v want %v", status, http.StatusCreated)
 	}
-	tx.Create(&newUser)
+
+	// Verify that the new user was created in the database
+	var user User
+	result := tx.Where("username = ?", "foo").First(&user)
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			t.Errorf("User was not added to the database")
+		}
+	}
 
 	// Create a new test request to retrieve the user
-	req, _ := http.NewRequest("GET", fmt.Sprintf("/api/users/%d", newUser.ID), nil)
+	req, _ = http.NewRequest("GET", fmt.Sprintf("/api/users/%d", user.ID), nil)
 
 	// Send the request to the handler
-	rr := httptest.NewRecorder()
+	rr = httptest.NewRecorder()
 	r.ServeHTTP(rr, req)
 
 	// Verify that the response status code is 200 OK
@@ -217,21 +275,45 @@ func TestGetAllUsers(t *testing.T) {
 	tx := db.Begin()
 	defer tx.Rollback() // Resets the database on function exit
 
-	// Insert test data into the database
-	user1 := User{Username: "test", Password: "test1"}
-	user2 := User{Username: "test2", Password: "test3"}
-	tx.Create(&user1)
-	tx.Create(&user2)
-
-	// Set up a new router with the getAllUsers handler
+	// Set up a new router with the user creation and retrieval handlers
 	r := mux.NewRouter()
+	r.HandleFunc("/api/users", newUser(tx)).Methods("POST")
 	r.HandleFunc("/api/users", getAllUsers(tx)).Methods("GET")
 
+	var user1 User = User{
+		Username: "test",
+		Password: "test1",
+		IsTutor:  false,
+	}
+
+	// Insert a new user into the database
+	reqBody, _ := json.Marshal(user1)
+
+	req, _ := http.NewRequest("POST", "/api/users", bytes.NewBuffer(reqBody))
+	req.Header.Set("Content-Type", "application/json")
+
+	rr := httptest.NewRecorder()
+	r.ServeHTTP(rr, req)
+
+	// Insert another user into the database
+	var user2 User = User{
+		Username: "test2",
+		Password: "test3",
+		IsTutor:  true,
+	}
+	reqBody, _ = json.Marshal(user2)
+
+	req, _ = http.NewRequest("POST", "/api/users", bytes.NewBuffer(reqBody))
+	req.Header.Set("Content-Type", "application/json")
+
+	rr = httptest.NewRecorder()
+	r.ServeHTTP(rr, req)
+
 	// Create a new test request to get all users
-	req, _ := http.NewRequest("GET", "/api/users", nil)
+	req, _ = http.NewRequest("GET", "/api/users", nil)
 
 	// Send the request to the handler
-	rr := httptest.NewRecorder()
+	rr = httptest.NewRecorder()
 	r.ServeHTTP(rr, req)
 
 	// Verify that the response status code is 200 OK
@@ -249,10 +331,11 @@ func TestGetAllUsers(t *testing.T) {
 	}
 
 	// Verify that the returned users match the test data
-	if users[0].Username != "test" || users[0].Password != "test1" {
-		t.Errorf("Incorrect user data returned: got %v want %v", users[0], user1)
+	if users[0].Username != "test" || bcrypt.CompareHashAndPassword([]byte(users[0].Password), []byte("test1")) != nil {
+		t.Errorf("Incorrect user data returned for user1")
 	}
-	if users[1].Username != "test2" || users[1].Password != "test3" {
-		t.Errorf("Incorrect user data returned: got %v want %v", users[1], user2)
+
+	if users[1].Username != "test2" || bcrypt.CompareHashAndPassword([]byte(users[1].Password), []byte("test3")) != nil {
+		t.Errorf("Incorrect user data returned for user2")
 	}
 }
