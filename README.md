@@ -1,9 +1,25 @@
 # CEN3031
 
-## Project Name
+### Table of Contents
+- [Project Info](#project-info)
+	- [Name](#name)
+	- [Description](#description)
+	- [Members](#members)
+- [Installation](#installation)
+	- [Installing dependencies](#installing-dependencies)
+- [Usage](#usage)
+	- [Running only the frontend](#running-only-the-frontend)
+	- [Running the frontend and the backend](#running-the-frontend-and-the-backend)
+	- [Building the frontend and running the backend](#building-the-frontend-and-running-the-backend)
+- [Unit testing](#unit-testing)
+	- [Unit testing for the frontend](#unit-testing-for-the-frontend)
+
+
+# Project Info
+## Name
 Find A Tutor
 
-## Project Description
+## Description
   
 Our project will essentially create a website for a tutoring service. It will be a system to help tutors and students connect. The website will be accessible by both the tutor and student, which means once the user logs in they will see different screens. The screen shown depends on whether student or tutor was chosen when the account was created. The student will be able to search for subjects and find tutors who they can contact. The tutor will be able to add their contact information and subjects they are comfortable with. There will also be a section where students can rate tutors they have interacted with. Overall, our project "Find A Tutor" will help students and tutors connect and communicate easily on this new platform. 
 
@@ -39,18 +55,6 @@ ng serve
 ```
 The app will be live at `http://localhost:4200`
 
-## Unit Testing for the frontend
-Install cyress, you can use the following command in the terminal:
-```
-npm install cypress --save-dev
-```
-Open cypress in the terminal using:
-```
-npx cypress open
-```
-Click on "Component Testing" in the cypress window, and select angular for the frontend framework.
-Make sure you have all of the correct dependencies installed and continue.
-
 ## Running the frontend and the backend
 If you want to run both the frontend and the backend and see real-time updates of the frontend, first navigate to the frontend folder and run `ng serve`.
 ```
@@ -76,3 +80,17 @@ cd ../backend
 go run .
 ```
 The server will now be running at http://localhost:8080/.
+
+# Unit testing
+## Unit testing for the frontend
+Install cypress using the following command in the terminal:
+```
+npm install cypress --save-dev
+```
+Open cypress in the terminal using:
+```
+npx cypress open
+```
+Click on "Component Testing" in the cypress window, and select angular for the frontend framework.
+Make sure you have all of the correct dependencies installed and continue.
+
