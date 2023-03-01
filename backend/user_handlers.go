@@ -153,9 +153,14 @@ func login(store *gormstore.Store, db *gorm.DB) http.HandlerFunc {
 		decoder := json.NewDecoder(r.Body)
 		decoder.DisallowUnknownFields()
 
+		res := make(map[string]any)
+
 		err := decoder.Decode(&reqUser)
 		if err != nil {
-			http.Error(w, "Invalid request", http.StatusBadRequest)
+			res["message"] = "Bad request."
+			res["status"] = http.StatusBadRequest
+			json.NewEncoder(w).Encode(res)
+			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
 
@@ -167,13 +172,12 @@ func login(store *gormstore.Store, db *gorm.DB) http.HandlerFunc {
 
 		result := db.Where("username = ?", reqUser.Username).First(&user)
 
-		res := make(map[string]any)
-
 		err = result.Error
 		if err != nil {
 			res["message"] = "Username or password was incorrect."
 			res["status"] = http.StatusUnauthorized
 			json.NewEncoder(w).Encode(res)
+			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
 
@@ -182,6 +186,7 @@ func login(store *gormstore.Store, db *gorm.DB) http.HandlerFunc {
 			res["message"] = "Username or password was incorrect."
 			res["status"] = http.StatusUnauthorized
 			json.NewEncoder(w).Encode(res)
+			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
 
@@ -190,6 +195,7 @@ func login(store *gormstore.Store, db *gorm.DB) http.HandlerFunc {
 			res["message"] = err.Error()
 			res["status"] = http.StatusInternalServerError
 			json.NewEncoder(w).Encode(res)
+			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 
@@ -203,12 +209,14 @@ func login(store *gormstore.Store, db *gorm.DB) http.HandlerFunc {
 			res["message"] = err.Error()
 			res["status"] = http.StatusInternalServerError
 			json.NewEncoder(w).Encode(res)
+			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 
 		w.Header().Set("Content-Type", "application/json")
 
 		res["message"] = "Successfully logged in."
+		res["status"] = http.StatusOK
 		json.NewEncoder(w).Encode(res)
 	}
 

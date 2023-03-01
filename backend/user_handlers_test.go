@@ -386,7 +386,7 @@ func TestLogin(t *testing.T) {
 		t.Errorf("Handler returned wrong status code: got %v want %v", status, http.StatusOK)
 	}
 
-	expected := `{"message":"Successfully logged in."}`
+	expected := `{"message":"Successfully logged in.","status":200}`
 	if got := strings.TrimSpace(rr.Body.String()); got != expected {
 		t.Errorf("Handler returned wrong body: got %v want %v", rr.Body.String(), expected)
 	}
