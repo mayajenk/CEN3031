@@ -55,7 +55,6 @@ Returns a list of all users in JSON. Example response format:
     "about": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     "grade": 13
   },
-  ...
 ]
 ```
 
