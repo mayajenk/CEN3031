@@ -32,8 +32,8 @@ Tests can be found in `backend/user_handlers_test.go`.
 
 
 ### Frontend
-- Test for login can be found using Cypress in 'frontend/src/app/login/login.component.cy.ts'
-- Test for register can be found using Cypress in 'frontend/src/app/register/register.component.cy.ts'
+- Test for login can be found using Cypress in `frontend/src/app/login/login.component.cy.ts`
+- Test for register can be found using Cypress in `frontend/src/app/register/register.component.cy.ts`
 
 ## Backend API Documentation
 Note: All successful requests to the backend should have a `200 OK` response code.
