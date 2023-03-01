@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/gorilla/mux"
@@ -367,7 +368,7 @@ func TestLogin(t *testing.T) {
 	}
 	reqBody, _ := json.Marshal(testUser)
 
-	req, _ := http.NewRequest("POST", "api/users", bytes.NewBuffer(reqBody))
+	req, _ := http.NewRequest("POST", "/api/users", bytes.NewBuffer(reqBody))
 
 	rr := httptest.NewRecorder()
 	r.ServeHTTP(rr, req)
@@ -377,7 +378,7 @@ func TestLogin(t *testing.T) {
 		"password": "bar",
 	})
 
-	req, _ = http.NewRequest("POST", "api/login", bytes.NewBuffer(reqBody))
+	req, _ = http.NewRequest("POST", "/api/login", bytes.NewBuffer(reqBody))
 	rr = httptest.NewRecorder()
 	r.ServeHTTP(rr, req)
 
@@ -385,8 +386,8 @@ func TestLogin(t *testing.T) {
 		t.Errorf("Handler returned wrong status code: got %v want %v", status, http.StatusOK)
 	}
 
-	expected := `{"message": "Successfully logged in."}`
-	if rr.Body.String() != expected {
+	expected := `{"message":"Successfully logged in."}`
+	if got := strings.TrimSpace(rr.Body.String()); got != expected {
 		t.Errorf("Handler returned wrong body: got %v want %v", rr.Body.String(), expected)
 	}
 }
