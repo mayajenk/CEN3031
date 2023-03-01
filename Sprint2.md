@@ -53,9 +53,9 @@ Returns a list of all users in JSON. Example response format:
     "email": "johndoe@example.com",
     "phone": "123-456-7890",
     "about": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    "grade": 13 // For college and beyond
+    "grade": 13
   },
-  // ... more users here
+  ...
 ]
 ```
 
@@ -88,7 +88,7 @@ Returns data for a user with the corresponding `id`. The response body will cont
   "email": "johndoe@example.com",
   "phone": "123-456-7890",
   "about": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  "grade": 13 // For college and beyond
+  "grade": 13 
 }
 ```
 
