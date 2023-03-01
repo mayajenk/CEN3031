@@ -1,5 +1,7 @@
 # Sprint 2
 
+Sprint 2 video link: https://drive.google.com/file/d/1UMxViTrCXZXH7VpDBt7kSYiujukaSJRP/view?usp=sharing
+
 ## Goals
 ### Frontend:
 - Fix button
