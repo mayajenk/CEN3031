@@ -171,7 +171,7 @@ func login(store *gormstore.Store, db *gorm.DB) http.HandlerFunc {
 
 		err = result.Error
 		if err != nil {
-			res["message"] = err.Error()
+			res["message"] = "Username or password was incorrect."
 			res["status"] = http.StatusUnauthorized
 			json.NewEncoder(w).Encode(res)
 			return
@@ -179,7 +179,7 @@ func login(store *gormstore.Store, db *gorm.DB) http.HandlerFunc {
 
 		err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(reqUser.Password))
 		if err != nil {
-			res["message"] = err.Error()
+			res["message"] = "Username or password was incorrect."
 			res["status"] = http.StatusUnauthorized
 			json.NewEncoder(w).Encode(res)
 			return

@@ -272,7 +272,7 @@ func TestGetUserHandler(t *testing.T) {
 	}
 }
 
-func TestGetAllUsers(t *testing.T) {
+func TestGetAllUsersHandler(t *testing.T) {
 	// Set up a test environment
 	db := setupTestEnv()
 	tx := db.Begin()

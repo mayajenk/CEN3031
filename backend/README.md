@@ -8,7 +8,7 @@ Adds a new user to the database. JSON format should follow:
 {
     "username": "myUsername",
     "password": "myPassword",
-    "isTutor": true
+    "is_tutor": true
 }
 ```
 
