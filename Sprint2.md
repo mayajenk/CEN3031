@@ -92,7 +92,7 @@ Returns data for a user with the corresponding `id`. The response body will cont
 ```
 
 ### PUT `/api/users/{id}`
-Updates user data for the user with the corresponding `id`. The request body should contain the have the same JSON format as the above GET request, with each parameter being optional (e.g. you may include `rating` and `email`, and exclude all other properties).
+Updates user data for the user with the corresponding `id`. The request body should contain have the same JSON format as the above GET request, with each parameter being optional (e.g. you may include `rating` and `email`, and exclude all other properties).
 
 The response body will contain the JSON representation of the user, as in the above GET request.
 
@@ -111,6 +111,7 @@ Sends a login request to the backend. The request body should contain JSON in th
 If the login is successful, the user will receive a cookie with a `session-name` attribute to identify the session, and the response will contain the following body:
 ```json
 {
+  "status": 200,
   "message": "Successfully logged in."
 }
 ```
@@ -118,7 +119,7 @@ If the login is successful, the user will receive a cookie with a `session-name`
 If the login was unsuccessful, the response will contain the following body with the appropriate error and error message:
 ```json
 {
-  "error": 401,
+  "status": 401,
   "message": "Username or password was incorrect."
 }
 ```
