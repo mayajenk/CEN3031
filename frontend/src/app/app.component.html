@@ -1,16 +1,117 @@
-<h1>Welcome!</h1>
+<!--<h1>Welcome!</h1>
 <!-- This nav gives you links to click, which tells the router which route to use (defined in the routes constant in  AppRoutingModule) -->
-<nav>
+<!--<nav>
   <ul>
         <a routerLink="/login" routerLinkActive="active" ariaCurrentWhenActive="page">Login</a>
         &nbsp;&nbsp;&nbsp;&nbsp;
         <a routerLink="/register" routerLinkActive="active" ariaCurrentWhenActive="page">Create Account</a>
         &nbsp;&nbsp;&nbsp;&nbsp;
-        <!-- make third & fourth inactive until logged in -->
         <a routerLink="/profile" routerLinkActive="inactive" ariaCurrentWhenActive="page">Profile</a>
         &nbsp;&nbsp;&nbsp;&nbsp;
         <a routerLink="/search" routerLinkActive="inactive" ariaCurrentWhenActive="page">Search</a>
   </ul>
-</nav>
+</nav>-->
 <!-- The routed views render in the <router-outlet>-->
+<!--<router-outlet></router-outlet>-->
+
+<html>
+<head>
+  <title>Home Page</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 20px;
+    }
+
+      header h1 {
+        margin: 0;
+      }
+
+    nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav li {
+      display: inline-block;
+      margin-right: 20px;
+    }
+
+      nav li:last-child {
+        margin-right: 0;
+      }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+    }
+
+      nav a:hover {
+        text-decoration: underline;
+      }
+
+    main {
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    section h2 {
+      margin-top: 0;
+    }
+
+    section ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    section li {
+      margin-bottom: 10px;
+    }
+
+    footer {
+      background-color: #333;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+
+      footer p {
+        margin: 0;
+      }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Find a Tutor</h1>
+    <nav>
+      <ul>
+        <a routerLink="/login" routerLinkActive="active" ariaCurrentWhenActive="page">Login</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a routerLink="/register" routerLinkActive="active" ariaCurrentWhenActive="page">Create Account</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a routerLink="/profile" routerLinkActive="active" ariaCurrentWhenActive="page">Profile</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a routerLink="/search" routerLinkActive="active" ariaCurrentWhenActive="page">Search</a>
+      </ul>
+    </nav>
+  </header>
+  
+</body>
+</html>
 <router-outlet></router-outlet>
+
+
