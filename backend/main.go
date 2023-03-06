@@ -7,8 +7,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/glebarez/sqlite"
 	"github.com/wader/gormstore/v2"
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
