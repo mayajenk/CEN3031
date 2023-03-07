@@ -1,29 +1,27 @@
 <!-- only active when logged in -->
-<!-- contact info -->
-<!-- my rating -->
-<!-- if student -> current tutors (add tutor) -->
-<!-- if tutor -> my subjects (add subject), current students (add student) -->
 
 <div class="container">
-  <h2 class="name">Welcome [Insert name here]!</h2>
-  <div class="rating">
-    <h1 class="rating">Rating: </h1>
+  <h1 class="name">Welcome [Insert name here]!</h1>
+  <!-- <div class="rating"> -->
+    <h2 class="rating">Rating: </h2>
     <span class="star">&#9733;</span>
     <span class="star">&#9733;</span>
     <span class="star">&#9733;</span>
     <span class="star">&#9733;</span>
     <span class="star">&#9733;</span>
+  <!-- </div> -->
+  <div>
+    <h2 class="info">Contact Me: (for tutors only)</h2>
+    <button type="edit">Edit Contact Info</button>
   </div>
   <div>
-    <h1 class="info">Contact Me: (for tutors only)</h1>
+    <h2 class="courses">My Subjects: (for tutors only)</h2>
+    <button type="addSubject">Add Subject</button>
   </div>
   <div>
-    <h1 class="courses">My Subjects: (for tutors only)</h1>
-  </div>
-  <div>
-    <h1 class="connections">My Tutors/Students: </h1>
+    <h2 class="connections">My Tutors/Students: </h2>
     <div>
-      <button type="add">Add Tutor/Student</button>
+      <button type="addPerson">Add Tutor/Student</button>
       <!-- only adds if both student and tutor have requested to add -->
     </div>
   </div>
