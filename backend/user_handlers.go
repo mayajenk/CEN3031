@@ -221,3 +221,48 @@ func login(store *gormstore.Store, db *gorm.DB) http.HandlerFunc {
 	}
 
 }
+
+// search function if the user wants to look for a particular tutor or a subject
+func searchDatabase(db *gorm.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		query := r.URL.Query().Get("query")
+
+		var users []User
+		db.Where("name LIKE ? OR subject LIKE ?", "%"+query+"%", "%"+query+"%").Find(&users)
+
+		json.NewEncoder(w).Encode(users)
+	}
+}
+
+// function for the user to log out of the website
+func logout(store *gormstore.Store) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		session, err := store.Get(r, "session-name")
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		session.Options.MaxAge = -1
+		err = session.Save(r, w)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		session.Values["userID"] = nil
+		session.Options = &sessions.Options{
+			MaxAge:   -1,
+			HttpOnly: true,
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+
+		res := make(map[string]interface{})
+		res["message"] = "Successfully logged out."
+		res["status"] = http.StatusOK
+		json.NewEncoder(w).Encode(res)
+
+	}
+}
