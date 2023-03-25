@@ -1,1 +1,4 @@
-<p>logout works!</p>
+<form #myForm="ngForm" (ngSubmit)="logout(myForm)">
+    <p>Are you sure?</p>
+    <button type="submit">Logout</button>
+</form>
