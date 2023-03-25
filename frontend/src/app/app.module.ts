@@ -15,6 +15,7 @@ import { LoginService } from './login.service';
 import { RegisterService } from './register.service';
 import { ProfileComponent } from './profile/profile.component';
 import { SearchComponent } from './search/search.component';
+import { LogoutComponent } from './logout/logout.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { SearchComponent } from './search/search.component';
     LoginComponent,
     RegisterComponent,
     ProfileComponent,
-    SearchComponent
+    SearchComponent,
+    LogoutComponent
   ],
   imports: [
     BrowserModule,
