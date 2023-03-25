@@ -17,6 +17,12 @@ import { ProfileComponent } from './profile/profile.component';
 import { SearchComponent } from './search/search.component';
 import { LogoutComponent } from './logout/logout.component';
 import { AuthGuard } from './auth/auth.guard';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatListModule } from '@angular/material/list';
+import { MatDividerModule } from '@angular/material/divider';
+
+
 
 @NgModule({
   declarations: [
@@ -32,6 +38,10 @@ import { AuthGuard } from './auth/auth.guard';
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    MatButtonToggleModule,
+    MatChipsModule,
+    MatDividerModule,
+    MatListModule,
     FormsModule
   ],
   providers: [HttpClient, CookieService, RegisterService, AuthService, AuthGuard, {provide: LocationStrategy, useClass: PathLocationStrategy}],

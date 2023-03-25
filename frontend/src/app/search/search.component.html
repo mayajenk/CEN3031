@@ -1,9 +1,11 @@
 <!-- only active when student logged in -->
-<!-- search bar -->
-<div class="form-group">
+<form #myForm="ngForm" (ngSubmit)="search()">
+    <p>not available for tutors</p>
+    <!-- search bar -->
     <label for="search"></label>
     <input type="text" formControlName="search" class="form-control" />
     &nbsp;&nbsp;&nbsp;
-    <button onclick="search()">Search</button>
-
+    <button type="submit">Search</button>
 <!-- available tutors -->
+
+</form>
