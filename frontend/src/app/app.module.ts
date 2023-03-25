@@ -16,6 +16,7 @@ import { RegisterService } from './register.service';
 import { ProfileComponent } from './profile/profile.component';
 import { SearchComponent } from './search/search.component';
 import { LogoutComponent } from './logout/logout.component';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [
@@ -31,9 +32,10 @@ import { LogoutComponent } from './logout/logout.component';
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    MatSlideToggleModule,
     FormsModule
   ],
-  providers: [HttpClient, CookieService, LoginService, RegisterService, LogoutComponent, {provide: LocationStrategy, useClass: PathLocationStrategy}],
+  providers: [HttpClient, CookieService, LoginService, RegisterService, {provide: LocationStrategy, useClass: PathLocationStrategy}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
