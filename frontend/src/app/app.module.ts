@@ -33,7 +33,7 @@ import { LogoutComponent } from './logout/logout.component';
     HttpClientModule,
     FormsModule
   ],
-  providers: [HttpClient, CookieService, LoginService, RegisterService, {provide: LocationStrategy, useClass: PathLocationStrategy}],
+  providers: [HttpClient, CookieService, LoginService, RegisterService, LogoutComponent, {provide: LocationStrategy, useClass: PathLocationStrategy}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
