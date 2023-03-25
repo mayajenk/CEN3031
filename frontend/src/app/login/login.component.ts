@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { LoginService } from '../login.service';
+import { AuthService } from '../auth/auth.service';
 import { NgForm } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
 
@@ -19,19 +19,16 @@ export class LoginComponent {
 
   private cookieValue: string | undefined;
 
-  constructor(private loginService : LoginService, private cookieService: CookieService) {}
+  constructor(private cookieService: CookieService, private authService: AuthService) {}
 
   login(form: NgForm) {
     // check if username and password entered are valid
     // if username or password is invalid -> display message
     // if successful -> display message
-    this.loginService.login(this.formData.username, this.formData.password)
-      .subscribe(response => {
+    this.authService.login(this.formData.username, this.formData.password).subscribe(
+      response => {
         console.log(response);
-      }, error => {
-        console.error(error);
-      });
-    this.cookieValue = this.cookieService.get('session-name');
-    console.log(this.cookieValue);
+      }
+    );
   }
 }

@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { LogoutService } from '../logout.service';
 import { NgForm } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
 
@@ -19,7 +18,7 @@ export class LogoutComponent {
 
   private cookieValue: string | undefined;
 
-  constructor(private logoutService : LogoutService, private cookieService: CookieService) {}
+  constructor(private cookieService: CookieService) {}
 
   logout(form: NgForm) {
     // if loggedin, logout

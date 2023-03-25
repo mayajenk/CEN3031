@@ -11,11 +11,12 @@ import { CookieService } from 'ngx-cookie-service';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { PathLocationStrategy, LocationStrategy } from '@angular/common';
-import { LoginService } from './login.service';
 import { RegisterService } from './register.service';
+import { AuthService } from './auth/auth.service'
 import { ProfileComponent } from './profile/profile.component';
 import { SearchComponent } from './search/search.component';
 import { LogoutComponent } from './logout/logout.component';
+import { AuthGuard } from './auth/auth.guard';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,7 @@ import { LogoutComponent } from './logout/logout.component';
     HttpClientModule,
     FormsModule
   ],
-  providers: [HttpClient, CookieService, LoginService, RegisterService, LogoutComponent, {provide: LocationStrategy, useClass: PathLocationStrategy}],
+  providers: [HttpClient, CookieService, RegisterService, AuthService, AuthGuard, {provide: LocationStrategy, useClass: PathLocationStrategy}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
