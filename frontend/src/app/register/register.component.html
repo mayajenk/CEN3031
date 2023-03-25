@@ -12,16 +12,10 @@
         </label>
     </div>
     <div>
-        <!-- import {MatButtonToggleModule} from '@angular/material/button-toggle';
-        line above needed to make code below work ... not sure what file to add it in
         <mat-button-toggle-group name="userType" aria-label="User Type">
             <mat-button-toggle value="tutor">Tutor</mat-button-toggle>
             <mat-button-toggle value="student">Student</mat-button-toggle>
-          </mat-button-toggle-group> -->
-        <label class="switch" for="is_tutor">
-            <input id="is_tutor" type="checkbox" name="is_tutor" [(ngModel)]="formData.is_tutor">
-            <span class="slider round"></span>
-          Tutor </label>
+          </mat-button-toggle-group>
     </div>
     <button type="submit">Go!</button>
 </form>

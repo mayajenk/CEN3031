@@ -9,7 +9,6 @@
     <span class="star">&#9733;</span>
     <span class="star">&#9733;</span>
     <span class="star">&#9733;</span>
-    <!-- <mat-progress-bar mode="determinate" value="100"></mat-progress-bar> -->
   <!-- </div> -->
   <div>
     <h2 class="info">Contact Me:</h2>
@@ -19,10 +18,34 @@
   <div>
     <h2 class="courses">My Subjects:</h2>
       <p>not available for students</p>
+
+      <!-- only for visual at the moment -->
+      <mat-chip-listbox aria-label="subjects">
+        <mat-chip>
+          Physics C
+        </mat-chip>
+        <mat-chip>
+          Calculus 2
+        </mat-chip>
+        <mat-chip>
+          Java
+        </mat-chip>
+      </mat-chip-listbox>
+
     <button type="addSubject">Add Subject</button>
   </div>
   <div>
-    <h2 class="connections">My Tutors/Students: </h2>
+    <h2 class="connections">Current Connections: </h2>
+    
+    <!-- only for visual at the moment -->
+    <mat-list>
+      <mat-list-item>Student 1</mat-list-item>
+      <mat-divider></mat-divider>
+      <mat-list-item>Student 2</mat-list-item>
+      <mat-divider></mat-divider>
+      <mat-list-item>Student 3</mat-list-item>
+    </mat-list>
+    
     <div>
       <button type="addPerson">Add Tutor/Student</button>
       <!-- only adds if both student and tutor have requested to add -->
