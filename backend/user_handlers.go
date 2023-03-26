@@ -91,7 +91,7 @@ func getUserFromSession(store *gormstore.Store, db *gorm.DB) http.HandlerFunc {
 			temp, _ := json.Marshal(user)
 			err = json.Unmarshal(temp, &tutor)
 
-			if err != nil {
+			if err == nil {
 				w.Header().Set("Content-Type", "application/json")
 				json.NewEncoder(w).Encode(tutor)
 			}
@@ -99,7 +99,8 @@ func getUserFromSession(store *gormstore.Store, db *gorm.DB) http.HandlerFunc {
 			var student StudentView
 			temp, _ := json.Marshal(user)
 			err = json.Unmarshal(temp, &student)
-			if err != nil {
+
+			if err == nil {
 				w.Header().Set("Content-Type", "application/json")
 				json.NewEncoder(w).Encode(student)
 			}

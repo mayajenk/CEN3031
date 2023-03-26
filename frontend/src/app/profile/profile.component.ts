@@ -1,14 +1,12 @@
 import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { User } from '../user';
 import { ProfileService } from '../profile.service';
-import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.sass'],
-  providers: [CookieService, ProfileService]
+  providers: [ProfileService]
 })
 export class ProfileComponent {
   user: User = {
@@ -25,6 +23,8 @@ export class ProfileComponent {
     grade: 0
   }
 
-  constructor() { 
+  constructor(private profileService: ProfileService) { 
+    this.profileService.getProfile()
+      .subscribe(user => this.user = user);
   }
 }
