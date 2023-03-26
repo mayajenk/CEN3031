@@ -1,4 +1,4 @@
-<form #myForm="ngForm" (ngSubmit)="login(myForm)">
+<!--<form #myForm="ngForm" (ngSubmit)="login(myForm)">
     <div>
         <label for="username">
             Username:
@@ -12,4 +12,26 @@
         </label>
     </div>
     <button type="submit">Go!</button>
+</form>-->
+<!--Previous code above in case something doesn't work-->
+
+<form #myForm="ngForm" (ngSubmit)="login(myForm)">
+  <div>
+    <mat-form-field class="example-full-width" appearance="fill">
+      <mat-label>Username</mat-label>
+      <input matInput placeholder="Enter your name" name="username"
+             [(ngModel)]="formData.username">
+    </mat-form-field>
+  </div>
+
+  <div>
+    <mat-form-field class="example-full-width" appearance="fill">
+      <mat-label>Password</mat-label>
+      <input matInput placeholder="Enter your password" value="" name="password" type="password" [(ngModel)]="formData.password">
+    </mat-form-field>
+    </div>
+    <div>
+      <button mat-stroked-button color="submit">Go!</button>
+    </div>
+
 </form>
