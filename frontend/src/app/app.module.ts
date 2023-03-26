@@ -21,7 +21,10 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
-
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
 
 
 @NgModule({
@@ -42,6 +45,10 @@ import { MatDividerModule } from '@angular/material/divider';
     MatChipsModule,
     MatDividerModule,
     MatListModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatButtonModule,
+    MatInputModule,
     FormsModule
   ],
   providers: [HttpClient, CookieService, RegisterService, AuthService, AuthGuard, {provide: LocationStrategy, useClass: PathLocationStrategy}],
