@@ -16,22 +16,31 @@
 <!--Previous code above in case something doesn't work-->
 
 <form #myForm="ngForm" (ngSubmit)="login(myForm)">
-  <div>
-    <mat-form-field class="example-full-width" appearance="fill">
-      <mat-label>Username</mat-label>
-      <input matInput placeholder="Enter your username" name="username"
-             [(ngModel)]="formData.username">
-    </mat-form-field>
-  </div>
+  <mat-card style="display: flex; justify-content: center; align-items: center; height: 55vh; max-width: 350px; margin: 0 auto;">
+    <mat-card-header>
+      <mat-card-title>
+        Log in!
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div>
+        <mat-form-field class="example-full-width" appearance="fill">
+          <mat-label>Username</mat-label>
+          <input matInput placeholder="Enter your username" name="username"
+                 [(ngModel)]="formData.username">
+        </mat-form-field>
+      </div>
 
-  <div>
-    <mat-form-field class="example-full-width" appearance="fill">
-      <mat-label>Password</mat-label>
-      <input matInput placeholder="Enter your password" value="" name="password" type="password" [(ngModel)]="formData.password">
-    </mat-form-field>
-    </div>
-    <div>
-      <button mat-stroked-button color="submit">Go!</button>
-    </div>
+      <div>
+        <mat-form-field class="example-full-width" appearance="fill">
+          <mat-label>Password</mat-label>
+          <input matInput placeholder="Enter your password" value="" name="password" type="password" [(ngModel)]="formData.password">
+        </mat-form-field>
+      </div>
 
+      <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+        <button mat-stroked-button color="submit">Go!</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
 </form>
