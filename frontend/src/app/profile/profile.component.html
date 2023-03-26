@@ -3,7 +3,7 @@
 <div class="container">
   <h1 class="name">Welcome [Insert name here]!</h1>
   <!-- <div class="rating"> -->
-    <h2 class="rating">Rating: </h2>
+    <h2 class="rating">Rating: {{user.rating}}</h2>
     <span class="star">&#9733;</span>
     <span class="star">&#9733;</span>
     <span class="star">&#9733;</span>
@@ -12,26 +12,18 @@
   <!-- </div> -->
   <div>
     <h2 class="info">Contact Me:</h2>
-      <p>not available for students</p>
+      <p>Phone: {{user.phone}}</p>
+      <p>Email: {{user.email}}</p>
     <button type="edit">Edit Contact Info</button>
   </div>
   <div>
     <h2 class="courses">My Subjects:</h2>
-      <p>not available for students</p>
-
       <!-- only for visual at the moment -->
-      <mat-chip-listbox aria-label="subjects">
+      <mat-chip-listbox *ngFor="let subject of user.subjects" aria-label="subjects">
         <mat-chip>
-          Physics C
-        </mat-chip>
-        <mat-chip>
-          Calculus 2
-        </mat-chip>
-        <mat-chip>
-          Java
+          {{subject.name}}
         </mat-chip>
       </mat-chip-listbox>
-
     <button type="addSubject">Add Subject</button>
   </div>
   <div>

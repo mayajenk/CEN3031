@@ -14,6 +14,7 @@ export class AuthService {
   login(username: string, password: string): Observable<HttpResponse<any>> {
     return this.http.post<any>("/api/login", {username, password}).pipe(
       tap(response => {
+        console.log(response.status);
         if (response.status == 200) {
           this.setLoggedIn(true);
         }

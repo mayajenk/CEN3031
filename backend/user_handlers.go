@@ -21,11 +21,37 @@ type User struct {
 	LastName   string    `json:"last_name"`
 	IsTutor    bool      `json:"is_tutor"`
 	Rating     float64   `json:"rating"`
-	Subjects   []Subject `gorm:"many2many:user_subjects;"`
+	Subjects   []Subject `gorm:"many2many:user_subjects" json:"subjects"`
 	Email      string    `json:"email"`
 	Phone      string    `json:"phone"`
 	About      string    `json:"about"`
 	Grade      int32     `json:"grade"`
+}
+
+type TutorView struct {
+	ID        int32     `json:"id"`
+	Username  string    `json:"username"`
+	FirstName string    `json:"first_name"`
+	LastName  string    `json:"last_name"`
+	IsTutor   bool      `json:"is_tutor"`
+	Rating    float64   `json:"rating"`
+	Subjects  []Subject `json:"subjects"`
+	Email     string    `json:"email"`
+	Phone     string    `json:"phone"`
+	About     string    `json:"about"`
+}
+
+type StudentView struct {
+	ID        int32   `json:"id"`
+	Username  string  `json:"username"`
+	FirstName string  `json:"first_name"`
+	LastName  string  `json:"last_name"`
+	IsTutor   bool    `json:"is_tutor"`
+	Rating    float64 `json:"rating"`
+	Email     string  `json:"email"`
+	Phone     string  `json:"phone"`
+	About     string  `json:"about"`
+	Grade     int32   `json:"grade"`
 }
 
 type Subject struct {
@@ -43,6 +69,44 @@ func getAllUsers(db *gorm.DB) http.HandlerFunc {
 	}
 }
 
+func getUserFromSession(store *gormstore.Store, db *gorm.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		session, err := store.Get(r, "session")
+		if err != nil {
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode("Error retrieving user.")
+		}
+
+		userID := session.Values["userID"]
+		var user User
+
+		err = db.Model(&User{}).Preload("Subjects").First(&user, userID).Error
+		if err != nil {
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode("Error retrieving user.")
+		}
+
+		if user.IsTutor {
+			var tutor TutorView
+			temp, _ := json.Marshal(user)
+			err = json.Unmarshal(temp, &tutor)
+
+			if err != nil {
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(tutor)
+			}
+		} else {
+			var student StudentView
+			temp, _ := json.Marshal(user)
+			err = json.Unmarshal(temp, &student)
+			if err != nil {
+				w.Header().Set("Content-Type", "application/json")
+				json.NewEncoder(w).Encode(student)
+			}
+		}
+	}
+}
+
 func getUser(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Get User Endpoint Hit")
@@ -54,7 +118,6 @@ func getUser(db *gorm.DB) http.HandlerFunc {
 		err := db.Model(&User{}).Preload("Subjects").First(&user, userID).Error
 		if err != nil {
 			w.Header().Set("Content-Type", "application/json")
-
 			json.NewEncoder(w).Encode("Error retrieving user.")
 		} else {
 			w.Header().Set("Content-Type", "application/json")
@@ -190,7 +253,7 @@ func login(store *gormstore.Store, db *gorm.DB) http.HandlerFunc {
 			return
 		}
 
-		session, err := store.New(r, "session-name")
+		session, err := store.New(r, "session")
 		if err != nil {
 			res["message"] = err.Error()
 			res["status"] = http.StatusInternalServerError
@@ -201,9 +264,14 @@ func login(store *gormstore.Store, db *gorm.DB) http.HandlerFunc {
 
 		session.Options = &sessions.Options{
 			SameSite: http.SameSiteLaxMode,
+			HttpOnly: false,
+			Secure:   false,
+			Path:     "/",
 		}
 
 		session.Values["userID"] = user.ID
+		session.Values["authenticated"] = true
+
 		err = session.Save(r, w)
 		if err != nil {
 			res["message"] = err.Error()
@@ -225,10 +293,10 @@ func login(store *gormstore.Store, db *gorm.DB) http.HandlerFunc {
 // search function if the user wants to look for a particular tutor or a subject
 func searchDatabase(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		query := r.URL.Query().Get("query")
+		query := r.URL.Query().Get("q")
 
 		var users []User
-		db.Where("name LIKE ? OR subject LIKE ?", "%"+query+"%", "%"+query+"%").Find(&users)
+		db.Where("username LIKE ? OR subject LIKE ?", "%"+query+"%", "%"+query+"%").Find(&users)
 
 		json.NewEncoder(w).Encode(users)
 	}
@@ -238,7 +306,7 @@ func searchDatabase(db *gorm.DB) http.HandlerFunc {
 func logout(store *gormstore.Store) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
-		session, err := store.Get(r, "session-name")
+		session, err := store.Get(r, "session")
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -252,6 +320,7 @@ func logout(store *gormstore.Store) http.HandlerFunc {
 		}
 
 		session.Values["userID"] = nil
+		session.Values["authenticated"] = false
 		session.Options = &sessions.Options{
 			MaxAge:   -1,
 			HttpOnly: true,

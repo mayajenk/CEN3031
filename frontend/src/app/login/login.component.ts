@@ -6,7 +6,7 @@ import { CookieService } from 'ngx-cookie-service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.sass']
+  styleUrls: ['./login.component.sass'],
 })
 export class LoginComponent {
   @Input() formData: {
@@ -16,8 +16,6 @@ export class LoginComponent {
     username: '',
     password: ''
   };
-
-  private cookieValue: string | undefined;
 
   constructor(private cookieService: CookieService, private authService: AuthService) {}
 
