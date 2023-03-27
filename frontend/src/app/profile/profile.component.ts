@@ -9,6 +9,7 @@ import { ProfileService } from '../profile.service';
   providers: [ProfileService]
 })
 export class ProfileComponent {
+  // Dummy data if request does not go through
   user: User = {
     id: 1,
     username: "foo",

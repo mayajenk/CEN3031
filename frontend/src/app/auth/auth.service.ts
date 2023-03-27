@@ -22,7 +22,7 @@ export class AuthService {
     );
   }
 
-  logout(): Observable<any> {
+  logout(): Observable<HttpResponse<any>> {
     return this.http.post<any>("/api/logout", {}).pipe(
       tap(response => {
         console.log(response);

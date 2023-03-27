@@ -26,7 +26,7 @@
 <!--Previous code above in case something doesn't work-->
 
 <form #myForm="ngForm" (ngSubmit)="register(myForm)">
-  <mat-card style="display: flex; justify-content: center; align-items: center; height: 60vh; max-width: 350px; margin: 0 auto;">
+  <mat-card>
     <mat-card-header>
       <mat-card-title>
         Create an account!
@@ -49,14 +49,15 @@
       </div>
 
 
-      <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+      <div class="isTutor">
+        <p class="i-am-a">I am a:</p>
         <mat-button-toggle-group name="userType" aria-label="User Type">
           <mat-button-toggle value="tutor">Tutor</mat-button-toggle>
           <mat-button-toggle value="student">Student</mat-button-toggle>
         </mat-button-toggle-group>
       </div>
-      <div style="padding: 20px; display: flex; justify-content: center; align-items: center; flex-direction: column;">
-        <button mat-stroked-button color="submit">Create!</button>
+      <div class="submit">
+        <button mat-raised-button color="primary" type="submit">Create!</button>
       </div>
     </mat-card-content>
   </mat-card>

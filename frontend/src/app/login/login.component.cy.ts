@@ -1,19 +1,19 @@
 import { LoginComponent } from "./login.component"
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { LoginService } from "../login.service";
 import { FormsModule } from '@angular/forms';
+import { AuthService } from "../auth/auth.service";
 
 describe('LoginComponent', () => {
     it('mounts', () => {
         cy.mount(LoginComponent, {
             imports: [HttpClientTestingModule, FormsModule],
-            providers: [LoginService]
+            providers: [AuthService]
         })
     })
     it('pass input to username and password', () => {
         cy.mount(LoginComponent, {
             imports: [HttpClientTestingModule, FormsModule],
-            providers: [LoginService],
+            providers: [AuthService],
             componentProperties: {
                 formData: {
                     username: "foo",
