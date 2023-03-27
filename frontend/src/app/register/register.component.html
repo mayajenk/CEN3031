@@ -51,9 +51,9 @@
 
       <div class="isTutor">
         <p class="i-am-a">I am a:</p>
-        <mat-button-toggle-group name="userType" aria-label="User Type">
-          <mat-button-toggle value="tutor">Tutor</mat-button-toggle>
-          <mat-button-toggle value="student">Student</mat-button-toggle>
+        <mat-button-toggle-group name="role" [(ngModel)]="formData.role" aria-label="User Type">
+          <mat-button-toggle name="tutor" value="tutor" data-cy="tutor">Tutor</mat-button-toggle>
+          <mat-button-toggle name="student" value="student" data-cy="student">Student</mat-button-toggle>
         </mat-button-toggle-group>
       </div>
       <div class="submit">

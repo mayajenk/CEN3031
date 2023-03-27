@@ -12,11 +12,11 @@ export class RegisterComponent {
   formData: {
     username: string,
     password: string,
-    is_tutor: boolean
+    role: string
   } = {
     username: '',
     password: '',
-    is_tutor: false
+    role: ''
   };
   
   constructor(private registerService : RegisterService) {}
@@ -27,7 +27,8 @@ export class RegisterComponent {
     // check if username is already taken
     // if user name is already taken -> display message
     // if successful -> display message
-    this.registerService.register(this.formData.username, this.formData.password, this.formData.is_tutor)
+    let is_tutor : boolean = this.formData.role == "tutor" ? true : false;
+    this.registerService.register(this.formData.username, this.formData.password, is_tutor)
       .subscribe(response => {
         console.log(response);
       }, error => {
