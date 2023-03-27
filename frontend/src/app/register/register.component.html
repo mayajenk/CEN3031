@@ -26,29 +26,39 @@
 <!--Previous code above in case something doesn't work-->
 
 <form #myForm="ngForm" (ngSubmit)="register(myForm)">
-  <div>
-    <mat-form-field class="example-full-width" appearance="fill">
-      <mat-label>Username</mat-label>
-      <input matInput placeholder="Enter your name" name="username"
-             [(ngModel)]="formData.username">
-    </mat-form-field>
-  </div>
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        Create an account!
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div>
+        <mat-form-field class="example-full-width" appearance="fill">
+          <mat-label>Username</mat-label>
+          <input matInput placeholder="Enter your name" name="username"
+                 [(ngModel)]="formData.username">
+        </mat-form-field>
+      </div>
 
-  <div>
-    <mat-form-field class="example-full-width" appearance="fill">
-      <mat-label>Password</mat-label>
-      <input matInput placeholder="Enter your password" value="" name="password" type="password" [(ngModel)]="formData.password">
-    </mat-form-field>
-  </div>
+      <div>
+        <mat-form-field class="example-full-width" appearance="fill">
+          <mat-label>Password</mat-label>
+          <input matInput placeholder="Enter your password" value="" name="password" type="password" [(ngModel)]="formData.password">
+        </mat-form-field>
+      </div>
 
 
-  <div>
-    <mat-button-toggle-group name="userType" aria-label="User Type">
-      <mat-button-toggle value="tutor">Tutor</mat-button-toggle>
-      <mat-button-toggle value="student">Student</mat-button-toggle>
-    </mat-button-toggle-group>
-  </div>
-  <div>
-    <button mat-stroked-button color="submit">Go!</button>
-  </div>
+      <div class="isTutor">
+        <p class="i-am-a">I am a:</p>
+        <mat-button-toggle-group name="userType" aria-label="User Type">
+          <mat-button-toggle value="tutor">Tutor</mat-button-toggle>
+          <mat-button-toggle value="student">Student</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+      <div class="submit">
+        <button mat-raised-button color="primary" type="submit">Create!</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
 </form>

@@ -16,7 +16,7 @@
 <!--Previous code above in case something doesn't work-->
 
 <form #myForm="ngForm" (ngSubmit)="login(myForm)">
-  <mat-card style="display: flex; justify-content: center; align-items: center; height: 55vh; max-width: 350px; margin: 0 auto;">
+  <mat-card>
     <mat-card-header>
       <mat-card-title>
         Log in!
@@ -38,8 +38,8 @@
         </mat-form-field>
       </div>
 
-      <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-        <button mat-stroked-button color="submit">Go!</button>
+      <div class="button">
+        <button mat-raised-button color="primary" type="submit">Go!</button>
       </div>
     </mat-card-content>
   </mat-card>

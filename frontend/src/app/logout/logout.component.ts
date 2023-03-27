@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { CookieService } from 'ngx-cookie-service';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-logout',
@@ -8,19 +8,11 @@ import { CookieService } from 'ngx-cookie-service';
   styleUrls: ['./logout.component.sass']
 })
 export class LogoutComponent {
-  @Input() formData: {
-    username: string,
-    password: string
-  } = {
-    username: '',
-    password: ''
-  };
 
-  private cookieValue: string | undefined;
-
-  constructor(private cookieService: CookieService) {}
+  constructor(private authService: AuthService) {}
 
   logout(form: NgForm) {
     // if loggedin, logout
+    this.authService.logout();
   }
 }
