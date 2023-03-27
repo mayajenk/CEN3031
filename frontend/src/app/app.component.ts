@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from './auth/auth.service';
-import { Observable } from 'rxjs';
+import { LogoutComponent } from './logout/logout.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +12,11 @@ export class AppComponent {
   title = 'Find a Tutor';
   authService: AuthService;
 
-  constructor(authService: AuthService) {
+  constructor(authService: AuthService, public dialog: MatDialog) {
     this.authService = authService
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(LogoutComponent);
   }
 }

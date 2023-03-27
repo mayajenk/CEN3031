@@ -7,7 +7,7 @@
   <a mat-button routerLink="/search" *ngIf="authService.getIsLoggedIn()">Search</a>
   <a mat-button routerLink="/login" *ngIf="!authService.getIsLoggedIn()">Login</a>
   <a mat-button routerLink="/register" *ngIf="!authService.getIsLoggedIn()">Register</a>
-  <a mat-button routerLink="/logout" *ngIf="authService.getIsLoggedIn()">Log out</a>
+  <button mat-button (click)="openDialog()" *ngIf="authService.getIsLoggedIn()">Log out</button>
 </mat-toolbar>
 <router-outlet></router-outlet>
 

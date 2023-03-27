@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 
 @Component({
@@ -9,10 +10,13 @@ import { AuthService } from '../auth/auth.service';
 })
 export class LogoutComponent {
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, public dialogRef: MatDialogRef<LogoutComponent>, private router: Router) {}
 
-  logout(form: NgForm) {
+  logout() {
     // if loggedin, logout
-    this.authService.logout();
+    this.dialogRef.close();
+    this.authService.logout().subscribe(
+      () => this.router.navigate(["/"])
+    );
   }
 }
