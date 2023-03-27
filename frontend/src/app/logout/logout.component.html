@@ -1,4 +1,15 @@
 <form #myForm="ngForm" (ngSubmit)="logout(myForm)">
-    <p>Are you sure?</p>
-    <button type="submit">Logout</button>
-</form>
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          Log out ... are you sure?
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="button">
+          <button mat-raised-button color="primary" type="submit">I'm sure, Logout!</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </form>
+  
