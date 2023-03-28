@@ -435,3 +435,36 @@ func TestLogout(t *testing.T) {
 		t.Errorf("Session authenticated was not set to false: got %v want %v", authenticated, false)
 	}
 }
+
+//unit test for the search database function
+func TestSearchDatabase(t *testing.T) {
+	// Connect to an in-memory test database using GORM
+	db, err := gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})
+	if err != nil {
+		t.Fatalf("failed to connect to database: %v", err)
+	}
+
+	// Create some test data
+	user1 := User{Username: "foo", Subjects: ["math", "english"], Rating: 5}
+	user2 := User{Username: "bar", Subjects: ["math", "english"], Rating: 1}
+	db.Create(&user1)
+	db.Create(&user2)
+
+	// Define a mock request and response
+	req := httptest.NewRequest("GET", "/search?q=j", nil)
+	w := httptest.NewRecorder()
+
+	// Call the searchDatabase function with the mock request and response
+	searchDatabase(db)(w, req)
+
+	// Assert that the response contains the expected data
+	var users []User
+	err = json.Unmarshal(w.Body.Bytes(), &users)
+	if err != nil {
+		t.Fatalf("failed to unmarshal response: %v", err)
+	}
+	if len(users) != 2 {
+		t.Errorf("expected 2 users, got %d", len(users))
+	}
+}
+
