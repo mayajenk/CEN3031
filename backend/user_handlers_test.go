@@ -391,3 +391,47 @@ func TestLogin(t *testing.T) {
 		t.Errorf("Handler returned wrong body: got %v want %v", rr.Body.String(), expected)
 	}
 }
+
+func TestLogout(t *testing.T) {
+	// Set up testing environment
+	db := setupTestEnv()
+	sessionDB, err := gorm.Open(sqlite.Open("sessions.db"), &gorm.Config{})
+	if err != nil {
+		panic(err)
+	}
+	store := gormstore.New(sessionDB, []byte(os.Getenv("SESSION_KEY")))
+
+	r := mux.NewRouter()
+	r.HandleFunc("/api/logout", logout(store)).Methods("POST")
+
+	// Set up session
+	session, _ := store.New(r, &http.Request{})
+	session.Values["userID"] = 123
+	session.Values["authenticated"] = true
+
+	req, _ := http.NewRequest("POST", "/api/logout", nil)
+	req.Header.Set("Cookie", session.Name()+"="+session.ID)
+
+	rr := httptest.NewRecorder()
+	r.ServeHTTP(rr, req)
+
+	// Check status code
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("Handler returned wrong status code: got %v want %v", status, http.StatusOK)
+	}
+
+	// Check response body
+	expected := `{"message":"Successfully logged out.","status":200}`
+	if got := strings.TrimSpace(rr.Body.String()); got != expected {
+		t.Errorf("Handler returned wrong body: got %v want %v", rr.Body.String(), expected)
+	}
+
+	// Check session values
+	session, _ = store.Get(req, "session")
+	if userID := session.Values["userID"]; userID != nil {
+		t.Errorf("Session userID was not cleared: got %v want %v", userID, nil)
+	}
+	if authenticated := session.Values["authenticated"]; authenticated != false {
+		t.Errorf("Session authenticated was not set to false: got %v want %v", authenticated, false)
+	}
+}
