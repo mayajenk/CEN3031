@@ -297,7 +297,7 @@ func searchDatabase(db *gorm.DB) http.HandlerFunc {
 		query := r.URL.Query().Get("q")
 
 		var users []User
-		db.Where("username LIKE ? OR subject LIKE ?", "%"+query+"%", "%"+query+"%").Find(&users)
+		db.Where("username LIKE ? OR subject LIKE ? OR ratings LIKE ?", "%"+query+"%", "%"+query+"%", "%"+query+"%").Find(&users)
 
 		json.NewEncoder(w).Encode(users)
 	}
