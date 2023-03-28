@@ -9,6 +9,12 @@ import { CookieService } from 'ngx-cookie-service';
   styleUrls: ['./search.component.sass']
 })
 export class SearchComponent {
+  @Input() formData: {
+    search : string
+    } = {
+    search : ''
+  };
+  
   search() {
     // list available tutors based on search
   }
