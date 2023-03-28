@@ -31,6 +31,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import {MatToolbarModule} from '@angular/material/toolbar'; 
 import {MatDialogModule} from '@angular/material/dialog';
+import { MatSelectModule } from '@angular/material/select';
  
 
 @NgModule({
@@ -60,6 +61,7 @@ import {MatDialogModule} from '@angular/material/dialog';
     MatCardModule,
     MatToolbarModule,
     MatDialogModule,
+    MatSelectModule,
     FormsModule
   ],
   providers: [HttpClient, CookieService, RegisterService, AuthService, AuthGuard, {provide: LocationStrategy, useClass: PathLocationStrategy}],
