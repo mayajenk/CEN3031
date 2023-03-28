@@ -9,6 +9,15 @@
                  [(ngModel)]="formData.search">
         </mat-form-field>
       </div>
+      
+    <mat-form-field>
+      <mat-label>Select a subject</mat-label>
+      <mat-select>
+        <mat-option value="reading">Reading</mat-option>
+        <mat-option value="math">Math</mat-option>
+        <mat-option value="science">Science</mat-option>
+      </mat-select>
+    </mat-form-field>
 
       <div class="button">
         <button mat-raised-button color="primary" type="submit">Search!</button>
