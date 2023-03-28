@@ -16,8 +16,8 @@ import { AuthService } from './auth/auth.service'
 import { ProfileComponent } from './profile/profile.component';
 import { SearchComponent } from './search/search.component';
 import { LogoutComponent } from './logout/logout.component';
-import { SprofileComponent } from './sprofile/sprofile.component';
-import { TprofileComponent } from './tprofile/tprofile.component';
+import { SprofileComponent } from './Sprofile/sprofile.component';
+import { TprofileComponent } from './Tprofile/tprofile.component';
 import { AuthGuard } from './auth/auth.guard';
 
 import { MatButtonToggleModule } from '@angular/material/button-toggle';

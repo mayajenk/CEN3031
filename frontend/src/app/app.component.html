@@ -5,7 +5,7 @@
   <span class="spacer"></span>
   <a mat-button routerLink="/Tprofile" *ngIf="authService.getIsLoggedIn() && authService.getIsTutor()">Profile</a>
   <a mat-button routerLink="/Sprofile" *ngIf="authService.getIsLoggedIn() && !authService.getIsTutor()">Profile</a>
-  <a mat-button routerLink="/search" *ngIf="authService.getIsLoggedIn() && !authService.getIsTutoe">Search</a>
+  <a mat-button routerLink="/search" *ngIf="authService.getIsLoggedIn() && !authService.getIsTutor()">Search</a>
   <a mat-button routerLink="/login" *ngIf="!authService.getIsLoggedIn()">Login</a>
   <a mat-button routerLink="/register" *ngIf="!authService.getIsLoggedIn()">Register</a>
   <button mat-button (click)="openDialog()" *ngIf="authService.getIsLoggedIn()">Log out</button>
