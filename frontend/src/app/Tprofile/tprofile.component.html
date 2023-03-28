@@ -1,0 +1,48 @@
+<!-- only active when logged in -->
+
+<div class="container">
+    <h1 class="name">Welcome {{user.first_name}}!</h1>
+    <!-- <div class="rating"> -->
+      <h2 class="rating">Rating: {{user.rating}}</h2>
+      <span class="star">&#9733;</span>
+      <span class="star">&#9733;</span>
+      <span class="star">&#9733;</span>
+      <span class="star">&#9733;</span>
+      <span class="star">&#9733;</span>
+    <!-- </div> -->
+    <div>
+      <h2 class="info">Contact Me:</h2>
+        <p>Phone: {{user.phone}}</p>
+        <p>Email: {{user.email}}</p>
+      <button type="edit">Edit Contact Info</button>
+    </div>
+    <div>
+      <h2 class="courses">My Subjects:</h2>
+        <!-- only for visual at the moment -->
+        <mat-chip-listbox *ngFor="let subject of user.subjects" aria-label="subjects">
+          <mat-chip>
+            {{subject.name}}
+          </mat-chip>
+        </mat-chip-listbox>
+      <button type="addSubject">Add Subject</button>
+    </div>
+    <div>
+      <h2 class="connections">Current Connections: </h2>
+      
+      <!-- only for visual at the moment -->
+      <mat-list>
+        <mat-list-item>Student 1</mat-list-item>
+        <mat-divider></mat-divider>
+        <mat-list-item>Student 2</mat-list-item>
+        <mat-divider></mat-divider>
+        <mat-list-item>Student 3</mat-list-item>
+      </mat-list>
+      
+      <div>
+        <button type="addPerson">Add Tutor/Student</button>
+        <!-- only adds if both student and tutor have requested to add -->
+      </div>
+    </div>
+  </div>
+  
+  

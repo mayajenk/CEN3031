@@ -16,6 +16,8 @@ import { AuthService } from './auth/auth.service'
 import { ProfileComponent } from './profile/profile.component';
 import { SearchComponent } from './search/search.component';
 import { LogoutComponent } from './logout/logout.component';
+import { SprofileComponent } from './sprofile/sprofile.component';
+import { TprofileComponent } from './tprofile/tprofile.component';
 import { AuthGuard } from './auth/auth.guard';
 
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -28,7 +30,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import {MatToolbarModule} from '@angular/material/toolbar'; 
-import {MatDialogModule} from '@angular/material/dialog'; 
+import {MatDialogModule} from '@angular/material/dialog';
+ 
 
 @NgModule({
   declarations: [
@@ -37,7 +40,9 @@ import {MatDialogModule} from '@angular/material/dialog';
     RegisterComponent,
     ProfileComponent,
     SearchComponent,
-    LogoutComponent
+    LogoutComponent,
+    SprofileComponent,
+    TprofileComponent
   ],
   imports: [
     BrowserModule,
