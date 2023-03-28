@@ -10,6 +10,10 @@ export class AuthService {
   private isLoggedInSubject = new BehaviorSubject<boolean>(false);
   public isLoggedIn$ = this.isLoggedInSubject.asObservable();
 
+  private isTutor = new BehaviorSubject<boolean>(false);
+  public isTutor$ = this.isTutor.asObservable();
+
+
   constructor(private http: HttpClient, private cookieService: CookieService) {
     const isLoggedIn = this.cookieService.get('isLoggedIn');
     if (isLoggedIn === 'true') {
@@ -23,6 +27,7 @@ export class AuthService {
         if (response.status == 200) {
           this.setLoggedIn(true);
           this.cookieService.set('isLoggedIn', 'true');
+          // check if user is tutor and set value accordingly
         }
       })
     );
@@ -45,5 +50,13 @@ export class AuthService {
 
   getIsLoggedIn(): boolean {
     return this.isLoggedInSubject.value;
+  }
+
+  setTutor(value: boolean) {
+    this.isTutor.next(value);
+  }
+
+  getIsTutor(): boolean {
+    return this.isTutor.value;
   }
 }
