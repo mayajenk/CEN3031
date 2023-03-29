@@ -1,4 +1,8 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatListModule } from '@angular/material/list';
+import { ProfileService } from '../profile.service';
 
 import { ProfileComponent } from './profile.component';
 
@@ -8,7 +12,9 @@ describe('ProfileComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ProfileComponent ]
+      declarations: [ ProfileComponent ],
+      imports: [HttpClientTestingModule, MatChipsModule, MatListModule],
+      providers: [ProfileService]
     })
     .compileComponents();
 

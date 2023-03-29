@@ -1,4 +1,7 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { AuthService } from '../auth/auth.service';
 
 import { LogoutComponent } from './logout.component';
 
@@ -8,7 +11,9 @@ describe('LogoutComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LogoutComponent ]
+      declarations: [ LogoutComponent ],
+      imports:[MatDialogModule, HttpClientTestingModule],
+      providers:[AuthService, {provide : MatDialogRef, useValue : {}}]
     })
     .compileComponents();
 

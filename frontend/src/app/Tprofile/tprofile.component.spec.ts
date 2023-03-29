@@ -1,4 +1,6 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatChipsModule } from '@angular/material/chips';
 
 import { TprofileComponent } from './tprofile.component';
 
@@ -8,7 +10,8 @@ describe('TprofileComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TprofileComponent ]
+      declarations: [ TprofileComponent ],
+      imports: [HttpClientTestingModule, MatChipsModule],
     })
     .compileComponents();
 
