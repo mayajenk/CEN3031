@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
-import { RegisterService } from '../register.service';
 import { NgForm } from '@angular/forms';
+import { AuthService } from '../auth/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -19,7 +19,7 @@ export class RegisterComponent {
     role: ''
   };
   
-  constructor(private registerService : RegisterService) {}
+  constructor(private authService : AuthService, private router : Router) {}
 
   register(form: NgForm) {
     // check if username and password entered are valid
@@ -28,9 +28,10 @@ export class RegisterComponent {
     // if user name is already taken -> display message
     // if successful -> display message
     let is_tutor : boolean = this.formData.role == "tutor" ? true : false;
-    this.registerService.register(this.formData.username, this.formData.password, is_tutor)
+    this.authService.registerAndLogin(this.formData.username, this.formData.password, is_tutor)
       .subscribe(response => {
         console.log(response);
+        this.router.navigate(["/"]);
       }, error => {
         console.error(error);
       });

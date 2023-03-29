@@ -38,17 +38,3 @@ func httpHandler(store *gormstore.Store, db *gorm.DB) http.Handler {
 			handlers.MaxAge(86400),
 		)(router))
 }
-
-func authMiddleWare(store *gormstore.Store) mux.MiddlewareFunc {
-	return func(next http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			session, err := store.Get(r, "session-name")
-			if err != nil || session.Values["authenticated"] != true {
-				if r.URL.Path == "/profile" {
-					http.Redirect(w, r, "/", http.StatusFound)
-				}
-			}
-			next.ServeHTTP(w, r)
-		})
-	}
-}

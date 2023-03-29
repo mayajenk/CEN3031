@@ -10,8 +10,8 @@ export class AuthService {
   private isLoggedInSubject = new BehaviorSubject<boolean>(false);
   public isLoggedIn$ = this.isLoggedInSubject.asObservable();
 
-  private isTutor = new BehaviorSubject<boolean>(false);
-  public isTutor$ = this.isTutor.asObservable();
+  private isTutorSubject = new BehaviorSubject<boolean>(false);
+  public isTutor$ = this.isTutorSubject.asObservable();
 
 
   constructor(private http: HttpClient, private cookieService: CookieService) {
@@ -19,18 +19,33 @@ export class AuthService {
     if (isLoggedIn === 'true') {
       this.isLoggedInSubject.next(true);
     }
-   }
+  }
 
-  login(username: string, password: string): Observable<HttpResponse<any>> {
+  register(username: string, password: string, is_tutor: boolean): Observable<HttpResponse<any>> {
+    return this.http.post<any>("/api/users", {username, password, is_tutor});
+  }
+
+
+  login(username: string, password: string): Observable<any> {
     return this.http.post<any>("/api/login", {username, password}).pipe(
       tap(response => {
         if (response.status == 200) {
           this.setLoggedIn(true);
           this.cookieService.set('isLoggedIn', 'true');
           // check if user is tutor and set value accordingly
+          this.isTutorSubject.next(response.is_tutor);
         }
+        return response;
       })
     );
+  }
+
+  registerAndLogin(username: string, password: string, is_tutor: boolean): Observable<HttpResponse<any>> {
+    return this.register(username, password, is_tutor).pipe(
+      tap(() => {
+        return this.login(username, password).subscribe();
+      })
+    )
   }
 
   logout(): Observable<HttpResponse<any>> {
@@ -53,10 +68,10 @@ export class AuthService {
   }
 
   setTutor(value: boolean) {
-    this.isTutor.next(value);
+    this.isTutorSubject.next(value);
   }
 
   getIsTutor(): boolean {
-    return this.isTutor.value;
+    return this.isTutorSubject.value;
   }
 }
