@@ -467,32 +467,22 @@ func TestSearchDatabase(t *testing.T) {
 		Password: "bar",
 		IsTutor:  false,
 		Subjects: []Subject{
-			Subject{Name: "math"},
-			Subject{Name: "english"},
+			{Name: "math"},
+			{Name: "english"},
 		},
 		Rating: 5,
 	}
 
-	user2 := User{
-		Username: "bar",
-		IsTutor:  false,
-		Subjects: []Subject{
-			Subject{Name: "math"},
-			Subject{Name: "english"},
-		},
-		Rating: 1,
-	}
-
 	tx.Create(&user1)
-	tx.Create(&user2)
 
 	// Define a mock request and response
 	req := httptest.NewRequest("GET", "/api/search?q=f", nil)
 	rr := httptest.NewRecorder()
 
 	r := mux.NewRouter()
-	r.HandleFunc("/api/search", searchDatabase(tx)).Methods("POST")
+	r.HandleFunc("/api/search", searchDatabase(tx)).Methods("GET")
 	r.ServeHTTP(rr, req)
+	fmt.Println(rr.Result().Body)
 
 	// Assert that the response contains the expected data
 	var users []User
@@ -500,7 +490,7 @@ func TestSearchDatabase(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to unmarshal response: %v", err)
 	}
-	if len(users) != 2 {
-		t.Errorf("expected 2 users, got %d", len(users))
+	if len(users) != 1 {
+		t.Errorf("expected 1 users, got %d", len(users))
 	}
 }

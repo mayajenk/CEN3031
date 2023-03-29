@@ -285,10 +285,17 @@ func login(store *gormstore.Store, db *gorm.DB) http.HandlerFunc {
 // search function if the user wants to look for a particular tutor or a subject
 func searchDatabase(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
 		query := r.URL.Query().Get("q")
+		subject := r.URL.Query().Get("subject")
 
 		var users []User
-		db.Where("username LIKE ? OR subject LIKE ?", "%"+query+"%", "%"+query+"%").Find(&users)
+
+		if subject == "" {
+			db.Where("username LIKE ?", "%"+query+"%").Find(&users)
+		} else {
+			db.Where("username LIKE ? AND subject LIKE ?", "%"+query+"%", "%"+subject+"%")
+		}
 
 		json.NewEncoder(w).Encode(users)
 	}
