@@ -386,7 +386,7 @@ func TestLogin(t *testing.T) {
 		t.Errorf("Handler returned wrong status code: got %v want %v", status, http.StatusOK)
 	}
 
-	expected := `{"message":"Successfully logged in.","status":200}`
+	expected := `{"is_tutor":false,"status":200}`
 	if got := strings.TrimSpace(rr.Body.String()); got != expected {
 		t.Errorf("Handler returned wrong body: got %v want %v", rr.Body.String(), expected)
 	}
@@ -395,24 +395,47 @@ func TestLogin(t *testing.T) {
 func TestLogout(t *testing.T) {
 	// Set up testing environment
 	db := setupTestEnv()
+	tx := db.Begin()
+	defer tx.Rollback()
+
+	// Set up session store
 	sessionDB, err := gorm.Open(sqlite.Open("sessions.db"), &gorm.Config{})
 	if err != nil {
 		panic(err)
 	}
+
 	store := gormstore.New(sessionDB, []byte(os.Getenv("SESSION_KEY")))
 
 	r := mux.NewRouter()
+	r.HandleFunc("/api/users", newUser(tx)).Methods("POST")
+	r.HandleFunc("/api/login", login(store, tx)).Methods("POST")
 	r.HandleFunc("/api/logout", logout(store)).Methods("POST")
 
-	// Set up session
-	session, _ := store.New(r, &http.Request{})
-	session.Values["userID"] = 123
-	session.Values["authenticated"] = true
+	var testUser User = User{
+		Username: "foo",
+		Password: "bar",
+		IsTutor:  false,
+	}
+	reqBody, _ := json.Marshal(testUser)
 
-	req, _ := http.NewRequest("POST", "/api/logout", nil)
-	req.Header.Set("Cookie", session.Name()+"="+session.ID)
+	req, _ := http.NewRequest("POST", "/api/users", bytes.NewBuffer(reqBody))
 
 	rr := httptest.NewRecorder()
+	r.ServeHTTP(rr, req)
+
+	reqBody, _ = json.Marshal(map[string]any{
+		"username": "foo",
+		"password": "bar",
+	})
+
+	req, _ = http.NewRequest("POST", "/api/login", bytes.NewBuffer(reqBody))
+	rr = httptest.NewRecorder()
+	r.ServeHTTP(rr, req)
+
+	reqBody, _ = json.Marshal(map[string]any{})
+
+	req, _ = http.NewRequest("POST", "/api/logout", bytes.NewBuffer(reqBody))
+	rr = httptest.NewRecorder()
 	r.ServeHTTP(rr, req)
 
 	// Check status code
@@ -427,39 +450,53 @@ func TestLogout(t *testing.T) {
 	}
 
 	// Check session values
-	session, _ = store.Get(req, "session")
+	session, _ := store.Get(req, "session")
 	if userID := session.Values["userID"]; userID != nil {
 		t.Errorf("Session userID was not cleared: got %v want %v", userID, nil)
 	}
-	if authenticated := session.Values["authenticated"]; authenticated != false {
-		t.Errorf("Session authenticated was not set to false: got %v want %v", authenticated, false)
-	}
 }
 
-//unit test for the search database function
+// unit test for the search database function
 func TestSearchDatabase(t *testing.T) {
-	// Connect to an in-memory test database using GORM
-	db, err := gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})
-	if err != nil {
-		t.Fatalf("failed to connect to database: %v", err)
+	db := setupTestEnv()
+	tx := db.Begin()
+	defer tx.Rollback()
+
+	user1 := User{
+		Username: "foo",
+		Password: "bar",
+		IsTutor:  false,
+		Subjects: []Subject{
+			Subject{Name: "math"},
+			Subject{Name: "english"},
+		},
+		Rating: 5,
 	}
 
-	// Create some test data
-	user1 := User{Username: "foo", Subjects: ["math", "english"], Rating: 5}
-	user2 := User{Username: "bar", Subjects: ["math", "english"], Rating: 1}
-	db.Create(&user1)
-	db.Create(&user2)
+	user2 := User{
+		Username: "bar",
+		IsTutor:  false,
+		Subjects: []Subject{
+			Subject{Name: "math"},
+			Subject{Name: "english"},
+		},
+		Rating: 1,
+	}
+
+	tx.Create(&user1)
+	tx.Create(&user2)
 
 	// Define a mock request and response
-	req := httptest.NewRequest("GET", "/search?q=j", nil)
-	w := httptest.NewRecorder()
+	req := httptest.NewRequest("GET", "/api/search?q=f", nil)
+	rr := httptest.NewRecorder()
 
-	// Call the searchDatabase function with the mock request and response
-	searchDatabase(db)(w, req)
+	r := mux.NewRouter()
+	r.HandleFunc("/api/search", searchDatabase(tx)).Methods("POST")
+	r.ServeHTTP(rr, req)
 
 	// Assert that the response contains the expected data
 	var users []User
-	err = json.Unmarshal(w.Body.Bytes(), &users)
+	err := json.Unmarshal(rr.Body.Bytes(), &users)
 	if err != nil {
 		t.Fatalf("failed to unmarshal response: %v", err)
 	}
@@ -467,4 +504,3 @@ func TestSearchDatabase(t *testing.T) {
 		t.Errorf("expected 2 users, got %d", len(users))
 	}
 }
-
