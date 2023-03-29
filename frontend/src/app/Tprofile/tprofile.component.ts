@@ -9,14 +9,14 @@ import { ProfileService } from '../profile.service';
 })
 export class TprofileComponent {
   user: User = {
-    id: 1,
-    username: "foo",
-    first_name: "Foo",
-    last_name: "Bar",
+    id: 2,
+    username: "hello",
+    first_name: "hello",
+    last_name: "world",
     is_tutor: true,
     rating: 10.0,
     subjects: [{name: "Reading"}, {name: "Math"}],
-    email: "foo@bar.com",
+    email: "hello@world.com",
     phone: "000-000-0000",
     about: "Foo bar, foo bar. Foo foo foo, foo bar bar.",
     grade: 0
