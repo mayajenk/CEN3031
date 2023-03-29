@@ -12,11 +12,12 @@ Sprint 3 video link:
   
 ### Backend:
 - search function (subjects, ratings, name)
-  -sort by highest rating, etc. 
--authentication feature (tutors can't access student websites and vice versa)
--logout feature
--add name attribute during registration
--unit tests
+- sort by highest rating, etc.
+- authentication feature (tutors can't access student websites and vice versa)
+- logout feature
+- add name attribute during registration
+- unit tests
+
  
 ### Overall Goals: 
 - Styling frontend and implementing angular material 
