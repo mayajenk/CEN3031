@@ -20,3 +20,4 @@ describe('search.component.cy.ts', () => {
     cy.get('button[type=submit]').should('exist').contains('Search!');
 
   });
+});
