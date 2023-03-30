@@ -4,35 +4,43 @@ Sprint 3 video link: [https://drive.google.com/file/d/1j7ntU4_jUTQY_42-pF5TltjOt
 
 ## Goals
 ### Frontend:
-- reorganize where each page is located
-  - take out login and create account from navigation bar after the user is logged in
-- create a home page and make one of the buttons in the nav bar link to it
-- cypress unit tests
-- create the separate student and tutor pages
+- Reorganize where each page is located
+  - Take out login and create account from navigation bar after the user is logged in
+- Create a home page and make one of the buttons in the nav bar link to it
+- Add Cypress and unit tests
+- Create the separate student and tutor pages
   
 ### Backend:
-- search function (subjects, ratings, name)
-- sort by highest rating, etc.
-- authentication feature (tutors can't access student websites and vice versa)
-- logout feature
-- add name attribute during registration
-- unit tests
+- Create a search function (subjects, ratings, name)
+  - Sort by highest rating, etc.
+- Add authentication feature (tutors can't access student websites and vice versa)
+- Add logout feature
+- Create unit tests for each new function
 
  
 ### Overall Goals: 
-- Styling frontend and implementing angular material 
+- Styling frontend and implementing Angular Material 
 - Set up profiles for tutors and students
 - Add logout feature
 - Create different views for students and teachers
 - Begin implementing search function
-- registration: add spot for username to put their whole name
+- Registration: Add spot for username to put their whole name
 - Unit tests for new functionality
 
 
 ## Work Completed
-  - Unit tests for both frontend and backend
-  - Frontend: Implemented angular material to improve the design of the website and added a logout button
-  - Backend: Created functionality for a user logging out and a search function where the user can search for a particular rating, subject, and person.         Unit tests for new functionality were implemented as well. 
+- Unit tests were completed for both frontend and backend
+- **Frontend:** 
+  - Implemented Angular Material to improve the design of the website.
+  - Added a logout button.
+  - Added authentication, preventing logged out users from accessing the `/profile` and `/search` routes.
+  - Implemented different Tutor and Student views of the website.
+  - Changed profile view so that it displayed the corresponding user's information when logged in.
+- **Backend:**
+  - Created functionality for a user logging out
+  - Created a search function where the user can search for a particular subject and user.
+  - Added a function that gets the user based on the cookies in the request.
+  - Revised the API response message so that the browser could properly render it.
 
 ## Unit Tests
 ### Backend
