@@ -42,7 +42,17 @@ Tests can be found in `backend/user_handlers_test.go`.
 
 
 ### Frontend
-- Test for _ can be found using Cypress in `frontend/src/app/_/_.component.cy.ts`
+- Cypress tests
+  - Login: `frontend/src/app/login/login.component.cy.ts`
+    - Tests that you can pass in input to username/password.  
+  - Logout: `frontend/src/app/logout/logout.component.cy.ts`
+    - Tests that the logout component mounts properly.
+  - `frontend/src/app/register/register.component.cy.ts`
+    - Tests that you can pass in input to username/password/is_tutor. 
+  - `frontend/src/app/search/search.component.cy.ts`
+    - Tests that the search component renders properly.
+- Unit tests
+  - A unit test for each component and service can be found in its corresponding `.spec` file. Run `ng test` in the `frontend` folder to see the results. 
 
 
 ## Updated Backend Documentation
