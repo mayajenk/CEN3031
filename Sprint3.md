@@ -37,7 +37,7 @@ Sprint 3 video link: [https://drive.google.com/file/d/1j7ntU4_jUTQY_42-pF5TltjOt
 ## Unit Tests
 ### Backend
 Tests can be found in `backend/user_handlers_test.go`.
-- Test for logging out: `TestLogout(t *testing.T)`
+- Test for logging out: `func TestLogout(t *testing.T)`
 - Test for searching the database: `func TestSearchDatabase(t *testing.T)`
 
 
