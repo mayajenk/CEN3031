@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { User } from '../user';
+import { TprofileComponent } from '../Tprofile/tprofile.component';
+import { SprofileComponent } from '../Sprofile/sprofile.component';
 import { ProfileService } from '../profile.service';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -9,25 +12,5 @@ import { ProfileService } from '../profile.service';
   providers: [ProfileService]
 })
 export class ProfileComponent {
-  // Dummy data if request does not go through
-  user: User = {
-    id: 0,
-    username: "",
-    first_name: "",
-    last_name: "",
-    is_tutor: true,
-    rating: 0,
-    subjects: [{name: ""}],
-    email: "",
-    phone: "",
-    about: "",
-    grade: 0
-  }
-
-  constructor(private profileService: ProfileService) { 
-  }
-    
-  ngOnInit(): void {
-    this.profileService.getProfile().subscribe(user => this.user = user);
-  }
+  constructor(public authService: AuthService){}
 }

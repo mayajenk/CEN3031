@@ -2,6 +2,7 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
+import { User } from '../user';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,22 @@ export class AuthService {
 
   private isTutorSubject = new BehaviorSubject<boolean>(false);
   public isTutor$ = this.isTutorSubject.asObservable();
+
+  private userSubject = new BehaviorSubject<User>({
+    id: 0,
+    username: "",
+    first_name: "",
+    last_name: "",
+    is_tutor: false,
+    rating: 0,
+    subjects: [],
+    email: "",
+    phone: "",
+    about: "",
+    grade: 0,
+    });
+
+    private user$ = this.userSubject.asObservable();
 
 
   constructor(private http: HttpClient, private cookieService: CookieService) {
@@ -33,7 +50,13 @@ export class AuthService {
           this.setLoggedIn(true);
           this.cookieService.set('isLoggedIn', 'true');
           // check if user is tutor and set value accordingly
-          this.isTutorSubject.next(response.is_tutor);
+          this.userSubject.next(response.user);
+          if (response.user.is_tutor) {
+            this.setTutor(true);
+          }
+          else {
+            this.setTutor(false);
+          }
         }
         return response;
       })
@@ -73,5 +96,9 @@ export class AuthService {
 
   getIsTutor(): boolean {
     return this.isTutorSubject.value;
+  }
+
+  getUser(): User {
+    return this.userSubject.value;
   }
 }

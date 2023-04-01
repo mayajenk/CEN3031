@@ -3,8 +3,7 @@
     <a id="title" mat-button routerLink="/">Find a Tutor</a>
   </span>
   <span class="spacer"></span>
-  <a mat-button routerLink="/Tprofile" *ngIf="authService.getIsLoggedIn() && authService.getIsTutor()">Profile</a>
-  <a mat-button routerLink="/Sprofile" *ngIf="authService.getIsLoggedIn() && !authService.getIsTutor()">Profile</a>
+  <a mat-button routerLink="/profile" *ngIf="authService.getIsLoggedIn()">Profile</a>
   <a mat-button routerLink="/search" *ngIf="authService.getIsLoggedIn() && !authService.getIsTutor()">Search</a>
   <a mat-button routerLink="/login" *ngIf="!authService.getIsLoggedIn()">Login</a>
   <a mat-button routerLink="/register" *ngIf="!authService.getIsLoggedIn()">Register</a>

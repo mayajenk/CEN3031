@@ -14,8 +14,6 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
-  { path: 'Tprofile', component: TprofileComponent, canActivate: [AuthGuard] },
-  { path: 'Sprofile', component: SprofileComponent, canActivate: [AuthGuard] },
   { path: 'search', component: SearchComponent, canActivate: [AuthGuard] },
   { path: 'logout', component: LogoutComponent },
 ];

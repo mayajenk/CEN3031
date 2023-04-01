@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { User } from '../user';
-import { ProfileService } from '../profile.service';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-tprofile',
@@ -8,22 +8,8 @@ import { ProfileService } from '../profile.service';
   styleUrls: ['./tprofile.component.sass']
 })
 export class TprofileComponent {
-  user: User = {
-    id: 2,
-    username: "hello",
-    first_name: "hello",
-    last_name: "world",
-    is_tutor: true,
-    rating: 10.0,
-    subjects: [{name: "Reading"}, {name: "Math"}],
-    email: "hello@world.com",
-    phone: "000-000-0000",
-    about: "Foo bar, foo bar. Foo foo foo, foo bar bar.",
-    grade: 0
-  }
+  user: User = this.authService.getUser();
 
-  constructor(private profileService: ProfileService) { 
-    this.profileService.getProfile()
-      .subscribe(user => this.user = user);
+  constructor(private authService: AuthService) { 
   }
 }

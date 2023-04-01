@@ -274,7 +274,7 @@ func login(store *gormstore.Store, db *gorm.DB) http.HandlerFunc {
 			return
 		}
 
-		res["is_tutor"] = user.IsTutor
+		res["user"] = user
 		res["status"] = http.StatusOK
 
 		json.NewEncoder(w).Encode(res)
