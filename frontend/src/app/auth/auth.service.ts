@@ -33,8 +33,15 @@ export class AuthService {
 
   constructor(private http: HttpClient, private cookieService: CookieService) {
     const isLoggedIn = this.cookieService.get('isLoggedIn');
+    const isTutor = this.cookieService.get('isTutor');
     if (isLoggedIn === 'true') {
       this.isLoggedInSubject.next(true);
+    }
+    if (isTutor === 'true') {
+      this.isTutorSubject.next(true);
+    }
+    else {
+      this.isTutorSubject.next(false);
     }
   }
 
@@ -53,9 +60,11 @@ export class AuthService {
           this.userSubject.next(response.user);
           if (response.user.is_tutor) {
             this.setTutor(true);
+            this.cookieService.set('isTutor', 'true');
           }
           else {
             this.setTutor(false);
+            this.cookieService.set('isTutor', 'false');
           }
         }
         return response;

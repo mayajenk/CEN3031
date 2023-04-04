@@ -14,6 +14,7 @@
   - Add a way to connect students and tutors
   - Add prices/rates to tutors
   - Update search to sort by ratings/prices
+  - Make mock database
 - Both:
   -  Add review system
   -  If time allows, add profile pictures

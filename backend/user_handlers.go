@@ -14,18 +14,29 @@ import (
 )
 
 type User struct {
+	gorm.Model  `json:"-"`
+	Username    string       `json:"username"`
+	Password    string       `json:"password"`
+	FirstName   string       `json:"first_name"`
+	LastName    string       `json:"last_name"`
+	IsTutor     bool         `json:"is_tutor"`
+	Rating      float64      `json:"rating"`
+	Subjects    []Subject    `gorm:"many2many:user_subjects" json:"subjects"`
+	Email       string       `json:"email"`
+	Phone       string       `json:"phone"`
+	About       string       `json:"about"`
+	Grade       int32        `json:"grade"`
+	Connections []Connection `gorm:"many2many:connections_users" json:"connections"`
+	Price       string       `json:"price"`
+}
+
+type Connection struct {
 	gorm.Model `json:"-"`
-	Username   string    `json:"username"`
-	Password   string    `json:"password"`
-	FirstName  string    `json:"first_name"`
-	LastName   string    `json:"last_name"`
-	IsTutor    bool      `json:"is_tutor"`
-	Rating     float64   `json:"rating"`
-	Subjects   []Subject `gorm:"many2many:user_subjects" json:"subjects"`
-	Email      string    `json:"email"`
-	Phone      string    `json:"phone"`
-	About      string    `json:"about"`
-	Grade      int32     `json:"grade"`
+	User1ID    uint `gorm:"index" json:"user_1_id"`
+	User1      User `json:"-"`
+	User2ID    uint `gorm:"index" json:"user_2_id"`
+	User2      User `json:"-"`
+	Connected  bool `gorm:"not null;default:false" json:"connected"`
 }
 
 type TutorView struct {
@@ -39,6 +50,7 @@ type TutorView struct {
 	Email     string    `json:"email"`
 	Phone     string    `json:"phone"`
 	About     string    `json:"about"`
+	Price     string    `json:"price"`
 }
 
 type StudentView struct {
@@ -332,5 +344,45 @@ func logout(store *gormstore.Store) http.HandlerFunc {
 		res["status"] = http.StatusOK
 		json.NewEncoder(w).Encode(res)
 
+	}
+}
+
+func addConnection(db *gorm.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// Parse the user IDs from the request body
+		var params struct {
+			User1ID uint `json:"user_1"`
+			User2ID uint `json:"user_2"`
+		}
+		err := json.NewDecoder(r.Body).Decode(&params)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		// Create a new connection object
+		var user1 User
+		var user2 User
+		db.First(&user1, params.User1ID)
+		db.First(&user2, params.User1ID)
+
+		connection := Connection{
+			User1ID:   user1.ID,
+			User1:     user1,
+			User2ID:   user2.ID,
+			User2:     user2,
+			Connected: true,
+		}
+
+		// Save the connection to the database
+		result := db.Create(&connection)
+		if result.Error != nil {
+			http.Error(w, result.Error.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		// Return the new connection object as JSON
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(connection)
 	}
 }
