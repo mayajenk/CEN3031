@@ -1,0 +1,23 @@
+<!-- only active when logged in -->
+
+<div class="container">
+    <!-- display tutor's username -->
+    
+    <!-- <div class="rating"> -->
+      <h2 class="rating">Rating: {{user.rating}} %</h2>
+      <button mat-raised-button (click)="rate()" color="primary">Rate Me</button>
+    <!-- </div> -->
+    <div>
+      <h2>Contact Me:</h2>
+      <p class="phone">Phone Number: </p>
+      <p class="email">Email: </p>
+      <p class="other">Other: </p>
+    </div>
+    <div>
+      <h2 class="courses">My Subjects:</h2>
+      <mat-chip-listbox aria-label="subjects">
+        <!-- make matt chips for each subject from back end -->
+        <mat-chip>EX 1</mat-chip>
+      </mat-chip-listbox>
+    </div>
+  </div>
