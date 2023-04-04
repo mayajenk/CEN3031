@@ -26,6 +26,7 @@ type User struct {
 	Phone      string    `json:"phone"`
 	About      string    `json:"about"`
 	Grade      int32     `json:"grade"`
+	Price      string    `json:"price"`
 }
 
 type TutorView struct {
@@ -39,6 +40,7 @@ type TutorView struct {
 	Email     string    `json:"email"`
 	Phone     string    `json:"phone"`
 	About     string    `json:"about"`
+	Price     string    `json:"price"`
 }
 
 type StudentView struct {
