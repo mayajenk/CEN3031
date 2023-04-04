@@ -12,13 +12,15 @@
     <!-- </div> -->
     <div>
       <h2>Contact Me:</h2>
-      <p class="info"></p>
-      <button type="edit">Edit Contact Info</button>
+      <p class="phone">Phone Number: </p>
+      <p class="email">Email: </p>
+      <p class="other">Other: </p>
+      <button mat-button (click)="openDialog()">Edit Contact Info</button>
     </div>
     <div>
       <h2 class="courses">My Subjects:</h2>
       <mat-form-field class="subjects" appearance="fill">
-        <mat-label>Favorite Subjects</mat-label>
+        <mat-label>Subjects</mat-label>
         <mat-chip-grid #chipGrid aria-label="Enter subjects...">
           <mat-chip-row *ngFor="let subject of subjects"
                         (removed)="remove(subject)"
@@ -37,9 +39,7 @@
                  (matChipInputTokenEnd)="add($event)"/>
         </mat-chip-grid>
       </mat-form-field>  
-      
-      <!-- only for visual at the moment -->
-        <!-- <mat-chip-listbox *ngFor="let subject of user.subjects" aria-label="subjects">
+          <!-- <mat-chip-listbox *ngFor="let subject of user.subjects" aria-label="subjects">
           <mat-chip>
             {{subject.name}}
           </mat-chip>

@@ -1,8 +1,12 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { User } from '../user';
 import { AuthService } from '../auth/auth.service';
 import { MatChipEditedEvent, MatChipInputEvent } from '@angular/material/chips';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import { MatLabel } from '@angular/material/form-field';
+import { MatFormField } from '@angular/material/form-field';
+import { DialogComponent } from '../dialog/dialog.component';
 
 export interface Subject {
   name: string;
@@ -16,7 +20,7 @@ export interface Subject {
 export class TprofileComponent {
   user: User = this.authService.getUser();
 
-  constructor(private authService: AuthService) { 
+  constructor(private authService: AuthService, public dialog: MatDialog) { 
   }
   addOnBlur = true;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
@@ -56,5 +60,9 @@ export class TprofileComponent {
     if (index >= 0) {
       this.subjects[index].name = value;
     }
+  }
+
+  openDialog() {
+    this.dialog.open(DialogComponent);
   }
 }

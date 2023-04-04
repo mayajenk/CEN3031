@@ -31,6 +31,9 @@ import { MatCardModule } from '@angular/material/card';
 import {MatToolbarModule} from '@angular/material/toolbar'; 
 import {MatDialogModule} from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
+import { MatLabel } from '@angular/material/form-field';
+import { MatFormField } from '@angular/material/form-field';
+import { DialogComponent } from './dialog/dialog.component';
  
 
 @NgModule({
@@ -42,7 +45,8 @@ import { MatSelectModule } from '@angular/material/select';
     SearchComponent,
     LogoutComponent,
     SprofileComponent,
-    TprofileComponent
+    TprofileComponent,
+    DialogComponent
   ],
   imports: [
     BrowserModule,
