@@ -17,3 +17,4 @@
 - Both:
   -  Add review system
   -  If time allows, add profile pictures
+  -  Fix bugs
