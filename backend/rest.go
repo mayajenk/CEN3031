@@ -21,6 +21,7 @@ func httpHandler(store *gormstore.Store, db *gorm.DB) http.Handler {
 	router.HandleFunc("/api/login", login(store, db)).Methods("POST")
 	router.HandleFunc("/api/search", searchDatabase(db)).Methods("GET")
 	router.HandleFunc("/api/logout", logout(store)).Methods("POST")
+	router.HandleFunc("/api/connection", addConnection(db)).Methods("POST")
 
 	router.PathPrefix("/").Handler(AngularHandler).Methods("GET")
 
