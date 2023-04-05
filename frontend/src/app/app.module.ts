@@ -35,6 +35,7 @@ import { HomeComponent } from './home/home.component';
 import { MatLabel } from '@angular/material/form-field';
 import { MatFormField } from '@angular/material/form-field';
 import { DialogComponent } from './dialog/dialog.component';
+import { SearchProfileComponent } from './search-profile/search-profile.component';
  
 
 @NgModule({
@@ -46,7 +47,9 @@ import { DialogComponent } from './dialog/dialog.component';
     SearchComponent,
     LogoutComponent,
     SprofileComponent,
-    TprofileComponent
+    TprofileComponent,
+    DialogComponent,
+    SearchProfileComponent
   ],
   imports: [
     BrowserModule,
