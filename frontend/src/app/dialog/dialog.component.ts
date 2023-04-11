@@ -13,5 +13,7 @@ import { MatFormField } from '@angular/material/form-field';
   styleUrls: ['./dialog.component.sass']
 })
 export class DialogComponent {
-
+  saveContact() {
+    
+  }
 }

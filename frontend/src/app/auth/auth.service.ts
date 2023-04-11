@@ -24,6 +24,7 @@ export class AuthService {
     subjects: [],
     email: "",
     phone: "",
+    contact: "",
     about: "",
     grade: 0,
     });
