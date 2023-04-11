@@ -38,9 +38,11 @@
                  [matChipInputAddOnBlur]="addOnBlur"
                  (matChipInputTokenEnd)="add($event)"/>
         </mat-chip-grid>
-      </mat-form-field>  
+      </mat-form-field>
+      <div>
       <button mat-raised-button color="primary" type="submit">Save Subjects</button>
-          <!-- <mat-chip-listbox *ngFor="let subject of user.subjects" aria-label="subjects">
+      </div> 
+      <!-- <mat-chip-listbox *ngFor="let subject of user.subjects" aria-label="subjects">
           <mat-chip>
             {{subject.name}}
           </mat-chip>
