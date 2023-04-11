@@ -23,6 +23,8 @@ func httpHandler(store *gormstore.Store, db *gorm.DB) http.Handler {
 	router.HandleFunc("/api/logout", logout(store)).Methods("POST")
 	router.HandleFunc("/api/connection", addConnection(db)).Methods("POST")
 	router.HandleFunc("/api/connection", deleteConnection(db)).Methods("DELETE")
+	router.HandleFunc("/api/review", addReview(db)).Methods("POST")
+	router.HandleFunc("/api/review/{id}", deleteReview(db)).Methods("DELETE")
 
 	router.PathPrefix("/").Handler(AngularHandler).Methods("GET")
 

@@ -14,7 +14,7 @@ import (
 )
 
 type User struct {
-	gorm.Model  `json:"-"`
+	gorm.Model
 	Username    string    `json:"username"`
 	Password    string    `json:"password"`
 	FirstName   string    `json:"first_name"`
@@ -32,30 +32,34 @@ type User struct {
 }
 
 type TutorView struct {
-	ID        int32     `json:"id"`
-	Username  string    `json:"username"`
-	FirstName string    `json:"first_name"`
-	LastName  string    `json:"last_name"`
-	IsTutor   bool      `json:"is_tutor"`
-	Rating    float64   `json:"rating"`
-	Subjects  []Subject `json:"subjects"`
-	Email     string    `json:"email"`
-	Phone     string    `json:"phone"`
-	About     string    `json:"about"`
-	Price     string    `json:"price"`
+	ID          int32          `json:"id"`
+	Username    string         `json:"username"`
+	FirstName   string         `json:"first_name"`
+	LastName    string         `json:"last_name"`
+	IsTutor     bool           `json:"is_tutor"`
+	Rating      float64        `json:"rating"`
+	Subjects    []Subject      `json:"subjects"`
+	Email       string         `json:"email"`
+	Phone       string         `json:"phone"`
+	About       string         `json:"about"`
+	Price       string         `json:"price"`
+	Connections []*StudentView `json:"connections"`
+	Reviews     []Review       `json:"reviews"`
 }
 
 type StudentView struct {
-	ID        int32   `json:"id"`
-	Username  string  `json:"username"`
-	FirstName string  `json:"first_name"`
-	LastName  string  `json:"last_name"`
-	IsTutor   bool    `json:"is_tutor"`
-	Rating    float64 `json:"rating"`
-	Email     string  `json:"email"`
-	Phone     string  `json:"phone"`
-	About     string  `json:"about"`
-	Grade     int32   `json:"grade"`
+	ID          int32        `json:"id"`
+	Username    string       `json:"username"`
+	FirstName   string       `json:"first_name"`
+	LastName    string       `json:"last_name"`
+	IsTutor     bool         `json:"is_tutor"`
+	Rating      float64      `json:"rating"`
+	Email       string       `json:"email"`
+	Phone       string       `json:"phone"`
+	About       string       `json:"about"`
+	Grade       int32        `json:"grade"`
+	Connections []*TutorView `json:"connections"`
+	Reviews     []Review     `json:"reviews"`
 }
 
 type Subject struct {
@@ -64,10 +68,11 @@ type Subject struct {
 }
 
 type Review struct {
-	gorm.Model `json:"-"`
-	ReviewerID uint   `gorm:"index" json:"reviewer_id"`
-	RevieweeID uint   `gorm:"index" json:"reviewee_id"`
-	ReviewText string `json:"review"`
+	gorm.Model
+	ReviewerID uint    `gorm:"index" json:"reviewer_id"`
+	RevieweeID uint    `gorm:"index" json:"reviewee_id"`
+	ReviewText string  `json:"review_text"`
+	Rating     float64 `json:"rating"`
 }
 
 func sendError(message string, status int, w http.ResponseWriter) {
@@ -82,7 +87,7 @@ func getAllUsers(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		var users []User
-		db.Model(&User{}).Preload("Subjects").Preload("Connections").Find(&users)
+		db.Model(&User{}).Preload("Subjects").Preload("Connections").Preload("Reviews").Find(&users)
 
 		json.NewEncoder(w).Encode(users)
 	}
@@ -100,7 +105,7 @@ func getUserFromSession(store *gormstore.Store, db *gorm.DB) http.HandlerFunc {
 		userID := session.Values["userID"]
 		var user User
 
-		err = db.Model(&User{}).Preload("Subjects").First(&user, userID).Error
+		err = db.Model(&User{}).Preload("Subjects").Preload("Connections").Preload("Reviews").First(&user, userID).Error
 		if err != nil {
 			sendError("Error retrieving user", http.StatusUnauthorized, w)
 			return
@@ -285,12 +290,28 @@ func login(store *gormstore.Store, db *gorm.DB) http.HandlerFunc {
 			return
 		}
 
-		res["user"] = user
-		res["status"] = http.StatusOK
+		db.Model(&User{}).Preload("Subjects").Preload("Connections").Preload("Reviews").First(&user, user.ID)
+		if user.IsTutor {
+			var tutor TutorView
+			temp, _ := json.Marshal(user)
+			err = json.Unmarshal(temp, &tutor)
 
+			if err == nil {
+				res["user"] = tutor
+				res["status"] = http.StatusOK
+			}
+		} else {
+			var student StudentView
+			temp, _ := json.Marshal(user)
+			err = json.Unmarshal(temp, &student)
+
+			if err == nil {
+				res["user"] = student
+				res["status"] = http.StatusOK
+			}
+		}
 		json.NewEncoder(w).Encode(res)
 	}
-
 }
 
 // search function if the user wants to look for a particular tutor or a subject
@@ -346,6 +367,7 @@ func logout(store *gormstore.Store) http.HandlerFunc {
 	}
 }
 
+// Adds a connection between user_1 and user_2 to the database
 func addConnection(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Parse the user IDs from the request body
@@ -384,6 +406,7 @@ func addConnection(db *gorm.DB) http.HandlerFunc {
 	}
 }
 
+// Deletes the connection between user_1 and user_2 from the database.
 func deleteConnection(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var params struct {
@@ -416,8 +439,55 @@ func deleteConnection(db *gorm.DB) http.HandlerFunc {
 
 		var users = []User{user1, user2}
 
-		// Return the new connection object as JSON
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(users)
+	}
+}
+
+func addReview(db *gorm.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		var review Review
+		err := json.NewDecoder(r.Body).Decode(&review)
+		if err != nil {
+			sendError(err.Error(), http.StatusBadRequest, w)
+		}
+
+		var reviewer User
+		var reviewee User
+
+		err = db.First(&reviewer, review.ReviewerID).Error
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusNotFound)
+			return
+		}
+
+		err = db.First(&reviewee, review.RevieweeID).Error
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusNotFound)
+			return
+		}
+
+		err = db.Model(&reviewee).Association("Connections").Find(&reviewer)
+
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusNotFound)
+			return
+		}
+
+		db.Model(&reviewee).Association("Reviews").Append(&review)
+	}
+}
+
+func deleteReview(db *gorm.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		id := mux.Vars(r)["id"]
+
+		var review Review
+		db.Model(&Review{}).First(&review, id)
+		db.Delete(&review)
+
+		json.NewEncoder(w).Encode(review)
 	}
 }
