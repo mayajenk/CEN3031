@@ -24,6 +24,7 @@ type User struct {
 	Subjects    []Subject `gorm:"many2many:user_subjects" json:"subjects"`
 	Email       string    `json:"email"`
 	Phone       string    `json:"phone"`
+	Contact     string    `json:"contact"`
 	About       string    `json:"about"`
 	Grade       int32     `json:"grade"`
 	Connections []*User   `gorm:"many2many:user_connections" json:"connections"`
@@ -41,6 +42,7 @@ type TutorView struct {
 	Subjects    []Subject      `json:"subjects"`
 	Email       string         `json:"email"`
 	Phone       string         `json:"phone"`
+	Contact     string         `json:"contact"`
 	About       string         `json:"about"`
 	Price       string         `json:"price"`
 	Connections []*StudentView `json:"connections"`

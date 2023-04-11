@@ -8,6 +8,7 @@ export interface User {
     subjects: {name: string}[];
     email: string;
     phone: string;
+    contact: string;
     about: string;
     grade: number;
 }
