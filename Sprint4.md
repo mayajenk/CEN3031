@@ -19,3 +19,18 @@
   -  Add review system
   -  If time allows, add profile pictures
   -  Fix bugs
+
+
+## Backend Documentation
+### POST `/api/connection`
+Adds a connection between the specified users. The request body should should contain JSON formatted like so:
+```json
+{
+  "user_1": 1,
+  "user_2": 2,
+}
+```
+where `user_1` and `user_2` are the IDs of the corresponding users.
+
+### DELETE `/api/connection`
+Removes the connection between the specified users. The request body should contain JSON formatted in the same way as above.

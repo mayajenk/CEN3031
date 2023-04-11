@@ -15,28 +15,20 @@ import (
 
 type User struct {
 	gorm.Model  `json:"-"`
-	Username    string       `json:"username"`
-	Password    string       `json:"password"`
-	FirstName   string       `json:"first_name"`
-	LastName    string       `json:"last_name"`
-	IsTutor     bool         `json:"is_tutor"`
-	Rating      float64      `json:"rating"`
-	Subjects    []Subject    `gorm:"many2many:user_subjects" json:"subjects"`
-	Email       string       `json:"email"`
-	Phone       string       `json:"phone"`
-	About       string       `json:"about"`
-	Grade       int32        `json:"grade"`
-	Connections []Connection `gorm:"many2many:connections_users" json:"connections"`
-	Price       string       `json:"price"`
-}
-
-type Connection struct {
-	gorm.Model `json:"-"`
-	User1ID    uint `gorm:"index" json:"user_1_id"`
-	User1      User `json:"-"`
-	User2ID    uint `gorm:"index" json:"user_2_id"`
-	User2      User `json:"-"`
-	Connected  bool `gorm:"not null;default:false" json:"connected"`
+	Username    string    `json:"username"`
+	Password    string    `json:"password"`
+	FirstName   string    `json:"first_name"`
+	LastName    string    `json:"last_name"`
+	IsTutor     bool      `json:"is_tutor"`
+	Rating      float64   `json:"rating"`
+	Subjects    []Subject `gorm:"many2many:user_subjects" json:"subjects"`
+	Email       string    `json:"email"`
+	Phone       string    `json:"phone"`
+	About       string    `json:"about"`
+	Grade       int32     `json:"grade"`
+	Connections []*User   `gorm:"many2many:user_connections" json:"connections"`
+	Price       string    `json:"price"`
+	Reviews     []Review  `gorm:"many2many:user_reviews" json:"reviews"`
 }
 
 type TutorView struct {
@@ -71,6 +63,13 @@ type Subject struct {
 	Name       string `json:"name"`
 }
 
+type Review struct {
+	gorm.Model `json:"-"`
+	ReviewerID uint   `gorm:"index" json:"reviewer_id"`
+	RevieweeID uint   `gorm:"index" json:"reviewee_id"`
+	ReviewText string `json:"review"`
+}
+
 func sendError(message string, status int, w http.ResponseWriter) {
 	res := make(map[string]any)
 	res["message"] = message
@@ -83,7 +82,7 @@ func getAllUsers(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		var users []User
-		db.Model(&User{}).Preload("Subjects").Find(&users)
+		db.Model(&User{}).Preload("Subjects").Preload("Connections").Find(&users)
 
 		json.NewEncoder(w).Encode(users)
 	}
@@ -136,7 +135,7 @@ func getUser(db *gorm.DB) http.HandlerFunc {
 
 		var user User
 
-		err := db.Model(&User{}).Preload("Subjects").First(&user, userID).Error
+		err := db.Model(&User{}).Preload("Subjects").Preload("Connections").Preload("Reviews").First(&user, userID).Error
 		if err != nil {
 			sendError("Error retrieving user", http.StatusUnauthorized, w)
 		} else {
@@ -360,29 +359,65 @@ func addConnection(db *gorm.DB) http.HandlerFunc {
 			return
 		}
 
-		// Create a new connection object
 		var user1 User
 		var user2 User
-		db.First(&user1, params.User1ID)
-		db.First(&user2, params.User1ID)
-
-		connection := Connection{
-			User1ID:   user1.ID,
-			User1:     user1,
-			User2ID:   user2.ID,
-			User2:     user2,
-			Connected: true,
-		}
-
-		// Save the connection to the database
-		result := db.Create(&connection)
-		if result.Error != nil {
-			http.Error(w, result.Error.Error(), http.StatusInternalServerError)
+		err = db.First(&user1, params.User1ID).Error
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusNotFound)
 			return
 		}
 
+		err = db.First(&user2, params.User2ID).Error
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusNotFound)
+			return
+		}
+
+		db.Model(&user1).Association("Connections").Append(&user2)
+		db.Model(&user2).Association("Connections").Append(&user1)
+
+		var users = []User{user1, user2}
+
 		// Return the new connection object as JSON
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(connection)
+		json.NewEncoder(w).Encode(users)
+	}
+}
+
+func deleteConnection(db *gorm.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var params struct {
+			User1ID uint `json:"user_1"`
+			User2ID uint `json:"user_2"`
+		}
+
+		err := json.NewDecoder(r.Body).Decode(&params)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		var user1 User
+		var user2 User
+		err = db.First(&user1, params.User1ID).Error
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusNotFound)
+			return
+		}
+
+		err = db.First(&user2, params.User2ID).Error
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusNotFound)
+			return
+		}
+
+		db.Model(&user1).Association("Connections").Delete(&user2)
+		db.Model(&user2).Association("Connections").Delete(&user1)
+
+		var users = []User{user1, user2}
+
+		// Return the new connection object as JSON
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(users)
 	}
 }
