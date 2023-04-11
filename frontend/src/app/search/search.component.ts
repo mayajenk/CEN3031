@@ -14,5 +14,6 @@ export class SearchComponent {
   
   search() {
     // list available tutors based on search
+    // ignore capitilization and spaces
   }
 }
