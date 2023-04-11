@@ -8,6 +8,7 @@ import { MatLabel } from '@angular/material/form-field';
 import { MatFormField } from '@angular/material/form-field';
 import { Router } from '@angular/router';
 import { ProfileService } from '../profile.service';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-dialog',
@@ -28,11 +29,11 @@ export class DialogComponent {
   constructor(private pService : ProfileService) {}
 
   saveContact(form: NgForm) {
-    this.pService.updateProfile(this.formData.phone, this.formData.email, this.formData.other)
-      .subscribe(response => {
-        console.log(response);
-      }, error => {
-        console.error(error);
-      });
+    // this.pService.updateProfile(this.formData.phone, this.formData.email, this.formData.other)
+    //   .subscribe(response => {
+    //     console.log(response);
+    //   }, error => {
+    //     console.error(error);
+    //   });
   }
 }

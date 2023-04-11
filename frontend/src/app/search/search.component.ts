@@ -1,4 +1,6 @@
 import { Component, Input } from '@angular/core';
+import { NgForm } from '@angular/forms';
+
 
 @Component({
   selector: 'app-search',
@@ -12,7 +14,7 @@ export class SearchComponent {
     search : ''
   };
   
-  search() {
+  search(form: NgForm) {
     // list available tutors based on search
     // ignore capitilization and spaces
   }

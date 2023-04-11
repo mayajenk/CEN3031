@@ -15,9 +15,11 @@
     </div>
     <div>
       <h2 class="courses">My Subjects:</h2>
-      <mat-chip-listbox aria-label="subjects">
-        <!-- make matt chips for each subject from back end -->
-        <mat-chip>EX 1</mat-chip>
-      </mat-chip-listbox>
+      <mat-chip-listbox *ngFor="let subject of user.subjects" aria-label="subjects">
+          <mat-chip>
+            {{subject.name}}
+          </mat-chip>
+        </mat-chip-listbox>
+      <button type="addSubject">Add Subject</button>
     </div>
   </div>
