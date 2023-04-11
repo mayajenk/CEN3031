@@ -6,6 +6,8 @@ import { MatChipEditedEvent, MatChipInputEvent } from '@angular/material/chips';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import { MatLabel } from '@angular/material/form-field';
 import { MatFormField } from '@angular/material/form-field';
+import { Router } from '@angular/router';
+import { ProfileService } from '../profile.service';
 
 @Component({
   selector: 'app-dialog',
@@ -13,7 +15,24 @@ import { MatFormField } from '@angular/material/form-field';
   styleUrls: ['./dialog.component.sass']
 })
 export class DialogComponent {
-  saveContact() {
-    
+  formData: {
+    phone: string,
+    email: string,
+    other: string
+  } = {
+    phone: '',
+    email: '',
+    other: ''
+  };
+  
+  constructor(private pService : ProfileService) {}
+
+  saveContact(form: NgForm) {
+    this.pService.updateProfile(this.formData.phone, this.formData.email, this.formData.other)
+      .subscribe(response => {
+        console.log(response);
+      }, error => {
+        console.error(error);
+      });
   }
 }

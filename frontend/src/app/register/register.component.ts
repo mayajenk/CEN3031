@@ -22,11 +22,6 @@ export class RegisterComponent {
   constructor(private authService : AuthService, private router : Router) {}
 
   register(form: NgForm) {
-    // check if username and password entered are valid
-    // if username or password is invalid -> display message
-    // check if username is already taken
-    // if user name is already taken -> display message
-    // if successful -> display message
     let is_tutor : boolean = this.formData.role == "tutor" ? true : false;
     this.authService.registerAndLogin(this.formData.username, this.formData.password, is_tutor)
       .subscribe(response => {
