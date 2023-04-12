@@ -29,7 +29,7 @@ export class AuthService {
     grade: 0,
     });
 
-    private user$ = this.userSubject.asObservable();
+  public user$ = this.userSubject.asObservable();
 
 
   constructor(private http: HttpClient, private cookieService: CookieService) {
@@ -44,6 +44,15 @@ export class AuthService {
     else {
       this.isTutorSubject.next(false);
     }
+
+    let options = {
+      withCredentials: true
+    };
+    this.http.get<User>("/api/user", options).pipe(
+      tap(response => {
+        this.userSubject.next(response);
+      })
+    );    
   }
 
   register(username: string, password: string, is_tutor: boolean): Observable<HttpResponse<any>> {
@@ -57,6 +66,7 @@ export class AuthService {
         if (response.status == 200) {
           this.setLoggedIn(true);
           this.cookieService.set('isLoggedIn', 'true');
+          this.cookieService.set('id', response.user.id);
           // check if user is tutor and set value accordingly
           this.userSubject.next(response.user);
           if (response.user.is_tutor) {

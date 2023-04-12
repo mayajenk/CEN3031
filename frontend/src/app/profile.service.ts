@@ -23,4 +23,10 @@ export class ProfileService {
     
     return this.http.get<User>("/api/user", options);
   }
+
+  updateProfile(user: User) {
+    let id: number = user.id
+    let requestBody = Object.keys(user).forEach((k) => user[k as keyof User] == null && delete user[k as keyof User]);
+    return this.http.put<any>("/api/users/" + id, user);
+  }
 }
