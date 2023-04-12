@@ -19,6 +19,12 @@
     </div>
     <div>
       <h2 class="courses">My Subjects:</h2>
+      <!-- <mat-chip-listbox *ngFor="let subject of user.subjects" aria-label="subjects">
+          <mat-chip>
+            {{subject.name}}
+          </mat-chip>
+        </mat-chip-listbox>
+      <button type="addSubject">Add Subject</button> -->
       <mat-form-field class="subjects" appearance="fill">
         <mat-label>Subjects</mat-label>
         <mat-chip-grid #chipGrid aria-label="Enter subjects...">
@@ -42,12 +48,6 @@
       <div>
       <button mat-raised-button color="primary" type="submit">Save Subjects</button>
       </div> 
-      <!-- <mat-chip-listbox *ngFor="let subject of user.subjects" aria-label="subjects">
-          <mat-chip>
-            {{subject.name}}
-          </mat-chip>
-        </mat-chip-listbox>
-      <button type="addSubject">Add Subject</button> -->
     </div>
   </div>
   

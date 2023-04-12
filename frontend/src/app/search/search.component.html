@@ -1,5 +1,6 @@
 <!-- only active when student logged in -->
 <!-- search bar -->
+<form #myForm="ngForm" (ngSubmit)="search(myForm)">
 <mat-card>
     <mat-card-content>
       <div>
@@ -24,4 +25,5 @@
       </div>
     </mat-card-content>
 </mat-card>
+</form>
 <!-- available tutors -->
