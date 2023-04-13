@@ -26,10 +26,11 @@ export class DialogComponent {
     other: ''
   };
   
-  constructor(private profileService : ProfileService, private authService: AuthService) {}
+  constructor(private authService: AuthService) {}
 
   saveContact(form: NgForm) {
     let user: User = this.authService.getUser();
+    console.log("button closed");
 
     if (this.formData.phone !== '') {
       user.phone = this.formData.phone
@@ -40,11 +41,6 @@ export class DialogComponent {
         if (this.formData.other !== '') {
       user.contact = this.formData.other
     }
-    this.profileService.updateProfile(user)
-      .subscribe(response => {
-        console.log(response);
-      }, error => {
-        console.error(error);
-      });
+    this.authService.updateUser(user).subscribe();
   }
 }

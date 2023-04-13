@@ -43,16 +43,11 @@ export class AuthService {
     }
     else {
       this.isTutorSubject.next(false);
+    } 
+    const userData: string | null = sessionStorage.getItem('userData');
+    if (userData != null) {
+      this.userSubject.next(JSON.parse(userData));
     }
-
-    let options = {
-      withCredentials: true
-    };
-    this.http.get<User>("/api/user", options).pipe(
-      tap(response => {
-        this.userSubject.next(response);
-      })
-    );    
   }
 
   register(username: string, password: string, is_tutor: boolean): Observable<HttpResponse<any>> {
@@ -66,9 +61,8 @@ export class AuthService {
         if (response.status == 200) {
           this.setLoggedIn(true);
           this.cookieService.set('isLoggedIn', 'true');
-          this.cookieService.set('id', response.user.id);
-          // check if user is tutor and set value accordingly
           this.userSubject.next(response.user);
+          sessionStorage.setItem('userData', JSON.stringify(response.user));
           if (response.user.is_tutor) {
             this.setTutor(true);
             this.cookieService.set('isTutor', 'true');
@@ -96,7 +90,10 @@ export class AuthService {
       tap(response => {
         if (response.status == 200) {
           this.setLoggedIn(false);
+          this.cookieService.delete('session')
           this.cookieService.delete('isLoggedIn');
+          this.cookieService.delete('isTutor');
+          sessionStorage.clear();
         }
       })
     );
@@ -120,5 +117,15 @@ export class AuthService {
 
   getUser(): User {
     return this.userSubject.value;
+  }
+
+  updateUser(user: User) {
+    let id: number = user.id;
+    return this.http.put<any>("/api/users/" + id, user).pipe(
+      tap((response) => {
+        this.userSubject.next(response);
+        sessionStorage.setItem('userData', JSON.stringify(response));
+      })
+    )
   }
 }
