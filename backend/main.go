@@ -8,17 +8,18 @@ import (
 	"time"
 
 	"github.com/glebarez/sqlite"
+	"github.com/mayajenk/CEN3031/models"
 	"github.com/wader/gormstore/v2"
 	"gorm.io/gorm"
 )
 
 func main() {
-	db, err := gorm.Open(sqlite.Open("users.db"), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open("db/users.db"), &gorm.Config{})
 	if err != nil {
 		panic("Failed to connect database")
 	}
 
-	sessionDB, err := gorm.Open(sqlite.Open("sessions.db"), &gorm.Config{})
+	sessionDB, err := gorm.Open(sqlite.Open("db/sessions.db"), &gorm.Config{})
 	if err != nil {
 		panic(err)
 	}
@@ -29,7 +30,7 @@ func main() {
 	quit := make(chan struct{})
 	go store.PeriodicCleanup(1*time.Hour, quit)
 
-	db.AutoMigrate(&User{})
+	db.AutoMigrate(&models.User{})
 
 	host := "127.0.0.1:8080"
 	fmt.Println("Serving on http://localhost:8080")

@@ -1,4 +1,4 @@
-package main
+package handlers
 
 import (
 	"bytes"
@@ -7,26 +7,24 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
-	"os"
-	"strings"
 	"testing"
 
 	"github.com/glebarez/sqlite"
 	"github.com/gorilla/mux"
-	"github.com/wader/gormstore/v2"
+	"github.com/mayajenk/CEN3031/models"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
 func setupTestEnv() *gorm.DB {
 	// Connect to a test database
-	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open("../db/test.db"), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
 	}
 
 	// Automatically create database tables
-	db.AutoMigrate(&User{})
+	db.AutoMigrate(&models.User{})
 
 	return db
 }
@@ -39,7 +37,7 @@ func TestNewUserHandler(t *testing.T) {
 
 	// Set up a new router with the user creation handler
 	r := mux.NewRouter()
-	r.HandleFunc("/api/users", newUser(tx)).Methods("POST")
+	r.HandleFunc("/api/users", NewUser(tx)).Methods("POST")
 
 	// Create a new test request with sample data
 	reqBody, _ := json.Marshal(map[string]any{
@@ -60,7 +58,7 @@ func TestNewUserHandler(t *testing.T) {
 	}
 
 	// Verify that the new user was created in the database
-	var user User
+	var user models.User
 	result := tx.Where("username = ?", "foo").First(&user)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
@@ -89,8 +87,8 @@ func TestDeleteUserHandler(t *testing.T) {
 
 	// Set up a new router with the user creation and deletion handler
 	r := mux.NewRouter()
-	r.HandleFunc("/api/users", newUser(tx)).Methods("POST")
-	r.HandleFunc("/api/users/{id}", deleteUser(tx)).Methods("DELETE")
+	r.HandleFunc("/api/users", NewUser(tx)).Methods("POST")
+	r.HandleFunc("/api/users/{id}", DeleteUser(tx)).Methods("DELETE")
 
 	// Insert a new user into the database
 	reqBody, _ := json.Marshal(map[string]any{
@@ -111,7 +109,7 @@ func TestDeleteUserHandler(t *testing.T) {
 	}
 
 	// Verify that the new user was created in the database
-	var user User
+	var user models.User
 	result := tx.Where("username = ?", "foo").First(&user)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
@@ -146,8 +144,8 @@ func TestUpdateUserHandler(t *testing.T) {
 
 	// Set up a new router with the user update handler
 	r := mux.NewRouter()
-	r.HandleFunc("/api/users", newUser(tx)).Methods("POST")
-	r.HandleFunc("/api/users/{id}", updateUser(tx)).Methods("PUT")
+	r.HandleFunc("/api/users", NewUser(tx)).Methods("POST")
+	r.HandleFunc("/api/users/{id}", UpdateUser(tx)).Methods("PUT")
 
 	// Insert a new user into the database
 	reqBody, _ := json.Marshal(map[string]any{
@@ -168,7 +166,7 @@ func TestUpdateUserHandler(t *testing.T) {
 	}
 
 	// Verify that the new user was created in the database
-	var user User
+	var user models.User
 	result := tx.Where("username = ?", "foo").First(&user)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
@@ -177,9 +175,10 @@ func TestUpdateUserHandler(t *testing.T) {
 	}
 
 	// Create a new test request with updated user data
-	newUserData := User{Username: "updated_foo", Password: "updated_bar", IsTutor: true}
+	newUserData := models.User{Username: "updated_foo", Password: "updated_bar", IsTutor: true}
 	reqBody, _ = json.Marshal(newUserData)
 	req, _ = http.NewRequest("PUT", fmt.Sprintf("/api/users/%d", user.ID), bytes.NewBuffer(reqBody))
+	fmt.Printf("ID: %d\n", user.ID)
 	req.Header.Set("Content-Type", "application/json")
 
 	// Send the request to the handler
@@ -192,7 +191,7 @@ func TestUpdateUserHandler(t *testing.T) {
 	}
 
 	// Verify that the user was updated in the database
-	var updatedUser User
+	var updatedUser models.User
 	tx.First(&updatedUser, user.ID)
 
 	if updatedUser.Username != newUserData.Username {
@@ -215,8 +214,8 @@ func TestGetUserHandler(t *testing.T) {
 
 	// Set up a new router with the user creation and retrieval handlers
 	r := mux.NewRouter()
-	r.HandleFunc("/api/users", newUser(tx)).Methods("POST")
-	r.HandleFunc("/api/users/{id}", getUser(tx)).Methods("GET")
+	r.HandleFunc("/api/users", NewUser(tx)).Methods("POST")
+	r.HandleFunc("/api/users/{id}", GetUser(tx)).Methods("GET")
 
 	// Insert a new user into the database
 	reqBody, _ := json.Marshal(map[string]any{
@@ -237,7 +236,7 @@ func TestGetUserHandler(t *testing.T) {
 	}
 
 	// Verify that the new user was created in the database
-	var user User
+	var user models.User
 	result := tx.Where("username = ?", "foo").First(&user)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
@@ -258,7 +257,7 @@ func TestGetUserHandler(t *testing.T) {
 	}
 
 	// Verify that the returned user matches the test data
-	var returnedUser User
+	var returnedUser models.User
 	json.NewDecoder(rr.Body).Decode(&returnedUser)
 	if returnedUser.Username != "foo" {
 		t.Errorf("Username is incorrect: got %v want %v", returnedUser.Username, "foo")
@@ -280,10 +279,10 @@ func TestGetAllUsersHandler(t *testing.T) {
 
 	// Set up a new router with the user creation and retrieval handlers
 	r := mux.NewRouter()
-	r.HandleFunc("/api/users", newUser(tx)).Methods("POST")
-	r.HandleFunc("/api/users", getAllUsers(tx)).Methods("GET")
+	r.HandleFunc("/api/users", NewUser(tx)).Methods("POST")
+	r.HandleFunc("/api/users", GetAllUsers(tx)).Methods("GET")
 
-	var user1 User = User{
+	var user1 models.User = models.User{
 		Username: "test",
 		Password: "test1",
 		IsTutor:  false,
@@ -299,7 +298,7 @@ func TestGetAllUsersHandler(t *testing.T) {
 	r.ServeHTTP(rr, req)
 
 	// Insert another user into the database
-	var user2 User = User{
+	var user2 models.User = models.User{
 		Username: "test2",
 		Password: "test3",
 		IsTutor:  true,
@@ -325,7 +324,7 @@ func TestGetAllUsersHandler(t *testing.T) {
 	}
 
 	// Parse the response body into a slice of users
-	var users []User
+	var users []models.User
 	json.NewDecoder(rr.Body).Decode(&users)
 
 	// Verify that the correct number of users were returned
@@ -340,157 +339,5 @@ func TestGetAllUsersHandler(t *testing.T) {
 
 	if users[1].Username != "test2" || bcrypt.CompareHashAndPassword([]byte(users[1].Password), []byte("test3")) != nil {
 		t.Errorf("Incorrect user data returned for user2")
-	}
-}
-
-func TestLogin(t *testing.T) {
-	// Set up testing environment
-	db := setupTestEnv()
-	tx := db.Begin()
-	defer tx.Rollback()
-
-	// Set up session store
-	sessionDB, err := gorm.Open(sqlite.Open("sessions.db"), &gorm.Config{})
-	if err != nil {
-		panic(err)
-	}
-
-	store := gormstore.New(sessionDB, []byte(os.Getenv("SESSION_KEY")))
-
-	r := mux.NewRouter()
-	r.HandleFunc("/api/users", newUser(tx)).Methods("POST")
-	r.HandleFunc("/api/login", login(store, tx)).Methods("POST")
-
-	var testUser User = User{
-		Username: "foo",
-		Password: "bar",
-		IsTutor:  false,
-	}
-	reqBody, _ := json.Marshal(testUser)
-
-	req, _ := http.NewRequest("POST", "/api/users", bytes.NewBuffer(reqBody))
-
-	rr := httptest.NewRecorder()
-	r.ServeHTTP(rr, req)
-
-	reqBody, _ = json.Marshal(map[string]any{
-		"username": "foo",
-		"password": "bar",
-	})
-
-	req, _ = http.NewRequest("POST", "/api/login", bytes.NewBuffer(reqBody))
-	rr = httptest.NewRecorder()
-	r.ServeHTTP(rr, req)
-
-	if status := rr.Code; status != http.StatusOK {
-		t.Errorf("Handler returned wrong status code: got %v want %v", status, http.StatusOK)
-	}
-
-	expected := `{"is_tutor":false,"status":200}`
-	if got := strings.TrimSpace(rr.Body.String()); got != expected {
-		t.Errorf("Handler returned wrong body: got %v want %v", rr.Body.String(), expected)
-	}
-}
-
-func TestLogout(t *testing.T) {
-	// Set up testing environment
-	db := setupTestEnv()
-	tx := db.Begin()
-	defer tx.Rollback()
-
-	// Set up session store
-	sessionDB, err := gorm.Open(sqlite.Open("sessions.db"), &gorm.Config{})
-	if err != nil {
-		panic(err)
-	}
-
-	store := gormstore.New(sessionDB, []byte(os.Getenv("SESSION_KEY")))
-
-	r := mux.NewRouter()
-	r.HandleFunc("/api/users", newUser(tx)).Methods("POST")
-	r.HandleFunc("/api/login", login(store, tx)).Methods("POST")
-	r.HandleFunc("/api/logout", logout(store)).Methods("POST")
-
-	var testUser User = User{
-		Username: "foo",
-		Password: "bar",
-		IsTutor:  false,
-	}
-	reqBody, _ := json.Marshal(testUser)
-
-	req, _ := http.NewRequest("POST", "/api/users", bytes.NewBuffer(reqBody))
-
-	rr := httptest.NewRecorder()
-	r.ServeHTTP(rr, req)
-
-	reqBody, _ = json.Marshal(map[string]any{
-		"username": "foo",
-		"password": "bar",
-	})
-
-	req, _ = http.NewRequest("POST", "/api/login", bytes.NewBuffer(reqBody))
-	rr = httptest.NewRecorder()
-	r.ServeHTTP(rr, req)
-
-	reqBody, _ = json.Marshal(map[string]any{})
-
-	req, _ = http.NewRequest("POST", "/api/logout", bytes.NewBuffer(reqBody))
-	rr = httptest.NewRecorder()
-	r.ServeHTTP(rr, req)
-
-	// Check status code
-	if status := rr.Code; status != http.StatusOK {
-		t.Errorf("Handler returned wrong status code: got %v want %v", status, http.StatusOK)
-	}
-
-	// Check response body
-	expected := `{"message":"Successfully logged out.","status":200}`
-	if got := strings.TrimSpace(rr.Body.String()); got != expected {
-		t.Errorf("Handler returned wrong body: got %v want %v", rr.Body.String(), expected)
-	}
-
-	// Check session values
-	session, _ := store.Get(req, "session")
-	if userID := session.Values["userID"]; userID != nil {
-		t.Errorf("Session userID was not cleared: got %v want %v", userID, nil)
-	}
-}
-
-// unit test for the search database function
-func TestSearchDatabase(t *testing.T) {
-	db := setupTestEnv()
-	tx := db.Begin()
-	defer tx.Rollback()
-
-	user1 := User{
-		Username: "foo",
-		Password: "bar",
-		IsTutor:  false,
-		Subjects: []Subject{
-			{Name: "math"},
-			{Name: "english"},
-		},
-		Rating: 5,
-	}
-
-	tx.Create(&user1)
-
-	// Define a mock request and response
-	req := httptest.NewRequest("GET", "/api/search?q=f", nil)
-	rr := httptest.NewRecorder()
-
-	r := mux.NewRouter()
-	r.HandleFunc("/api/search", searchDatabase(tx)).Methods("GET")
-	r.ServeHTTP(rr, req)
-	fmt.Println(rr.Result().Body)
-
-	// Assert that the response contains the expected data
-	var users []User
-	err := json.Unmarshal(rr.Body.Bytes(), &users)
-	if err != nil {
-		t.Fatalf("failed to unmarshal response: %v", err)
-	}
-	if len(users) != 1 {
-		t.Errorf("expected 1 users, got %d", len(users))
 	}
 }
