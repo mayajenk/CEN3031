@@ -4,8 +4,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
+	"mime"
 	"net/http"
 	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -154,7 +157,7 @@ func UpdateUser(db *gorm.DB) http.HandlerFunc {
 			panic(err)
 		}
 
-		if updatedUser.Password != user.Password {
+		if updatedUser.Password != "" {
 			password, err := bcrypt.GenerateFromPassword([]byte(updatedUser.Password), bcrypt.DefaultCost)
 			if err != nil {
 				panic("Failed to hash password")
@@ -170,6 +173,9 @@ func UpdateUser(db *gorm.DB) http.HandlerFunc {
 func UploadProfilePicture(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		userID := mux.Vars(r)["id"]
+		var user models.User
+		db.First(&user, userID)
+
 		file, handler, err := r.FormFile("file")
 		if err != nil {
 			http.Error(w, "Error uploading file", http.StatusBadRequest)
@@ -178,10 +184,42 @@ func UploadProfilePicture(db *gorm.DB) http.HandlerFunc {
 		defer file.Close()
 		filename := fmt.Sprintf("%s_%d_%s", userID, time.Now().Unix(), handler.Filename)
 
-		f, err := os.OpenFile("/uploads/"+filename, os.O_WRONLY|os.O_CREATE, 0666)
+		f, err := os.OpenFile("uploads/"+filename, os.O_CREATE|os.O_WRONLY, 0644)
 		if err != nil {
-			http.Error(w, "Error saving file", http.StatusInternalServerError)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 		defer f.Close()
+		io.Copy(f, file)
+
+		user.ProfilePicture = filename
+		db.Save(&user)
+		w.Header().Set("Cache-Control", "no-cache")
+		jsonResponse := map[string]string{"filename": filename}
+		json.NewEncoder(w).Encode(jsonResponse)
+	}
+}
+
+func GetProfilePicture(db *gorm.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		userID := mux.Vars(r)["id"]
+		var user models.User
+		db.First(&user, userID)
+
+		filename := user.ProfilePicture
+		file, err := os.Open("uploads/" + filename)
+		if err != nil {
+			http.Error(w, "File not found", http.StatusNotFound)
+		}
+
+		defer file.Close()
+
+		contentType := mime.TypeByExtension(filepath.Ext(filename))
+		if contentType == "" {
+			contentType = "application/octet-stream"
+		}
+
+		w.Header().Set("Content-Type", contentType)
+		w.Header().Set("Cache-Control", "no-cache")
+		io.Copy(w, file)
 	}
 }
