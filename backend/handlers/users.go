@@ -156,7 +156,7 @@ func UpdateUser(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		userID := mux.Vars(r)["id"]
 		var user models.User
-		db.First(&user, userID)
+		db.Model(&user).Preload("Connections").Preload("Subjects").Preload("Reviews").First(&user, userID)
 
 		var updatedUser models.User
 		decoder := json.NewDecoder(r.Body)
