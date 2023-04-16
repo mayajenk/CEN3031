@@ -11,4 +11,8 @@ export interface User {
     contact: string;
     about: string;
     grade: number;
+    profile_picture: string;
+    title: string;
+    price: number;
+    connections: User[];
 }

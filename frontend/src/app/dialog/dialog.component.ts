@@ -17,30 +17,50 @@ import { NgForm } from '@angular/forms';
 })
 export class DialogComponent {
   formData: {
+    first_name: string,
+    last_name: string,
+    price: number,
+    title: string,
     phone: string,
     email: string,
-    other: string
+    other: string,
+    about: string
   } = {
+    first_name: '',
+    last_name: '',
+    price: 0,
+    title: '',
     phone: '',
     email: '',
-    other: ''
+    other: '',
+    about: ''
   };
+  user: User
   
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) {
+    this.user = this.authService.getUser();
+    this.formData.first_name = this.user.first_name;
+    this.formData.last_name = this.user.last_name;
+    this.formData.price = this.user.price;
+    this.formData.title = this.user.title;
+    this.formData.phone = this.user.phone;
+    this.formData.email = this.user.email;
+    this.formData.other = this.user.contact;
+    this.formData.about = this.user.about;
+  }
 
-  saveContact(form: NgForm) {
-    let user: User = this.authService.getUser();
-    console.log("button closed");
+  saveInfo(form: NgForm) {
+    this.user = this.authService.getUser();
 
-    if (this.formData.phone !== '') {
-      user.phone = this.formData.phone
-    }
-    if (this.formData.email !== '') {
-      user.email = this.formData.email
-    }
-        if (this.formData.other !== '') {
-      user.contact = this.formData.other
-    }
-    this.authService.updateUser(user).subscribe();
+    this.user.first_name = this.formData.first_name;
+    this.user.last_name = this.formData.last_name;
+    this.user.price = this.formData.price;
+    this.user.title = this.formData.title;
+    this.user.phone = this.formData.phone;
+    this.user.email = this.formData.email;
+    this.user.contact = this.formData.other;
+    this.user.about = this.formData.about;
+
+    this.authService.updateUser(this.user).subscribe();
   }
 }

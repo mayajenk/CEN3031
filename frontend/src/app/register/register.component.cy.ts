@@ -22,6 +22,8 @@ describe('register.component.cy.ts', () => {
       providers: [AuthService],
       componentProperties: {
         formData: {
+          first_name: "Foo",
+          last_name: "Bar",
           username: "foo",
           password: "bar",
           role: "tutor"

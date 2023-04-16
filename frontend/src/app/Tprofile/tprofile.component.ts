@@ -4,8 +4,6 @@ import { User } from '../user';
 import { AuthService } from '../auth/auth.service';
 import { MatChipEditedEvent, MatChipInputEvent } from '@angular/material/chips';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import { MatLabel } from '@angular/material/form-field';
-import { MatFormField } from '@angular/material/form-field';
 import { DialogComponent } from '../dialog/dialog.component';
 
 export interface Subject {
@@ -19,12 +17,45 @@ export interface Subject {
 })
 export class TprofileComponent {
   user: User = this.authService.getUser();
+  selectedFile: any = null;
+  cacheBuster: string = '?cache=' + Math.random();
+  profilePictureURL: string = `/api/users/${this.user.id}/profile-picture${this.cacheBuster}`
 
   constructor(private authService: AuthService, public dialog: MatDialog) { 
   }
   addOnBlur = true;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
   subjects: Subject[] = [];
+
+  onFileSelected(event: any): void {
+    this.selectedFile = event.target.files[0] ?? null;
+    if (this.selectedFile != null) {
+      const formData = new FormData();
+      formData.append('file', this.selectedFile);
+      this.authService.setProfilePicture(formData).subscribe(
+        (response: any) => {
+          this.cacheBuster = '?cache=' + Math.random();
+          console.log('Cache buster updated to', this.cacheBuster);
+          this.profilePictureURL = `/api/users/${this.user.id}/profile-picture${this.cacheBuster}`
+        }
+      )
+    }
+  }
+
+  setRatingBackground() {
+    if (this.user.rating < 3) {
+      return `#e84c3f`
+    }
+    else if (this.user.rating < 6) {
+      return `#b5b500`
+    }
+    else if (this.user.rating < 8) {
+      return `#95b500`
+    }
+    else {
+      return `#2ac325`
+    }
+  }
 
   add(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();

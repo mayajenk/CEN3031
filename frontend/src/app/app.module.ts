@@ -49,7 +49,7 @@ import { SearchProfileComponent } from './search-profile/search-profile.componen
     SprofileComponent,
     TprofileComponent,
     DialogComponent,
-    SearchProfileComponent
+    SearchProfileComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,5 +1,5 @@
 :host
-    margin-top: 100px !important
+    margin: auto
 
 mat-card
     display: flex
@@ -13,11 +13,11 @@ mat-card-title
 
 mat-form-field
     display: flex
-    min-width: 300px
     flex: 1 1 auto
 
 .isTutor
     display: flex
+    flex-direction: row
     flex: 1 1 auto
     align-content: center
     align-items: center
@@ -25,11 +25,17 @@ mat-form-field
     margin: 0 0 1em 0
 
 .i-am-a
-    margin: 0 !important
+    margin: auto 0 !important
 
 
 .submit
     display: flex
-    justify-content: center
-    align-items: center
-    flex-direction: column
+
+#submit
+    margin-left: auto
+    font-size: large
+
+.name
+    display: flex
+    flex-direction: row
+    gap: 1em

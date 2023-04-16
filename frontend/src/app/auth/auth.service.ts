@@ -27,6 +27,10 @@ export class AuthService {
     contact: "",
     about: "",
     grade: 0,
+    profile_picture: "",
+    title: "",
+    price: 0,
+    connections: []
     });
 
   public user$ = this.userSubject.asObservable();
@@ -50,8 +54,8 @@ export class AuthService {
     }
   }
 
-  register(username: string, password: string, is_tutor: boolean): Observable<HttpResponse<any>> {
-    return this.http.post<any>("/api/users", {username, password, is_tutor});
+  register(first_name: string, last_name: string, username: string, password: string, is_tutor: boolean): Observable<HttpResponse<any>> {
+    return this.http.post<any>("/api/users", {first_name, last_name, username, password, is_tutor});
   }
 
 
@@ -77,8 +81,8 @@ export class AuthService {
     );
   }
 
-  registerAndLogin(username: string, password: string, is_tutor: boolean): Observable<HttpResponse<any>> {
-    return this.register(username, password, is_tutor).pipe(
+  registerAndLogin(first_name: string, last_name: string, username: string, password: string, is_tutor: boolean): Observable<HttpResponse<any>> {
+    return this.register(first_name, last_name, username, password, is_tutor).pipe(
       tap(() => {
         return this.login(username, password).subscribe();
       })
@@ -120,11 +124,28 @@ export class AuthService {
   }
 
   updateUser(user: User) {
-    let id: number = user.id;
+    let id: number = this.userSubject.value.id
     return this.http.put<any>("/api/users/" + id, user).pipe(
       tap((response) => {
         this.userSubject.next(response);
         sessionStorage.setItem('userData', JSON.stringify(response));
+      })
+    )
+  }
+
+  getProfilePicture(): any {
+    let id = this.userSubject.value.id;
+    return this.http.get<any>("/api/users/" + id + "/profile-picture")
+  }
+
+  setProfilePicture(formData: any) {
+    let id = this.userSubject.value.id;
+    return this.http.post<any>("/api/users/" + id + "/profile-picture", formData).pipe(
+      tap((response) => {
+        let user: User = this.userSubject.value;
+        user.profile_picture = response.filename;
+        sessionStorage.setItem('userData', JSON.stringify(user));
+        return response;
       })
     )
   }

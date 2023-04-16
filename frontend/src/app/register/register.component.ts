@@ -10,10 +10,14 @@ import { Router } from '@angular/router';
 })
 export class RegisterComponent {
   formData: {
+    first_name: string,
+    last_name: string,
     username: string,
     password: string,
     role: string
   } = {
+    first_name: '',
+    last_name: '',
     username: '',
     password: '',
     role: ''
@@ -23,7 +27,7 @@ export class RegisterComponent {
 
   register(form: NgForm) {
     let is_tutor : boolean = this.formData.role == "tutor" ? true : false;
-    this.authService.registerAndLogin(this.formData.username, this.formData.password, is_tutor)
+    this.authService.registerAndLogin(this.formData.first_name, this.formData.last_name, this.formData.username, this.formData.password, is_tutor)
       .subscribe(response => {
         console.log(response);
         this.router.navigate(["/"]);
