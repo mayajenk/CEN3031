@@ -1,3 +1,5 @@
+import { Review } from "./review";
+
 export interface User {
     id: number;
     username: string;
@@ -15,4 +17,5 @@ export interface User {
     title: string;
     price: number;
     connections: User[];
+    reviews: Review[];
 }

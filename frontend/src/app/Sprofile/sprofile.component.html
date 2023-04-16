@@ -1,32 +1,52 @@
-<!-- only active when logged in -->
-
-<div class="container">
-    <h1 class="name">Welcome {{user.first_name}}!</h1>
-    <!-- <div class="rating"> -->
-      <h2 class="rating">Rating: {{user.rating}} %</h2>
-      <!-- <span class="star">&#9733;</span>
-      <span class="star">&#9733;</span>
-      <span class="star">&#9733;</span>
-      <span class="star">&#9733;</span>
-      <span class="star">&#9733;</span> -->
-    <!-- </div> -->
-    <div>
-      <h2 class="favorites">Favorites: </h2>
-      
-      <!-- only for visual at the moment
-      <mat-list>
-        <mat-list-item>Student 1</mat-list-item>
-        <mat-divider></mat-divider>
-        <mat-list-item>Student 2</mat-list-item>
-        <mat-divider></mat-divider>
-        <mat-list-item>Student 3</mat-list-item>
-      </mat-list> -->
-      
-      <!-- <div>
-        <button type="addPerson">Add Tutor/Student</button>
-        only adds if both student and tutor have requested to add
-      </div> -->
+<div class="main">
+  <mat-card class="profile">
+    <div class="sidebar">
+      <img *ngIf="user.profile_picture != ''" [src]="profilePictureURL" id="profile-picture">
+      <img *ngIf="user.profile_picture == ''" src="/assets/img/avatar.webp{{cacheBuster}}" id="profile-picture">
+      <form>
+        <button type="button" mat-flat-button (click)="fileInput.click()">Upload a profile picture</button>
+        <input hidden (change)="onFileSelected($event)" #fileInput type="file" accept="image/*">
+      </form>
+      <h2 id="title">{{user.title}}</h2>
     </div>
-  </div>
-  
-  
+    <div class="content">
+      <div class="header">
+        <h1 class="name">{{user.first_name != "" ? user.first_name : "First Name"}} {{user.last_name}}</h1>
+        <button mat-button [style.background-color]="setRatingBackground(user.rating)" class="rating">
+          <span id="rating-number"><b>{{user.rating}}</b></span>/10
+        </button>
+      </div>
+      <div class="contact">
+        <h1>Contact Me</h1>
+        <p>Phone Number: {{user.phone}}</p>
+        <p>Email: {{user.email}}</p>
+        <p>Other: {{user.contact}}</p>
+        <button mat-raised-button (click)="openDialog()" color="primary">Edit your info</button>
+      </div>
+      <h1>Tutors</h1>
+      <mat-chip-set>
+        <mat-chip *ngFor="let user of user.connections">
+          <a routerLink="/users/{{user.id}}" class="connection">
+            {{user.first_name}} {{user.last_name}}
+          </a>
+        </mat-chip>
+      </mat-chip-set>
+    </div>
+  </mat-card>
+  <mat-card class="reviews">
+    <h1 class="name">Reviews</h1>
+    <mat-card *ngFor="let review of user.reviews" class="review">
+      <div class="review-header">
+        <h1 style="font-size: 2.5rem; line-height: 1em;">
+          {{review.review_text.split(' ').length > 5 ? review.review_text.split(' ').slice(0, 5).join(' ') : review.review_text}}...
+        </h1>
+        <button mat-button [style.background-color]="setRatingBackground(review.rating)" class="rating">
+          <span id="rating-number"><b>{{review.rating}}</b></span>/10
+        </button>
+      </div>
+      <p class="review-text">
+        {{review.review_text}}
+      </p>  
+    </mat-card>
+  </mat-card>
+</div>

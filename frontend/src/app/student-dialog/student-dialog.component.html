@@ -1,0 +1,35 @@
+<form #myForm="ngForm" (ngSubmit)="saveInfo(myForm)">
+    <h1 mat-dialog-title>Edit your info</h1>
+    <div mat-dialog-content>
+      <div class="content">
+        <div class="left">
+          <mat-form-field appearance="fill">
+            <mat-label>First name</mat-label>
+            <input matInput placeholder={{user.first_name}} name="first_name" [(ngModel)]="formData.first_name">
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Last name</mat-label>
+            <input matInput placeholder={{user.last_name}} name="last_name" [(ngModel)]="formData.last_name">
+          </mat-form-field>
+        </div>
+        <div class="right">
+          <mat-form-field appearance="fill">
+            <mat-label>Phone number</mat-label>
+            <input matInput placeholder={{user.phone}} name="phone" [(ngModel)]="formData.phone">
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Email Address</mat-label>
+            <input matInput placeholder={{user.email}} name="email" [(ngModel)]="formData.email">
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Other</mat-label>
+            <input matInput placeholder={{user.contact}} name="other" [(ngModel)]="formData.other">
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div mat-dialog-actions class="actions">
+      <button mat-button mat-dialog-close id="cancel">Cancel</button>
+      <button mat-flat-button mat-dialog-close type="submit" (click)="saveInfo(myForm)" id="done" color="primary">Done</button>
+    </div>
+  </form>

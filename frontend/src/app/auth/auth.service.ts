@@ -30,7 +30,8 @@ export class AuthService {
     profile_picture: "",
     title: "",
     price: 0,
-    connections: []
+    connections: [],
+    reviews: []
     });
 
   public user$ = this.userSubject.asObservable();

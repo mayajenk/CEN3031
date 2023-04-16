@@ -42,14 +42,14 @@ export class TprofileComponent {
     }
   }
 
-  setRatingBackground() {
-    if (this.user.rating < 3) {
+  setRatingBackground(rating: number) {
+    if (rating < 3) {
       return `#e84c3f`
     }
-    else if (this.user.rating < 6) {
+    else if (rating < 6) {
       return `#b5b500`
     }
-    else if (this.user.rating < 8) {
+    else if (rating < 8) {
       return `#95b500`
     }
     else {

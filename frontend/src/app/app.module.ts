@@ -36,6 +36,7 @@ import { MatLabel } from '@angular/material/form-field';
 import { MatFormField } from '@angular/material/form-field';
 import { DialogComponent } from './dialog/dialog.component';
 import { SearchProfileComponent } from './search-profile/search-profile.component';
+import { StudentDialogComponent } from './student-dialog/student-dialog.component';
  
 
 @NgModule({
@@ -50,6 +51,7 @@ import { SearchProfileComponent } from './search-profile/search-profile.componen
     TprofileComponent,
     DialogComponent,
     SearchProfileComponent,
+    StudentDialogComponent,
   ],
   imports: [
     BrowserModule,
