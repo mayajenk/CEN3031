@@ -21,6 +21,10 @@ func httpHandler(store *gormstore.Store, db *gorm.DB) http.Handler {
 	router.HandleFunc("/api/users/{id}", handlers.DeleteUser(db)).Methods("DELETE")
 	router.HandleFunc("/api/users/{id}", handlers.UpdateUser(db)).Methods("PUT")
 	router.HandleFunc("/api/users/{id}/profile-picture", handlers.UploadProfilePicture(db)).Methods("POST")
+	router.HandleFunc("/api/users/{id}/profile-picture", handlers.GetProfilePicture(db)).Methods("GET")
+	router.HandleFunc("/api/users/{id}/subjects", handlers.AddSubject(db)).Methods("POST")
+	router.HandleFunc("/api/users/{id}/subjects", handlers.UpdateSubjects(db)).Methods("PUT")
+	router.HandleFunc("/api/users/{id}/subjects", handlers.DeleteSubjects(db)).Methods("DELETE")
 
 	router.HandleFunc("/api/login", handlers.Login(store, db)).Methods("POST")
 	router.HandleFunc("/api/search", handlers.SearchDatabase(db)).Methods("GET")

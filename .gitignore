@@ -19,3 +19,5 @@ vendor/
 node_modules/
 
 *.db
+
+uploads/

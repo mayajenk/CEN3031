@@ -125,7 +125,17 @@ func NewUser(db *gorm.DB) http.HandlerFunc {
 
 		db.Create(&user)
 
-		json.NewEncoder(w).Encode(user)
+		if user.IsTutor {
+			var tutor models.Tutor
+			temp, _ := json.Marshal(user)
+			err = json.Unmarshal(temp, &tutor)
+			json.NewEncoder(w).Encode(tutor)
+		} else {
+			var student models.Student
+			temp, _ := json.Marshal(user)
+			err = json.Unmarshal(temp, &student)
+			json.NewEncoder(w).Encode(student)
+		}
 	}
 }
 
@@ -166,7 +176,18 @@ func UpdateUser(db *gorm.DB) http.HandlerFunc {
 		}
 		db.Model(&user).Updates(updatedUser)
 		w.Header().Add("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(user)
+
+		if user.IsTutor {
+			var tutor models.Tutor
+			temp, _ := json.Marshal(user)
+			err = json.Unmarshal(temp, &tutor)
+			json.NewEncoder(w).Encode(tutor)
+		} else {
+			var student models.Student
+			temp, _ := json.Marshal(user)
+			err = json.Unmarshal(temp, &student)
+			json.NewEncoder(w).Encode(student)
+		}
 	}
 }
 
