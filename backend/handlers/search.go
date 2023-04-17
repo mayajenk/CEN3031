@@ -12,17 +12,17 @@ import (
 func SearchDatabase(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		query := r.URL.Query().Get("q")
 		subject := r.URL.Query().Get("subject")
 
 		var users []models.User
 
-		if subject == "" {
-			db.Where("username LIKE ?", "%"+query+"%").Find(&users)
-		} else {
-			db.Where("username LIKE ? AND subject LIKE ?", "%"+query+"%", "%"+subject+"%")
+		if subject != "" {
+			db.Joins("JOIN user_subjects ON users.id = user_subjects.user_id").
+				Joins("JOIN subjects ON user_subjects.subject_id = subjects.id").
+				Where("subjects.name LIKE ?", subject).
+				Preload("Subjects").
+				Find(&users)
 		}
-
 		json.NewEncoder(w).Encode(users)
 	}
 }
