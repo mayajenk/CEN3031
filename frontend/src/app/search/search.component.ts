@@ -22,7 +22,7 @@ export class SearchComponent {
   constructor(private http: HttpClient) { }
 
   searchTutors() {
-    const url = `api/search/?subject=${this.subject}`;
+    const url = `api/search?subject=${this.subject}`;
     this.http.get(url).subscribe((data: any) => {
       this.tutors = data;
     });
