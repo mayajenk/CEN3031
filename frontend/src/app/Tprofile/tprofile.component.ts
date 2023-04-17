@@ -106,13 +106,13 @@ export class TprofileComponent {
     
 
     // Call the API to update the user's subjects
-    this.authService.updateUser(subjectNames).subscribe(
-      (response: any) => {
-        console.log('Subjects saved successfully!');
-      },
-      (error: any) => {
-        console.error('Error saving subjects:', error);
-      }
-    );
+    //this.authService.updateUser(subjectNames).subscribe(
+    //  (response: any) => {
+    //    console.log('Subjects saved successfully!');
+    //  },
+    //  (error: any) => {
+    //    console.error('Error saving subjects:', error);
+    //  }
+    //);
   }
 }

@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { User } from '../user';
 
 interface Tutor {
   name: string;
@@ -12,34 +14,17 @@ interface Tutor {
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.sass']
 })
+
 export class SearchComponent {
-  // @Input() formData: {
-    // search : string
-    // } = {
-    // search : ''
-  // };
-  
-  // search(form: NgForm) {
-    // list available tutors based on search
-    // ignore capitilization and spaces
-  // }
-  
-  searchSubject: string = '';
-  tutors: Tutor[] = [
-    { name: 'John Doe', subject: 'Mathematics' },
-    { name: 'Jane Smith', subject: 'English' },
-    { name: 'Bob Johnson', subject: 'History' },
-    { name: 'Sara Lee', subject: 'Chemistry' },
-    { name: 'Mark Davis', subject: 'Physics' },
-    { name: 'Emily Jones', subject: 'Biology' },
-    { name: 'David Lee', subject: 'Mathematics' },
-    { name: 'Lisa Chen', subject: 'Mathematics' },
-    { name: 'Mike Brown', subject: 'Mathematics' },
-  ];
+  subject: string = '';
+  tutors: User[] = [];
 
-  filteredTutors: Tutor[] = [];
+  constructor(private http: HttpClient) { }
 
-  filterTutors() {
-    this.filteredTutors = this.tutors.filter(tutor => tutor.subject === this.searchSubject);
+  searchTutors() {
+    const url = `api/search/?subject=${this.subject}`;
+    this.http.get(url).subscribe((data: any) => {
+      this.tutors = data;
+    });
   }
 }

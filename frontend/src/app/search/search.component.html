@@ -26,19 +26,19 @@
   <mat-card-content>
     <mat-form-field appearance="fill" class="example-full-width">
       <mat-label>Enter subject</mat-label>
-      <input matInput placeholder="Enter subject here" [(ngModel)]="searchSubject">
+      <input matInput placeholder="Enter subject here" [(ngModel)]="subject">
     </mat-form-field>
-    <button mat-button (click)="filterTutors()">Find Tutors</button>
+    <button mat-button (click)="searchTutors()">Find Tutors</button>
   </mat-card-content>
 </mat-card>
 
 <div class="card-container">
-  <mat-card *ngFor="let tutor of filteredTutors">
+  <mat-card *ngFor="let tutor of tutors">
     <mat-card-header>
-      <mat-card-title>{{ tutor.name }}</mat-card-title>
+      <mat-card-title>{{ tutor.first_name }}</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <p>{{ tutor.subject }}</p>
+      <p>{{ tutor.subjects }}</p>
     </mat-card-content>
   </mat-card>
 </div>
