@@ -99,4 +99,8 @@ export class TprofileComponent {
   openDialog() {
     this.dialog.open(DialogComponent);
   }
+
+  saveSubjects() {
+    
+  }
 }
