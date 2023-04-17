@@ -3,6 +3,8 @@ import { User } from '../user';
 import { AuthService } from '../auth/auth.service';
 import { ActivatedRoute } from '@angular/router';
 import { ProfileService } from '../profile.service';
+import { NgForm } from '@angular/forms';
+import { ReviewService } from '../review.service';
 
 @Component({
   selector: 'app-search-profile',
@@ -30,20 +32,46 @@ export class SearchProfileComponent implements OnInit {
     reviews: []
   }
 
+  review: {
+    reviewer_id: number,
+    reviewee_id: number,
+    review_text: string,
+    rating: number
+  } = {
+    reviewer_id: 0,
+    reviewee_id: 0,
+    review_text: '',
+    rating: 1,
+  }
+
+  loading: boolean = true;
+
+  isConnection: boolean = false;
+
   profilePictureURL = "/assets/img/avatar.webp"
 
-  constructor(private route: ActivatedRoute, private profileService: ProfileService) {}
+  constructor(private route: ActivatedRoute, private profileService: ProfileService, private authService: AuthService, private reviewService: ReviewService) {}
 
   ngOnInit() {
     const id: number = this.route.snapshot.params['id'];
     this.profileService.getUser(id).subscribe(user => {
       this.user = user;
+      let currUserID = this.authService.getUser().id;
+      for (let i = 0; i < user.connections.length; i++) {
+        if (user.connections[i].ID === currUserID) {
+          this.isConnection = true;
+        }
+      }
       this.profilePictureURL = `/api/users/${id}/profile-picture`
+      this.loading = false;
     })
   }
 
   setRatingBackground(rating: number) {
-    if (rating < 3) {
+    if (rating == 0) {
+      return `#595959`
+    }
+    else if (rating < 3) {
       return `#e84c3f`
     }
     else if (rating< 6) {
@@ -57,7 +85,9 @@ export class SearchProfileComponent implements OnInit {
     }
   }
 
-  rate() {
-
+  submitReview() {
+    this.review.reviewer_id = Number(this.authService.getUser().id);
+    this.review.reviewee_id = Number(this.route.snapshot.params['id']);
+    this.reviewService.addReview(this.review).subscribe();
   }
 }

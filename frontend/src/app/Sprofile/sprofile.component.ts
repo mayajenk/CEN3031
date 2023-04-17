@@ -35,6 +35,9 @@ export class SprofileComponent {
   }
 
   setRatingBackground(rating: number) {
+    if (rating == 0) {
+      return `#595959`
+    }
     if (rating < 3) {
       return `#e84c3f`
     }

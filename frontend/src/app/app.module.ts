@@ -42,6 +42,7 @@ import { StudentDialogComponent } from './student-dialog/student-dialog.componen
 @NgModule({
   declarations: [
     AppComponent,
+    HomeComponent,
     LoginComponent,
     RegisterComponent,
     ProfileComponent,

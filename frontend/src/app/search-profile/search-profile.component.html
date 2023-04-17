@@ -1,4 +1,4 @@
-<div class="main">
+<div class="main" *ngIf="!loading">
   <mat-card class="profile">
     <div class="sidebar">
       <img *ngIf="user.profile_picture != ''" [src]="profilePictureURL" id="profile-picture">
@@ -12,11 +12,11 @@
           <span id="rating-number"><b>{{user.rating}}</b></span>/10
         </button>
       </div>
-      <div class="about">
+      <div *ngIf="user.is_tutor" class="about">
         <h1>About me</h1>
         <p>{{user.about}}</p>
       </div>
-      <div class="price">
+      <div *ngIf="user.is_tutor" class="price">
         <h1>Hourly rate</h1>
         <h2>${{user.price}}/hr</h2>
       </div>
@@ -36,6 +36,22 @@
   </mat-card>
   <mat-card class="reviews">
     <h1 class="name">Reviews</h1>
+    <!-- Submit a review -->
+    <mat-card class="review" *ngIf="isConnection">
+      <div class="submit-review-header">
+        <h1 style="font-size:1.6rem;">Submit a review</h1>
+      </div>        
+      <mat-form-field id="rating-input">
+        <mat-label>Rating</mat-label>
+        <input matInput type="number" id="quantity" name="quantity" placeholder="1-10" step="1" min="1" max="10" [(ngModel)]="review.rating" required> 
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Review</mat-label>
+        <textarea matInput placeholder="Write your review here!" [(ngModel)]="review.review_text" required></textarea>
+      </mat-form-field>
+      <button mat-raised-button color="primary" id="submit-review" (click)="submitReview()">Submit</button>
+    </mat-card>
+    <!-- Display reviews -->
     <mat-card *ngFor="let review of user.reviews" class="review">
       <div class="review-header">
         <h1 style="font-size: 2.5rem; line-height: 1em;">

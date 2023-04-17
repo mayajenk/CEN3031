@@ -43,7 +43,10 @@ export class TprofileComponent {
   }
 
   setRatingBackground(rating: number) {
-    if (rating < 3) {
+    if (rating == 0) {
+      return `#595959`
+    }
+    else if (rating < 3) {
       return `#e84c3f`
     }
     else if (rating < 6) {
