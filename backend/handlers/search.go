@@ -19,7 +19,7 @@ func SearchDatabase(db *gorm.DB) http.HandlerFunc {
 		if subject != "" {
 			db.Joins("JOIN user_subjects ON users.id = user_subjects.user_id").
 				Joins("JOIN subjects ON user_subjects.subject_id = subjects.id").
-				Where("subjects.name LIKE ?", subject).
+				Where("subjects.name LIKE ?", "%"+subject+"%").
 				Preload("Subjects").
 				Find(&users)
 		}
