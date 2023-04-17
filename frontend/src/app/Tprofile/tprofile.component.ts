@@ -17,12 +17,6 @@ export interface Subject {
   styleUrls: ['./tprofile.component.sass']
 })
 export class TprofileComponent {
-  formData: {
-    subjects: string[]
-  } = {
-    subjects: []
-  };
-
   user: User = this.authService.getUser();
   selectedFile: any = null;
   cacheBuster: string = '?cache=' + Math.random();
@@ -32,7 +26,7 @@ export class TprofileComponent {
   }
   addOnBlur = true;
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
-  subjects: Subject[] = [];
+  subjects: Subject[] = this.user.subjects;
 
   onFileSelected(event: any): void {
     this.selectedFile = event.target.files[0] ?? null;

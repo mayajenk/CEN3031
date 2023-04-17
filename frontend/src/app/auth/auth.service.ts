@@ -48,7 +48,7 @@ export class AuthService {
     }
     else {
       this.isTutorSubject.next(false);
-    } 
+    }
     const userData: string | null = sessionStorage.getItem('userData');
     if (userData != null) {
       this.userSubject.next(JSON.parse(userData));
