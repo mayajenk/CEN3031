@@ -33,6 +33,7 @@
         <p>Other: {{user.contact}}</p>
         <button mat-raised-button (click)="openDialog()" color="primary">Edit your info</button>
       </div>
+      <form #myForm="ngForm" (ngSubmit)="saveSubjects(myForm)">
       <h1 class="courses">My Subjects</h1>
       <mat-form-field class="subjects" appearance="fill">
         <mat-label>Subjects</mat-label>
@@ -51,12 +52,14 @@
                   [matChipInputFor]="chipGrid"
                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                   [matChipInputAddOnBlur]="addOnBlur"
-                  (matChipInputTokenEnd)="add($event)"/>
+                  (matChipInputTokenEnd)="add($event)"
+                  [(ngModel)]="formData.subjects"/>
         </mat-chip-grid>
       </mat-form-field>
       <div>
-        <button mat-raised-button color="primary" (click)="saveSubjects()">Save Subjects</button>
+        <button mat-raised-button color="primary" type="submit">Save Subjects</button>
       </div>
+    </form>
       <h1>Students</h1>
       <mat-chip-set>
         <mat-chip *ngFor="let user of user.connections">

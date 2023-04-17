@@ -5,6 +5,7 @@ import { AuthService } from '../auth/auth.service';
 import { MatChipEditedEvent, MatChipInputEvent } from '@angular/material/chips';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import { DialogComponent } from '../dialog/dialog.component';
+import { NgForm } from '@angular/forms';
 
 export interface Subject {
   name: string;
@@ -16,6 +17,12 @@ export interface Subject {
   styleUrls: ['./tprofile.component.sass']
 })
 export class TprofileComponent {
+  formData: {
+    subjects: string[]
+  } = {
+    subjects: []
+  };
+
   user: User = this.authService.getUser();
   selectedFile: any = null;
   cacheBuster: string = '?cache=' + Math.random();
@@ -100,7 +107,7 @@ export class TprofileComponent {
     this.dialog.open(DialogComponent);
   }
 
-  saveSubjects() {
+  saveSubjects(form: NgForm) {
     // Create an array of subject names from the Subject objects
     const subjectNames: { name: string; }[] = this.subjects.map(subject => ({ name: subject.name }));
     // Call the API to update the user's subjects
