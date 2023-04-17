@@ -1,6 +1,7 @@
 <!-- only active when student logged in -->
 <!-- search bar -->
-<form #myForm="ngForm" (ngSubmit)="search(myForm)">
+
+<!--<form #myForm="ngForm" (ngSubmit)="search(myForm)">
 <mat-card>
     <mat-card-content>
       <div>
@@ -10,20 +11,33 @@
                  [(ngModel)]="formData.search">
         </mat-form-field>
       </div>
-      
-    <!-- <mat-form-field>
-      <mat-label>Select a subject</mat-label>
-      <mat-select>
-        <mat-option value="reading">Reading</mat-option>
-        <mat-option value="math">Math</mat-option>
-        <mat-option value="science">Science</mat-option>
-      </mat-select>
-    </mat-form-field> -->
 
       <div class="button">
         <button mat-raised-button color="primary" type="submit">Search!</button>
       </div>
     </mat-card-content>
 </mat-card>
-</form>
-<!-- available tutors -->
+</form>-->
+
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Search Tutors by Subject</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-form-field appearance="fill" class="example-full-width">
+      <mat-label>Enter subject</mat-label>
+      <input matInput placeholder="Enter subject here" [(ngModel)]="searchSubject" (ngModelChange)="filterTutors()">
+    </mat-form-field>
+  </mat-card-content>
+</mat-card>
+
+<div class="card-container">
+  <mat-card *ngFor="let tutor of filteredTutors">
+    <mat-card-header>
+      <mat-card-title>{{ tutor.name }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p>{{ tutor.subject }}</p>
+    </mat-card-content>
+  </mat-card>
+</div>
