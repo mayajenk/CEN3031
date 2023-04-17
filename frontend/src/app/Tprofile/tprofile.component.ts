@@ -101,6 +101,18 @@ export class TprofileComponent {
   }
 
   saveSubjects() {
+    // Create an array of subject names from the Subject objects
+    const subjectNames = this.subjects.map(subject => subject.name);
     
+
+    // Call the API to update the user's subjects
+    this.authService.updateUser(subjectNames).subscribe(
+      (response: any) => {
+        console.log('Subjects saved successfully!');
+      },
+      (error: any) => {
+        console.error('Error saving subjects:', error);
+      }
+    );
   }
 }
