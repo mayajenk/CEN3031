@@ -101,7 +101,7 @@ export class TprofileComponent {
     this.dialog.open(DialogComponent);
   }
 
-  saveSubjects(form: NgForm) {
+  saveSubjects() {
     // Create an array of subject names from the Subject objects
     const subjectNames: { name: string; }[] = this.subjects.map(subject => ({ name: subject.name }));
     // Call the API to update the user's subjects

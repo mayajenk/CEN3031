@@ -157,4 +157,11 @@ export class AuthService {
     user.subjects = subjects;
     return this.http.put<any>('/api/users/' + id + '/subjects', user.subjects);
   }
+
+  updateUserConnections(user2: User): Observable<User> {
+    let id = this.userSubject.value.id;
+    const user: User = this.getUser();
+    // edit connections here?
+    return this.http.put<any>('/api/users/' + id + '/connections', user.connections);
+  }
 }

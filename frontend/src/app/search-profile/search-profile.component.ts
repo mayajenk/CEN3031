@@ -90,4 +90,20 @@ export class SearchProfileComponent implements OnInit {
     this.review.reviewee_id = Number(this.route.snapshot.params['id']);
     this.reviewService.addReview(this.review).subscribe();
   }
+
+  addTutor() {
+    // add tutor user to student's connections
+
+    // add student user to tutor's connections 
+
+    // update connections
+    // this.authService.updateUserConnections(user2).subscribe(
+    //   (response: any) => {
+    //     console.log('Subjects saved successfully!');
+    //   },
+    //   (error: any) => {
+    //     console.error('Error saving subjects:', error);
+    //   }
+    // );
+  }
 }
