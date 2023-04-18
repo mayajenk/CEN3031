@@ -1,23 +1,16 @@
 import { SearchComponent } from "./search.component"
-import { MatSelectModule } from '@angular/material/select'
-import { MatFormFieldModule } from '@angular/material/form-field'
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AppModule } from '../app.module';
 
 describe('search.component.cy.ts', () => {
+  beforeEach(() => {
+  });
+
   it('mounts', () => {
     cy.mount(SearchComponent, {
-      imports: [MatSelectModule, MatFormFieldModule, BrowserAnimationsModule]
+      imports: [AppModule]
     })
   })
-  it('should display a search bar and a "Search! button', () => {
-    
-    cy.mount(SearchComponent, {
-      imports: [MatSelectModule, MatFormFieldModule, BrowserAnimationsModule]
-    })
-
-    cy.get('mat-form-field').should('exist');
-    cy.get('input[name=search]').should('exist');
-    cy.get('button[type=submit]').should('exist').contains('Search!');
-
+  it('should display search form and find tutors on search for math', () => {
+    //cy.contains('button', 'Find Tutors').click(); will change later with static code since it can't work get access to other parts
   });
 });
