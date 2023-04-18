@@ -5,8 +5,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import { HttpClientModule } from '@angular/common/http';
 import { SearchComponent } from './search.component';
+import { SearchService } from '../search.service';
 
 describe('SearchComponent', () => {
   let component: SearchComponent;
@@ -15,7 +16,8 @@ describe('SearchComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ SearchComponent],
-      imports: [MatCardModule, MatFormFieldModule, MatSelectModule, FormsModule, MatInputModule, BrowserAnimationsModule]
+      imports: [MatCardModule, MatFormFieldModule, MatSelectModule, HttpClientModule, FormsModule, MatInputModule, BrowserAnimationsModule],
+      providers: [SearchService]
     })
     .compileComponents();
 
