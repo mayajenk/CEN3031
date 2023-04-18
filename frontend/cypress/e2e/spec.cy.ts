@@ -36,3 +36,20 @@ describe('Login form', () => {
     cy.url().should('include', 'localhost:8080');
   });
 });
+
+describe('Register form', () => {
+  it('registers a new user', () => {
+    cy.visit('localhost:8080/register');
+
+    cy.get('#first_name').type('test1')
+    cy.get('#last_name').type('test')
+    cy.get('input[name=username]').type('test1')
+    cy.get('input[name=password]').type('test')
+    cy.get('mat-button-toggle[data-cy=tutor]').click()
+    cy.get('#submit').click()
+
+    // check that the registration was successful
+    cy.url().should('include', 'localhost:8080')
+    // doesn't look like cypress has access to POST requests so it would be a little difficult running this part
+  })
+});
