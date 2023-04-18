@@ -7,8 +7,8 @@
   </mat-card-header>
   <mat-card-content>
     <mat-form-field appearance="fill" class="example-full-width">
-      <mat-label>Enter subject</mat-label>
-      <input matInput placeholder="Enter subject here" [(ngModel)]="subject">
+
+      <input matInput placeholder="Enter subject here" id="subject" [(ngModel)]="subject">
     </mat-form-field>
     <button mat-raised-button (click)="searchTutors()" color="primary">Find Tutors</button>
   </mat-card-content>
