@@ -16,13 +16,24 @@ func SearchDatabase(db *gorm.DB) http.HandlerFunc {
 
 		var users []models.User
 
-		if subject != "" {
-			db.Joins("JOIN user_subjects ON users.id = user_subjects.user_id").
-				Joins("JOIN subjects ON user_subjects.subject_id = subjects.id").
-				Where("subjects.name LIKE ?", "%"+subject+"%").
-				Preload("Subjects").
-				Find(&users)
+		db.Joins("JOIN user_subjects ON users.id = user_subjects.user_id").
+			Joins("JOIN subjects ON user_subjects.subject_id = subjects.id").
+			Where("subjects.name LIKE ?", "%"+subject+"%").
+			Select("DISTINCT users.*").
+			Preload("Subjects").
+			Find(&users)
+
+		var tutors []models.Tutor
+
+		for _, user := range users {
+			var tutor models.Tutor
+			temp, _ := json.Marshal(user)
+			err := json.Unmarshal(temp, &tutor)
+
+			if err == nil {
+				tutors = append(tutors, tutor)
+			}
 		}
-		json.NewEncoder(w).Encode(users)
+		json.NewEncoder(w).Encode(tutors)
 	}
 }

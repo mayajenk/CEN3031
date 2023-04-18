@@ -9,6 +9,7 @@ type Student struct {
 	Rating         float64  `json:"rating"`
 	Email          string   `json:"email"`
 	Phone          string   `json:"phone"`
+	Contact        string   `json:"contact"`
 	About          string   `json:"about"`
 	Grade          int32    `json:"grade"`
 	Connections    []*Tutor `json:"connections"`

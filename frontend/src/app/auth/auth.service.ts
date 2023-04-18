@@ -95,9 +95,7 @@ export class AuthService {
       tap(response => {
         if (response.status == 200) {
           this.setLoggedIn(false);
-          this.cookieService.delete('session')
-          this.cookieService.delete('isLoggedIn');
-          this.cookieService.delete('isTutor');
+          this.cookieService.deleteAll();
           sessionStorage.clear();
         }
       })
@@ -151,6 +149,19 @@ export class AuthService {
     )
   }
 
+  updateBrowserStorage() {
+    let options = {
+      withCredentials: true
+    }
+    let id: number = this.userSubject.value.id;
+    return this.http.get(`/api/users/${id}`, options)
+      .pipe(
+        tap((response) => {
+          sessionStorage.setItem('userData', JSON.stringify(response));
+        })
+      );
+  }
+
   updateUserSubjects(subjects: {name: string}[]): Observable<User> {
     let id = this.userSubject.value.id;
     const user: User = this.getUser();
@@ -158,10 +169,13 @@ export class AuthService {
     return this.http.put<any>('/api/users/' + id + '/subjects', user.subjects);
   }
 
-  updateUserConnections(user2: User): Observable<User> {
-    let id = this.userSubject.value.id;
+  updateUserConnections(user_2: number): Observable<User> {
+    let user_1 = this.userSubject.value.id;
+
+    let request_body = {
+      user_1, user_2
+    }
     const user: User = this.getUser();
-    // edit connections here?
-    return this.http.put<any>('/api/users/' + id + '/connections', user.connections);
+    return this.http.post<any>('/api/connection', request_body);
   }
 }

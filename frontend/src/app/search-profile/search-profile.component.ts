@@ -92,18 +92,15 @@ export class SearchProfileComponent implements OnInit {
   }
 
   addTutor() {
-    // add tutor user to student's connections
-
-    // add student user to tutor's connections 
-
-    // update connections
-    // this.authService.updateUserConnections(user2).subscribe(
-    //   (response: any) => {
-    //     console.log('Subjects saved successfully!');
-    //   },
-    //   (error: any) => {
-    //     console.error('Error saving subjects:', error);
-    //   }
-    // );
+    let user_2: number = Number(this.route.snapshot.params['id'])
+    this.authService.updateUserConnections(user_2).subscribe(
+      (response: any) => {
+        console.log('User connection saved successfully!');
+        this.authService.updateBrowserStorage().subscribe();
+      },
+      (error: any) => {
+        console.error('Error saving user connection:', error);
+      }
+    );
   }
 }

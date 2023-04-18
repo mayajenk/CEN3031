@@ -27,4 +27,22 @@ export class SearchComponent {
       this.tutors = data;
     });
   }
+
+  setRatingBackground(rating: number) {
+    if (rating == 0) {
+      return `#595959`
+    }
+    else if (rating < 3) {
+      return `#e84c3f`
+    }
+    else if (rating< 6) {
+      return `#b5b500`
+    }
+    else if (rating < 8) {
+      return `#95b500`
+    }
+    else {
+      return `#2ac325`
+    }
+  }
 }

@@ -41,6 +41,14 @@ func AddReview(db *gorm.DB) http.HandlerFunc {
 		}
 
 		db.Model(&reviewee).Association("Reviews").Append(&review)
+		db.Preload("Reviews").Find(&reviewee, review.RevieweeID)
+
+		ratingSum := 0.0
+		for _, review := range reviewee.Reviews {
+			ratingSum += review.Rating
+		}
+		reviewee.Rating = ratingSum / float64(len(reviewee.Reviews))
+		db.Save(&reviewee)
 	}
 }
 
@@ -51,7 +59,17 @@ func DeleteReview(db *gorm.DB) http.HandlerFunc {
 
 		var review models.Review
 		db.Model(&models.Review{}).First(&review, id)
+
+		var reviewee models.User
+		db.Preload("Reviews").Find(&reviewee, review.RevieweeID)
 		db.Delete(&review)
+
+		ratingSum := 0.0
+		for _, review := range reviewee.Reviews {
+			ratingSum += review.Rating
+		}
+		reviewee.Rating = ratingSum / float64(len(reviewee.Reviews))
+		db.Save(&reviewee)
 
 		json.NewEncoder(w).Encode(review)
 	}

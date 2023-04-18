@@ -51,6 +51,9 @@ mat-card
 
 h1, h2, p
     margin: 0.3em 0em !important
+    
+p
+    white-space: pre-line
 
 .header
     display: flex
@@ -79,13 +82,20 @@ h1, h2, p
     text-decoration: none
     color: white
 
+.reviews
+    display: flex
+    flex-direction: column
+    gap: 1em
+
 .review
     max-width: 1000px
     background-color: #525252
 
 .review-header
     display: flex
+    margin-bottom: 1em
 
 .review-text
     font-size: 1.5em
     font-weight: 100
+    line-height: 1.5em

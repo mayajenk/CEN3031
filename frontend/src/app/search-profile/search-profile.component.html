@@ -4,6 +4,7 @@
       <img *ngIf="user.profile_picture != ''" [src]="profilePictureURL" id="profile-picture">
       <img *ngIf="user.profile_picture == ''" src="/assets/img/avatar.webp" id="profile-picture">
       <h2 id="title">{{user.title}}</h2>
+      <button *ngIf="!isConnection && user.is_tutor" mat-raised-button color="primary" (click)="addTutor()" id="addTutor">Add Tutor</button>
     </div>
     <div class="content">
       <div class="header">
@@ -66,7 +67,4 @@
       </p>  
     </mat-card>
   </mat-card>
-  <div>
-    <button mat-raised-button color="primary" (click)="addTutor()">Add Tutor</button>
-  </div>
 </div>
