@@ -5,9 +5,15 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
+	"io/ioutil"
+	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
+	"path/filepath"
 	"testing"
+
+	"os"
 
 	"github.com/glebarez/sqlite"
 	"github.com/gorilla/mux"
@@ -339,5 +345,141 @@ func TestGetAllUsersHandler(t *testing.T) {
 
 	if users[1].Username != "test2" || bcrypt.CompareHashAndPassword([]byte(users[1].Password), []byte("test3")) != nil {
 		t.Errorf("Incorrect user data returned for user2")
+	}
+}
+
+func TestGetProfilePicture(t *testing.T) {
+	// Create a test database with a user and profile picture
+	db := setupTestEnv()
+	tx := db.Begin()
+	defer tx.Rollback() // Resets the database on function exit
+
+	// Set up a new router with the user creation and retrieval handlers
+	r := mux.NewRouter()
+	r.HandleFunc("/api/users", NewUser(tx)).Methods("POST")
+	r.HandleFunc("/api/users/{id}/profile-picture", GetProfilePicture(tx)).Methods("GET")
+
+	var user models.User = models.User{
+		Username:       "foo",
+		Password:       "bar",
+		IsTutor:        true,
+		ProfilePicture: "test.jpg",
+	}
+
+	reqBody, _ := json.Marshal(user)
+	req, _ := http.NewRequest("POST", "/api/users", bytes.NewBuffer(reqBody))
+	rr := httptest.NewRecorder()
+	r.ServeHTTP(rr, req)
+
+	tx.Where("username = ?", user.Username).First(&user)
+	fmt.Println(user.ID)
+	fmt.Println(user.ProfilePicture)
+	req, _ = http.NewRequest("GET", fmt.Sprintf("/api/users/%d/profile-picture", user.ID), nil)
+
+	rr = httptest.NewRecorder()
+	r.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusOK {
+		fmt.Printf(rr.Body.String())
+		t.Errorf("Incorrect status code, got %v want %v", rr.Code, http.StatusOK)
+	}
+
+	if rr.Header().Get("Content-Type") != "image/jpeg" {
+		t.Errorf("Incorrect file format, got %v want %v", rr.Header().Get("Content-Type"), "image/jpeg")
+	}
+}
+
+func TestUploadProfilePicture(t *testing.T) {
+	// Create a test database with a user
+	db := setupTestEnv()
+	tx := db.Begin()
+	defer tx.Rollback() // Resets the database on function exit
+
+	r := mux.NewRouter()
+	r.HandleFunc("/api/users", NewUser(tx)).Methods("POST")
+	r.HandleFunc("/api/users/{id}/profile-picture", UploadProfilePicture(tx)).Methods("POST")
+	r.HandleFunc("/api/users/{id}/profile-picture", GetProfilePicture(tx)).Methods("GET")
+
+	var user models.User = models.User{
+		Username: "foo",
+		Password: "bar",
+		IsTutor:  true,
+	}
+
+	reqBody, _ := json.Marshal(user)
+	req, _ := http.NewRequest("POST", "/api/users", bytes.NewBuffer(reqBody))
+	rr := httptest.NewRecorder()
+	r.ServeHTTP(rr, req)
+
+	tx.Where("username = ?", user.Username).First(&user)
+
+	// Create a test file to upload
+	file, err := os.Create("testing.jpg")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer os.Remove(file.Name())
+	if _, err := file.Write([]byte("test content")); err != nil {
+		t.Fatal(err)
+	}
+	if err := file.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	file, err = os.Open("testing.jpg")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer file.Close()
+
+	body := &bytes.Buffer{}
+	writer := multipart.NewWriter(body)
+
+	part, err := writer.CreateFormFile("file", filepath.Base("testing.jpg"))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := io.Copy(part, file); err != nil {
+		t.Fatal(err)
+	}
+	writer.Close()
+
+	req, err = http.NewRequest("POST", fmt.Sprintf("/api/users/%d/profile-picture", user.ID), body)
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set("Content-Type", writer.FormDataContentType())
+	rr = httptest.NewRecorder()
+	r.ServeHTTP(rr, req)
+
+	// Verify that the file was uploaded successfully
+	if rr.Code != http.StatusOK {
+		t.Errorf("Incorrect status code, got %v want %v", rr.Code, http.StatusOK)
+	}
+
+	// Retrieve the uploaded file
+	req, err = http.NewRequest("GET", fmt.Sprintf("/api/users/%d/profile-picture", user.ID), nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	rr = httptest.NewRecorder()
+	r.ServeHTTP(rr, req)
+
+	// Verify that the retrieved file has the correct format and content
+	if rr.Code != http.StatusOK {
+		t.Errorf("Incorrect status code, got %v want %v", rr.Code, http.StatusOK)
+	}
+
+	if rr.Header().Get("Content-Type") != "image/jpeg" {
+		t.Errorf("Incorrect file format, got %v want %v", rr.Header().Get("Content-Type"), "image/jpeg")
+	}
+
+	bodyBytes, err := ioutil.ReadAll(rr.Body)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(bodyBytes, []byte("test content")) {
+		t.Errorf("Incorrect file content, got %v want %v", string(bodyBytes), "test content")
 	}
 }
