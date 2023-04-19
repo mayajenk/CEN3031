@@ -73,7 +73,7 @@ func TestAddSubjectHandler(t *testing.T) {
 	}
 
 	// Check that the existing subject was added to the user's list of subjects
-	db.Model(&user).Association("Subjects").Find(&existingSubject)
+	tx.Model(&user).Association("Subjects").Find(&existingSubject)
 	if existingSubject.ID == 0 {
 		t.Errorf("Existing subject was not added to user's subjects list")
 	}
@@ -90,7 +90,7 @@ func TestUpdateSubjectsHandler(t *testing.T) {
 		Username: "foo",
 		Password: "bar",
 	}
-	db.Create(&user)
+	tx.Create(&user)
 
 	// Insert some subjects into the database
 	subjects := []models.Subject{
@@ -99,7 +99,7 @@ func TestUpdateSubjectsHandler(t *testing.T) {
 		{Name: "English"},
 	}
 	for i := range subjects {
-		db.Create(&subjects[i])
+		tx.Create(&subjects[i])
 	}
 
 	// Set up a new router with the update subjects handler
@@ -125,7 +125,7 @@ func TestUpdateSubjectsHandler(t *testing.T) {
 
 	// Verify that the user's subjects were updated
 	var updatedUser models.User
-	db.Preload("Subjects").First(&updatedUser, user.ID)
+	tx.Preload("Subjects").First(&updatedUser, user.ID)
 	if len(updatedUser.Subjects) != len(subjectsToUpdate) {
 		t.Errorf("User's subjects were not updated: got %v want %v", updatedUser.Subjects, subjectsToUpdate)
 	}

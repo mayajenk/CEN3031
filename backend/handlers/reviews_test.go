@@ -9,7 +9,6 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/glebarez/sqlite"
 	"github.com/gorilla/mux"
 	"github.com/mayajenk/CEN3031/models"
 	"gorm.io/gorm"
@@ -63,23 +62,16 @@ func TestAddReview(t *testing.T) {
 
 func TestDeleteReview(t *testing.T) {
 	// Create a test database
-	db, err := gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})
-	if err != nil {
-		t.Fatalf("Failed to open database: %v", err)
-	}
-
-	// Migrate the schema
-	err = db.AutoMigrate(&models.Review{}, &models.User{})
-	if err != nil {
-		t.Fatalf("Failed to migrate schema: %v", err)
-	}
+	db := setupTestEnv()
+	tx := db.Begin()
+	defer tx.Rollback()
 
 	// Create a test review and user
 	review := models.Review{Rating: 3.5, ReviewText: "Test review"}
 	user := models.User{Username: "Test user", Email: "test@test.com", Reviews: []models.Review{review}}
 
 	// Save the review and user to the database
-	err = db.Create(&user).Error
+	err := tx.Create(&user).Error
 	if err != nil {
 		t.Fatalf("Failed to create user: %v", err)
 	}
@@ -94,7 +86,7 @@ func TestDeleteReview(t *testing.T) {
 	rr := httptest.NewRecorder()
 
 	// Call the DeleteReview function with the test database and request
-	handler := DeleteReview(db)
+	handler := DeleteReview(tx)
 	handler(rr, req)
 
 	// Check the response status code
@@ -104,14 +96,14 @@ func TestDeleteReview(t *testing.T) {
 
 	// Check that the review was deleted from the database
 	var deletedReview models.Review
-	err = db.First(&deletedReview, review.ID).Error
+	err = tx.First(&deletedReview, review.ID).Error
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
 		t.Errorf("Review was not deleted from the database")
 	}
 
 	// Check that the user's rating was updated
 	var updatedUser models.User
-	err = db.First(&updatedUser, user.ID).Error
+	err = tx.First(&updatedUser, user.ID).Error
 	if err != nil {
 		t.Fatalf("Failed to retrieve updated user: %v", err)
 	}
