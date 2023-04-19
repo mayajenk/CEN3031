@@ -33,7 +33,7 @@ describe('Check links', () =>
 
 describe('Login form', () =>
 {
-  it('logs in with correct credentials', () =>
+  it('logs in with valid tutor credentials', () =>
   {
     cy.visit('localhost:8080/login');
 
@@ -43,6 +43,30 @@ describe('Login form', () =>
     cy.get('form').submit();
 
     cy.url().should('include', 'localhost:8080');
+  });
+
+  it('logs in with valid student credentials', () =>
+  {
+    cy.visit('localhost:8080/login');
+
+    cy.get('#username').type('bar');
+    cy.get('#password').type('foo');
+
+    cy.get('form').submit();
+
+    cy.url().should('include', 'localhost:8080');
+  });
+
+  it('does not log in with invalid credentials', () =>
+  {
+    cy.visit('localhost:8080/login');
+
+    cy.get('#username').type('wee');
+    cy.get('#password').type('woo');
+
+    cy.get('form').submit();
+
+    cy.url().should('include', 'localhost:8080/login');
   });
 });
 
@@ -62,7 +86,8 @@ describe('Register form', () =>
     cy.url().should('include', 'localhost:8080')
   })
 
-  it('registers a new student user', () => {
+  it('registers a new student user', () =>
+  {
     cy.visit('localhost:8080/register');
 
     cy.get('#first_name').type('test2')
@@ -73,6 +98,19 @@ describe('Register form', () =>
     cy.get('#submit').click()
 
     cy.url().should('include', 'localhost:8080')
+  })
+
+  it('does not create a new account if the username is not unique', () => {
+    cy.visit('localhost:8080/register');
+
+    cy.get('#first_name').type('foo')
+    cy.get('#last_name').type('bar')
+    cy.get('input[name=username]').type('foo')
+    cy.get('input[name=password]').type('bar')
+    cy.get('mat-button-toggle[data-cy=tutor]').click()
+    cy.get('#submit').click()
+
+    cy.url().should('include', 'localhost:8080/register')
   })
 });
 
@@ -321,6 +359,62 @@ describe('Tutor profile page', () =>
 
     cy.get('.reviews').should('contain', 'Meh...');
   });
+
+  it('allows the tutor edit the info of themselves', () => {
+    cy.visit('localhost:8080/login');
+
+    cy.get('#username').type('foo');
+    cy.get('#password').type('bar');
+
+    cy.get('form').submit();
+
+    cy.url().should('include', 'localhost:8080');
+
+    cy.visit('localhost:8080/profile');
+
+    cy.contains('Edit your info').click();
+  });
+
+  it('edits and saves the info of the tutor', () =>
+  {
+    cy.visit('localhost:8080/login');
+
+    cy.get('#username').type('foo');
+    cy.get('#password').type('bar');
+
+    cy.get('form').submit();
+
+    cy.url().should('include', 'localhost:8080');
+
+    cy.visit('localhost:8080/profile');
+
+    cy.contains('Edit your info').click();
+
+    cy.get('input[name="first_name"]').clear();
+    cy.get('input[name="first_name"]').type('foo');
+    cy.get('input[name="last_name"]').clear();
+    cy.get('input[name="last_name"]').type('bar');
+    cy.get('input[name="price"]').clear();
+    cy.get('input[name="price"]').type('$23/hr');
+    cy.get('input[name="title"]').clear();
+    cy.get('input[name="title"]').type('Math Teacher');
+    cy.get('input[name="phone"]').clear();
+    cy.get('input[name="phone"]').type('1234567890');
+    cy.get('input[name="email"]').clear();
+    cy.get('input[name="email"]').type('foo@bar.com');
+    cy.get('input[name="other"]').clear();
+    cy.get('input[name="other"]').type('N/A');
+
+    cy.get('button#done').click();
+
+    cy.get('.name').should('contain', 'foo bar');
+    cy.get('.rating b').should('contain', '6');
+    cy.get('.about p').should('contain', 'I like math');
+    cy.get('.price h2').should('contain', '$23/hr');
+    cy.get('.contact p').should('contain', 'Phone Number: 1234567890');
+    cy.get('.contact p').should('contain', 'Email: foo@bar.com');
+    cy.get('.contact p').should('contain', 'Other: N/A');
+  });
 });
 
 describe('Student profile page', () =>
@@ -378,10 +472,73 @@ describe('Student profile page', () =>
 
     cy.get('.reviews').should('contain', 'kinda bad...');
   });
+
+  it('edits the info of the student', () =>
+  {
+    cy.visit('localhost:8080/login');
+
+    cy.get('#username').type('bar');
+    cy.get('#password').type('foo');
+
+    cy.get('form').submit();
+
+    cy.url().should('include', 'localhost:8080');
+
+    cy.visit('localhost:8080/profile');
+
+    cy.contains('Edit your info').click();
+  });
+
+  it('edits and saves the info of the student', () => {
+    cy.visit('localhost:8080/login');
+
+    cy.get('#username').type('bar');
+    cy.get('#password').type('foo');
+
+    cy.get('form').submit();
+
+    cy.url().should('include', 'localhost:8080');
+
+    cy.visit('localhost:8080/profile');
+
+    cy.contains('Edit your info').click();
+
+    cy.get('input[name="first_name"]').clear();
+    cy.get('input[name="first_name"]').type('bar');
+    cy.get('input[name="last_name"]').clear();
+    cy.get('input[name="last_name"]').type('foo');
+    cy.get('input[name="phone"]').clear();
+    cy.get('input[name="phone"]').type('0987654321');
+    cy.get('input[name="email"]').clear();
+    cy.get('input[name="email"]').type('bar@foo.com');
+    cy.get('input[name="other"]').clear();
+    cy.get('input[name="other"]').type('N/A');
+
+    cy.get('button#done').click();
+
+    cy.get('.name').should('contain', 'bar foo');
+    cy.get('.contact p').should('contain', 'Phone Number: 0987654321');
+    cy.get('.contact p').should('contain', 'Email: bar@foo.com');
+    cy.get('.contact p').should('contain', 'Other: N/A');
+  });
 });
 
 describe('Logout feature', () =>
 {
+  it('displays the logout confirmation message', () =>
+  {
+    cy.visit('localhost:8080')
+    cy.contains('Login').click()
+    cy.url().should('include', '/login')
+    cy.get('#username').type('foo');
+    cy.get('#password').type('bar');
+    cy.get('form').submit();
+    cy.url().should('include', 'localhost:8080');
+
+    cy.get('#logout-button').click();
+    cy.contains('Are you sure you want to logout?').should('be.visible');
+  });
+
   it('logs out after logging in', () =>
   {
     cy.visit('localhost:8080')
