@@ -348,3 +348,33 @@ describe('Student profile page', () =>
     cy.get('.reviews').should('contain', 'kinda bad...');
   });
 });
+
+describe('Logout feature', () =>
+{
+  it('logs out after logging in', () =>
+  {
+    cy.visit('localhost:8080')
+    cy.contains('Login').click()
+    cy.url().should('include', '/login')
+    cy.get('#username').type('foo');
+    cy.get('#password').type('bar');
+    cy.get('form').submit();
+    cy.url().should('include', 'localhost:8080');
+
+    cy.get('#logout-button').click();
+    cy.get('#logout').click();
+  })
+
+  it('does not log out after pressing No after clicking the logout button', () => {
+    cy.visit('localhost:8080')
+    cy.contains('Login').click()
+    cy.url().should('include', '/login')
+    cy.get('#username').type('foo');
+    cy.get('#password').type('bar');
+    cy.get('form').submit();
+    cy.url().should('include', 'localhost:8080');
+
+    cy.get('#logout-button').click();
+    cy.get('#no').click();
+  })
+})
