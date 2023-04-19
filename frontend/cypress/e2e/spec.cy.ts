@@ -233,8 +233,10 @@ describe('Search profile pages', () =>
   });
 })
 
-describe('Tutor profile page', () => {
-  it('should display user information', () => {
+describe('Tutor profile page', () =>
+{
+  it('should display user information', () =>
+  {
     cy.visit('localhost:8080/login');
 
     cy.get('#username').type('foo');
@@ -255,7 +257,8 @@ describe('Tutor profile page', () => {
     cy.get('.contact p').should('contain', 'Other: N/A');
   });
 
-  it('displays the review section for the tutor on their own page', () => {
+  it('displays the review section for the tutor on their own page', () =>
+  {
     cy.visit('localhost:8080/login');
 
     cy.get('#username').type('foo');
@@ -270,7 +273,8 @@ describe('Tutor profile page', () => {
     cy.get('.reviews').should('exist');
   });
 
-  it('displays individual reviews for the tutor on their own page', () => {
+  it('displays individual reviews for the tutor on their own page', () =>
+  {
     cy.visit('localhost:8080/login');
 
     cy.get('#username').type('foo');
@@ -286,5 +290,61 @@ describe('Tutor profile page', () => {
 
     cy.get('.reviews').should('contain', 'Meh...');
   });
+});
 
+describe('Student profile page', () =>
+{
+  it('should display user information', () =>
+  {
+    cy.visit('localhost:8080/login');
+
+    cy.get('#username').type('bar');
+    cy.get('#password').type('foo');
+
+    cy.get('form').submit();
+
+    cy.url().should('include', 'localhost:8080');
+
+    cy.visit('localhost:8080/profile');
+
+    cy.get('.name').should('contain', 'bar foo');
+    cy.get('.contact h1').should('contain', 'Contact Me');
+    cy.get('.contact p').should('contain', 'Phone Number: 0987654321');
+    cy.get('.contact p').should('contain', 'Email: bar@foo.com');
+    cy.get('.contact p').should('contain', 'Other: N/A');
+  });
+
+  it('displays the reviews section for the student on their own page', () =>
+  {
+    cy.visit('localhost:8080/login');
+
+    cy.get('#username').type('bar');
+    cy.get('#password').type('foo');
+
+    cy.get('form').submit();
+
+    cy.url().should('include', 'localhost:8080');
+
+    cy.visit('localhost:8080/profile');
+
+    cy.get('.reviews').should('exist');
+  });
+
+  it('displays individual reviews for the tutor on their own page', () =>
+  {
+    cy.visit('localhost:8080/login');
+
+    cy.get('#username').type('bar');
+    cy.get('#password').type('foo');
+
+    cy.get('form').submit();
+
+    cy.url().should('include', 'localhost:8080');
+
+    cy.visit('localhost:8080/profile');
+
+    cy.get('.reviews').should('exist');
+
+    cy.get('.reviews').should('contain', 'kinda bad...');
+  });
 });
