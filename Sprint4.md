@@ -20,6 +20,26 @@
   -  If time allows, add profile pictures
   -  Fix bugs
 
+## Work Completed
+- Unit tests were completed for both frontend and backend
+- **Frontend:** 
+  - Updated the home page 
+  - Refomatted both profile views for student and tutor
+  - Added buttons to edit contact and personal information 
+  - Added upload profile picture button 
+  - Created a "My Subjects" section in the tutor profile to add/save subjects
+  - Created a "Students" section in the tutor profile
+  - Created a "Reviews" section for both tutor and students in the profile page
+  - Student can add a tutor after searching which creates a connection 
+  - Student and tutor can give each other reviews after connection is created
+  - Created the search page that displays tutor cards
+  - Added functionality to display tutors and redirect to tutors on student profile page 
+  
+- **Backend:**
+  - Added functionality for profile pictures 
+  - Calculate ratings based on reviews 
+  - Added prices and rates attribute to the tutors
+  - Added functionality to create a connection between a student and tutor 
 
 
 
@@ -46,8 +66,28 @@ Tests can be found in `backend/users_test.go`.
 
 ### Frontend
 - Cypress tests
-  - 
+  - All tests can be found in `frontend/cypress/e2e/spec.cy.ts`
+  - Check Links: 
+    - Tests visiting website and clicking login and register. 
+  - Login Form: 
+    - Tests that students and tutors can log in with valid credentials. 
+  - Register Form:
+    - Tests that students and tutors can register unless the username is not unique. 
+   - Home Page:
+     - Tests that the home page is fully working. 
+   - Search Page:
+     - Tests that the search page is fully working including all functionality. 
+   - Search Profile Page:
+     - Tests that the search profile pages is fully working. 
+    - Tutor Profile Page:
+      - Tests that the tutor profile pages is fully working including all functionality. 
+   - Student Profile Page:
+     - Tests that the search profile pages is fully working including all functionality. 
+  - Logout:
+    - Tests that the logout component mounts properly.
 
+- Unit tests
+  - A unit test for each component and service can be found in its corresponding `.spec` file. Run `ng test` in the `frontend` folder to see the results. 
 
 ## Backend Documentation
 ### POST `/api/connection`
