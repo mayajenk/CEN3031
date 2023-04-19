@@ -106,6 +106,36 @@ describe('Search page', () => {
     cy.get('.card-container mat-card').should('have.length.gt', 0);
   });
 
+  it('should display tutor information correctly', () => {
+    cy.visit('localhost:8080/login');
+
+    cy.get('#username').type('foo');
+    cy.get('#password').type('bar');
+
+    cy.get('form').submit();
+
+    cy.url().should('include', 'localhost:8080');
+
+    cy.visit('localhost:8080/search');
+
+    cy.get('#subject').type('Math');
+
+    cy.get('button[color="primary"]').click();
+
+    cy.get('.card-container mat-card').should('have.length.gt', 0);
+
+    cy.get('.card-container mat-card:first-child h1.name').should('contain', 'foo bar');
+
+    cy.get('.card-container mat-card:first-child button#price').should('contain', '$23/hr');
+
+    cy.get('.card-container mat-card:first-child button.rating:last-child').should('contain', '6/10');
+
+    cy.get('.card-container mat-card:first-child mat-card-content h2:first-child').should('contain', 'Math Teacher');
+
+    cy.get('.card-container mat-card:first-child mat-card-content mat-chip-set').should('contain', 'Physics');
+    cy.get('.card-container mat-card:first-child mat-card-content mat-chip-set').should('contain', 'Mathematics');
+  });
+
   it('should allow searching for physics tutors after logging in', () => {
     cy.visit('localhost:8080/login');
 
