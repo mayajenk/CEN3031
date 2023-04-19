@@ -21,6 +21,18 @@
   -  Fix bugs
 
 
+
+
+## Unit Tests
+### Backend
+Tests can be found in `backend/connections_test.go`.
+- Test for adding a connection: `func TestAddConnection(t *testing.T)`
+- Test for deleting a connection: `func TestDeleteConnection(t *testing.T) `
+
+
+### Frontend
+
+
 ## Backend Documentation
 ### POST `/api/connection`
 Adds a connection between the specified users. The request body should should contain JSON formatted like so:
