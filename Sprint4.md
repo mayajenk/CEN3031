@@ -21,6 +21,34 @@
   -  Fix bugs
 
 
+
+
+## Unit Tests
+### Backend
+Tests can be found in `backend/connections_test.go`.
+- Test for adding a connection: `func TestAddConnection(t *testing.T)`
+- Test for deleting a connection: `func TestDeleteConnection(t *testing.T) `
+
+Tests can be found in `backend/reviews_test.go`.
+- Test for adding a review: `func TestAddReview(t *testing.T)`
+- Test for deleting a review: `func TestDeleteReview(t *testing.T)`
+
+Tests can be found in `backend/search_test.go`.
+- Test for searching the database: `func TestSearchDatabase(t *testing.T)`
+
+Tests can be found in `backend/subjects_test.go`.
+- Test for adding a subject: `func TestAddSubjectHandler(t *testing.T)`
+- Test for updating a subject: `func TestUpdateSubjectsHandler(t *testing.T)`
+
+Tests can be found in `backend/users_test.go`.
+- Test for getting a profile picture: `func TestGetProfilePicture(t *testing.T)`
+- Test for updating a profile picture: `func TestUploadProfilePicture(t *testing.T)`
+
+### Frontend
+- Cypress tests
+  - 
+
+
 ## Backend Documentation
 ### POST `/api/connection`
 Adds a connection between the specified users. The request body should should contain JSON formatted like so:
