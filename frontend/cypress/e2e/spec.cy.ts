@@ -48,7 +48,7 @@ describe('Login form', () =>
 
 describe('Register form', () =>
 {
-  it('registers a new user', () =>
+  it('registers a new tutor user', () =>
   {
     cy.visit('localhost:8080/register');
 
@@ -57,6 +57,19 @@ describe('Register form', () =>
     cy.get('input[name=username]').type('test1')
     cy.get('input[name=password]').type('test')
     cy.get('mat-button-toggle[data-cy=tutor]').click()
+    cy.get('#submit').click()
+
+    cy.url().should('include', 'localhost:8080')
+  })
+
+  it('registers a new student user', () => {
+    cy.visit('localhost:8080/register');
+
+    cy.get('#first_name').type('test2')
+    cy.get('#last_name').type('test')
+    cy.get('input[name=username]').type('test2')
+    cy.get('input[name=password]').type('test')
+    cy.get('mat-button-toggle[data-cy=student]').click()
     cy.get('#submit').click()
 
     cy.url().should('include', 'localhost:8080')
@@ -100,7 +113,8 @@ describe('Search page', () =>
     cy.visit('localhost:8080/search');
   });
 
-  it('should allow searching for physics tutors after logging in', () => {
+  it('should allow searching for mathematics tutors after logging in', () =>
+  {
     cy.visit('localhost:8080/login');
 
     cy.get('#username').type('foo');
@@ -192,6 +206,23 @@ describe('Search page', () =>
     cy.get('.card-container mat-card:first-child a').click();
 
     cy.url().should('include', '/users/1');
+  });
+
+  it('displays nothing if no tutors have the desired subject', () =>
+  {
+    cy.visit('localhost:8080/login');
+
+    cy.get('#username').type('foo');
+    cy.get('#password').type('bar');
+
+    cy.get('form').submit();
+
+    cy.url().should('include', 'localhost:8080');
+
+    cy.visit('localhost:8080/search');
+
+    cy.get('#subject').type('English');
+    cy.get('.card-container mat-card').should('not.exist');
   });
 });
 
@@ -365,7 +396,8 @@ describe('Logout feature', () =>
     cy.get('#logout').click();
   })
 
-  it('does not log out after pressing No after clicking the logout button', () => {
+  it('does not log out after pressing No after clicking the logout button', () =>
+  {
     cy.visit('localhost:8080')
     cy.contains('Login').click()
     cy.url().should('include', '/login')
