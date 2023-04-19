@@ -31,40 +31,42 @@
         <p>Phone Number: {{user.phone}}</p>
         <p>Email: {{user.email}}</p>
         <p>Other: {{user.contact}}</p>
-        <button mat-raised-button (click)="openDialog()" color="primary">Edit your info</button>
+        <button mat-raised-button id="edit-info" (click)="openDialog()" color="primary">Edit your info</button>
       </div>
       <h1 class="courses">My Subjects</h1>
-      <mat-form-field class="subjects" id ="subjects" appearance="fill">
+      <mat-form-field class="subjects" id="subjects" appearance="fill">
         <mat-label>Subjects</mat-label>
-          <mat-chip-grid #chipGrid aria-label="Enter subjects...">
-            <mat-chip-row *ngFor="let subject of subjects"
-                          (removed)="remove(subject)"
-                          [editable]="true"
-                          (edited)="edit(subject, $event)"
-                          [aria-description]="'press enter to edit ' + subject.name">
-              {{subject.name}}
-              <button matChipRemove [attr.aria-label]="'remove ' + subject.name">
-                <mat-icon>cancel</mat-icon>
-              </button>
-            </mat-chip-row>
-            <input placeholder="Add Subject..."
-                    [matChipInputFor]="chipGrid"
-                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                    [matChipInputAddOnBlur]="addOnBlur"
-                    (matChipInputTokenEnd)="add($event)"/>
-          </mat-chip-grid>
+        <mat-chip-grid #chipGrid aria-label="Enter subjects...">
+          <mat-chip-row *ngFor="let subject of subjects"
+                        (removed)="remove(subject)"
+                        [editable]="true"
+                        (edited)="edit(subject, $event)"
+                        [aria-description]="'press enter to edit ' + subject.name">
+            {{subject.name}}
+            <button matChipRemove [attr.aria-label]="'remove ' + subject.name">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip-row>
+          <input placeholder="Add Subject..."
+                 [matChipInputFor]="chipGrid"
+                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                 [matChipInputAddOnBlur]="addOnBlur"
+                 (matChipInputTokenEnd)="add($event)" />
+        </mat-chip-grid>
       </mat-form-field>
       <div>
         <button mat-raised-button color="primary" id="saveSubjects" (click)="saveSubjects()">Save Subjects</button>
       </div>
       <h1>Students</h1>
-      <mat-chip-set>
-        <mat-chip *ngFor="let user of user.connections">
-          <a routerLink="/users/{{user.id}}" class="connection">
-            {{user.first_name}} {{user.last_name}}
-          </a>
-        </mat-chip>
-      </mat-chip-set>
+      <div class="connections">
+        <mat-chip-set>
+          <mat-chip id="userList" *ngFor="let user of user.connections">
+            <a routerLink="/users/{{user.id}}" class="connection">
+              {{user.first_name}} {{user.last_name}}
+            </a>
+          </mat-chip>
+        </mat-chip-set>
+      </div>
     </div>
   </mat-card>
   <mat-card class="reviews">

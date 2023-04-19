@@ -40,7 +40,7 @@
         <h1 style="font-size: 2.5rem; line-height: 1em;">
           {{review.review_text.split(' ').length > 5 ? review.review_text.split(' ').slice(0, 5).join(' ') : review.review_text}}...
         </h1>
-        <button mat-button [style.background-color]="setRatingBackground(review.rating)" class="rating">
+        <button mat-button id="rating-button" [style.background-color]="setRatingBackground(review.rating)" class="rating">
           <span id="rating-number"><b>{{review.rating}}</b></span>/10
         </button>
       </div>
