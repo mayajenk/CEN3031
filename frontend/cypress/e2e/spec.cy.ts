@@ -201,8 +201,8 @@ describe('Search profile pages', () =>
   {
     cy.visit('localhost:8080/login');
 
-    cy.get('#username').type('foo');
-    cy.get('#password').type('bar');
+    cy.get('#username').type('bar');
+    cy.get('#password').type('foo');
 
     cy.get('form').submit();
 
@@ -221,7 +221,7 @@ describe('Search profile pages', () =>
     cy.get('#title1').should('contain', 'Math Teacher');
     cy.get('#full-name').should('contain', 'foo bar');
     cy.get('#rating-number').should('contain', '6');
-    cy.get('#addTutor').should('exist');
+    cy.get('#addTutor').should('not.exist');
     cy.get('#profile-picture').should('have.attr', 'src', '/assets/img/avatar.webp');
     cy.get('.about').should('exist');
     cy.get('.about').should('contain', 'I like math');
@@ -232,3 +232,59 @@ describe('Search profile pages', () =>
     cy.get('.courses').should('exist');
   });
 })
+
+describe('Tutor profile page', () => {
+  it('should display user information', () => {
+    cy.visit('localhost:8080/login');
+
+    cy.get('#username').type('foo');
+    cy.get('#password').type('bar');
+
+    cy.get('form').submit();
+
+    cy.url().should('include', 'localhost:8080');
+
+    cy.visit('localhost:8080/profile');
+
+    cy.get('.name').should('contain', 'foo bar');
+    cy.get('.rating b').should('contain', '6');
+    cy.get('.about p').should('contain', 'I like math');
+    cy.get('.price h2').should('contain', '$23/hr');
+    cy.get('.contact p').should('contain', 'Phone Number: 1234567890');
+    cy.get('.contact p').should('contain', 'Email: foo@bar.com');
+    cy.get('.contact p').should('contain', 'Other: N/A');
+  });
+
+  it('displays the review section for the tutor on their own page', () => {
+    cy.visit('localhost:8080/login');
+
+    cy.get('#username').type('foo');
+    cy.get('#password').type('bar');
+
+    cy.get('form').submit();
+
+    cy.url().should('include', 'localhost:8080');
+
+    cy.visit('localhost:8080/profile');
+
+    cy.get('.reviews').should('exist');
+  });
+
+  it('displays individual reviews for the tutor on their own page', () => {
+    cy.visit('localhost:8080/login');
+
+    cy.get('#username').type('foo');
+    cy.get('#password').type('bar');
+
+    cy.get('form').submit();
+
+    cy.url().should('include', 'localhost:8080');
+
+    cy.visit('localhost:8080/profile');
+
+    cy.get('.reviews').should('exist');
+
+    cy.get('.reviews').should('contain', 'Meh...');
+  });
+
+});
