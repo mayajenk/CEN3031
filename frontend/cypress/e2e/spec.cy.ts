@@ -17,6 +17,7 @@ describe('Check links', () =>
 
 describe('Check links', () =>
 {
+
   it('Visit website and clicks login', () =>
   {
     cy.visit('localhost:8080')
@@ -137,12 +138,18 @@ describe('Home page', () =>
 
 describe('Search page', () =>
 {
+  beforeEach(() =>
+  {
+    cy.visit('localhost:8080');
+    cy.contains('Login').click();
+
+  });
   it('makes sure the search page exists', () =>
   {
     cy.visit('localhost:8080/login');
 
-    cy.get('#username').type('foo');
-    cy.get('#password').type('bar');
+    cy.get('#username').type('bar');
+    cy.get('#password').type('foo');
 
     cy.get('form').submit();
 
@@ -155,8 +162,8 @@ describe('Search page', () =>
   {
     cy.visit('localhost:8080/login');
 
-    cy.get('#username').type('foo');
-    cy.get('#password').type('bar');
+    cy.get('#username').type('bar');
+    cy.get('#password').type('foo');
 
     cy.get('form').submit();
 
@@ -175,8 +182,8 @@ describe('Search page', () =>
   {
     cy.visit('localhost:8080/login');
 
-    cy.get('#username').type('foo');
-    cy.get('#password').type('bar');
+    cy.get('#username').type('bar');
+    cy.get('#password').type('foo');
 
     cy.get('form').submit();
 
@@ -206,8 +213,8 @@ describe('Search page', () =>
   {
     cy.visit('localhost:8080/login');
 
-    cy.get('#username').type('foo');
-    cy.get('#password').type('bar');
+    cy.get('#username').type('bar');
+    cy.get('#password').type('foo');
 
     cy.get('form').submit();
 
@@ -226,8 +233,8 @@ describe('Search page', () =>
   {
     cy.visit('localhost:8080/login');
 
-    cy.get('#username').type('foo');
-    cy.get('#password').type('bar');
+    cy.get('#username').type('bar');
+    cy.get('#password').type('foo');
 
     cy.get('form').submit();
 
@@ -250,8 +257,8 @@ describe('Search page', () =>
   {
     cy.visit('localhost:8080/login');
 
-    cy.get('#username').type('foo');
-    cy.get('#password').type('bar');
+    cy.get('#username').type('bar');
+    cy.get('#password').type('foo');
 
     cy.get('form').submit();
 
@@ -264,8 +271,15 @@ describe('Search page', () =>
   });
 });
 
-describe('Search profile pages', () => {
-  it('displays correct tutor information when student views tutor profile', () => {
+describe('Search profile pages', () =>
+{
+  beforeEach(() => {
+    cy.visit('localhost:8080');
+    cy.contains('Login').click();
+
+  });
+  it('displays correct tutor information when student views tutor profile', () =>
+  {
     cy.visit('localhost:8080/login');
 
     cy.get('#username').type('bar');
@@ -300,8 +314,6 @@ describe('Search profile pages', () => {
   });
 
   it('Adding a tutor as a student', () => {
-    cy.visit('localhost:8080')
-    cy.contains('Login').click()
     cy.url().should('include', '/login')
     cy.get('#username').type('bar');
     cy.get('#password').type('foo');
@@ -319,6 +331,11 @@ describe('Search profile pages', () => {
 
 describe('Tutor profile page', () =>
 {
+  beforeEach(() =>
+  {
+    cy.visit('localhost:8080');
+    cy.contains('Login').click();
+  });
   it('should display user information', () =>
   {
     cy.visit('localhost:8080/login');
@@ -434,6 +451,11 @@ describe('Tutor profile page', () =>
 
 describe('Student profile page', () =>
 {
+  beforeEach(() =>
+  {
+    cy.visit('localhost:8080');
+    cy.contains('Login').click();
+  });
   it('should display user information', () =>
   {
     cy.visit('localhost:8080/login');
@@ -540,6 +562,11 @@ describe('Student profile page', () =>
 
 describe('Logout feature', () =>
 {
+  beforeEach(() =>
+  {
+    cy.visit('localhost:8080');
+    cy.contains('Login').click();
+  });
   it('displays the logout confirmation message', () =>
   {
     cy.visit('localhost:8080')
