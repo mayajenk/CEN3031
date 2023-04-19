@@ -264,10 +264,8 @@ describe('Search page', () =>
   });
 });
 
-describe('Search profile pages', () =>
-{
-  it('displays correct tutor information when student views tutor profile', () =>
-  {
+describe('Search profile pages', () => {
+  it('displays correct tutor information when student views tutor profile', () => {
     cy.visit('localhost:8080/login');
 
     cy.get('#username').type('bar');
@@ -300,7 +298,24 @@ describe('Search profile pages', () =>
     cy.get('.contact').should('contain', '1234567890');
     cy.get('.courses').should('exist');
   });
-})
+
+  it('Adding a tutor as a student', () => {
+    cy.visit('localhost:8080')
+    cy.contains('Login').click()
+    cy.url().should('include', '/login')
+    cy.get('#username').type('bar');
+    cy.get('#password').type('foo');
+    cy.get('form').submit();
+    cy.url().should('include', 'localhost:8080');
+    cy.visit('localhost:8080/search');
+    cy.get('#subject').type('Calculus');
+    cy.get('button[color="primary"]').click();
+    cy.get('.card-container mat-card').should('have.length.gt', 0);
+    cy.get('.card-container mat-card:first-child a').click();
+    cy.get('#full-name').should('contain', 'test1 test');
+    cy.get('button[color="primary"]').click();
+  });
+});
 
 describe('Tutor profile page', () =>
 {
