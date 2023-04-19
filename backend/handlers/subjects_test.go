@@ -78,3 +78,60 @@ func TestAddSubjectHandler(t *testing.T) {
 		t.Errorf("Existing subject was not added to user's subjects list")
 	}
 }
+
+func TestUpdateSubjectsHandler(t *testing.T) {
+	// Set up a test environment
+	db := setupTestEnv()
+	tx := db.Begin()
+	defer tx.Rollback() // Resets the database on function exit
+
+	// Insert a new user into the database
+	user := models.User{
+		Username: "foo",
+		Password: "bar",
+	}
+	db.Create(&user)
+
+	// Insert some subjects into the database
+	subjects := []models.Subject{
+		{Name: "Math"},
+		{Name: "Science"},
+		{Name: "English"},
+	}
+	for i := range subjects {
+		db.Create(&subjects[i])
+	}
+
+	// Set up a new router with the update subjects handler
+	r := mux.NewRouter()
+	r.HandleFunc("/api/users/{id}/subjects", UpdateSubjects(tx)).Methods("PUT")
+
+	// Create a new test request to update the user's subjects
+	subjectsToUpdate := []models.Subject{
+		{Name: "Math"},
+		{Name: "History"},
+	}
+	reqBody, _ := json.Marshal(subjectsToUpdate)
+	req, _ := http.NewRequest("PUT", fmt.Sprintf("/api/users/%d/subjects", user.ID), bytes.NewBuffer(reqBody))
+	req.Header.Set("Content-Type", "application/json")
+
+	rr := httptest.NewRecorder()
+	r.ServeHTTP(rr, req)
+
+	// Verify that the response status code is 200 OK
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("Handler returned wrong status code: got %v want %v", status, http.StatusOK)
+	}
+
+	// Verify that the user's subjects were updated
+	var updatedUser models.User
+	db.Preload("Subjects").First(&updatedUser, user.ID)
+	if len(updatedUser.Subjects) != len(subjectsToUpdate) {
+		t.Errorf("User's subjects were not updated: got %v want %v", updatedUser.Subjects, subjectsToUpdate)
+	}
+	for i, subject := range updatedUser.Subjects {
+		if subject.Name != subjectsToUpdate[i].Name {
+			t.Errorf("User's subjects were not updated: got %v want %v", updatedUser.Subjects, subjectsToUpdate)
+		}
+	}
+}
