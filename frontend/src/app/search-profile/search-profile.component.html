@@ -3,12 +3,12 @@
     <div class="sidebar">
       <img *ngIf="user.profile_picture != ''" [src]="profilePictureURL" id="profile-picture">
       <img *ngIf="user.profile_picture == ''" src="/assets/img/avatar.webp" id="profile-picture">
-      <h2 id="title">{{user.title}}</h2>
+      <h2 id="title1">{{user.title}}</h2>
       <button *ngIf="!isConnection && user.is_tutor" mat-raised-button color="primary" (click)="addTutor()" id="addTutor">Add Tutor</button>
     </div>
     <div class="content">
       <div class="header">
-        <h1 class="name">{{user.first_name}} {{user.last_name}}</h1>
+        <h1 class="name" id="full-name">{{user.first_name}} {{user.last_name}}</h1>
         <button mat-button [style.background-color]="setRatingBackground(user.rating)" class="rating">
           <span id="rating-number"><b>{{user.rating}}</b></span>/10
         </button>
@@ -19,7 +19,7 @@
       </div>
       <div *ngIf="user.is_tutor" class="price">
         <h1>Hourly rate</h1>
-        <h2>${{user.price}}/hr</h2>
+        <h2 id="price">${{user.price}}/hr</h2>
       </div>
       <div class="contact">
         <h1>Contact Me</h1>
@@ -37,6 +37,7 @@
   </mat-card>
   <mat-card class="reviews">
     <h1 class="name">Reviews</h1>
+
     <!-- Submit a review -->
     <mat-card class="review" *ngIf="isConnection">
       <div class="submit-review-header">
@@ -52,6 +53,7 @@
       </mat-form-field>
       <button mat-raised-button color="primary" id="submit-review" (click)="submitReview()">Submit</button>
     </mat-card>
+
     <!-- Display reviews -->
     <mat-card *ngFor="let review of user.reviews" class="review">
       <div class="review-header">

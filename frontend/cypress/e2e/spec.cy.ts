@@ -1,31 +1,40 @@
-describe('Check links', () => {
-  it('Visit website and clicks login', () => {
+describe('Check links', () =>
+{
+  it('Visit website and clicks login', () =>
+  {
     cy.visit('localhost:8080')
     cy.contains('Login').click()
     cy.url().should('include', '/login')
   })
-  it('Visit website and clicks Create Account', () => {
+
+  it('Visit website and clicks Create Account', () =>
+  {
     cy.visit('localhost:8080')
     cy.contains('Register').click()
     cy.url().should('include', '/register')
   })
 })
 
-describe('Check links', () => {
-  it('Visit website and clicks login', () => {
+describe('Check links', () =>
+{
+  it('Visit website and clicks login', () =>
+  {
     cy.visit('localhost:8080')
     cy.contains('Login').click()
     cy.url().should('include', '/login')
   })
-  it('Visit website and clicks Create Account', () => {
+  it('Visit website and clicks Create Account', () =>
+  {
     cy.visit('localhost:8080')
     cy.contains('Register').click()
     cy.url().should('include', '/register')
   })
 })
 
-describe('Login form', () => {
-  it('logs in with correct credentials', () => {
+describe('Login form', () =>
+{
+  it('logs in with correct credentials', () =>
+  {
     cy.visit('localhost:8080/login');
 
     cy.get('#username').type('foo');
@@ -37,8 +46,10 @@ describe('Login form', () => {
   });
 });
 
-describe('Register form', () => {
-  it('registers a new user', () => {
+describe('Register form', () =>
+{
+  it('registers a new user', () =>
+  {
     cy.visit('localhost:8080/register');
 
     cy.get('#first_name').type('test1')
@@ -48,14 +59,14 @@ describe('Register form', () => {
     cy.get('mat-button-toggle[data-cy=tutor]').click()
     cy.get('#submit').click()
 
-    // check that the registration was successful
     cy.url().should('include', 'localhost:8080')
-    // doesn't look like cypress has access to POST requests so it would be a little difficult running this part
   })
 });
 
-describe('Home page', () => {
-  it('shows all of the correct parts', () => {
+describe('Home page', () =>
+{
+  it('shows all of the correct parts', () =>
+  {
     cy.visit('localhost:8080');
 
     cy.get('.title').should('exist');
@@ -73,8 +84,10 @@ describe('Home page', () => {
   });
 });
 
-describe('Search page', () => {
-  it('makes sure the search page exists', () => {
+describe('Search page', () =>
+{
+  it('makes sure the search page exists', () =>
+  {
     cy.visit('localhost:8080/login');
 
     cy.get('#username').type('foo');
@@ -87,7 +100,7 @@ describe('Search page', () => {
     cy.visit('localhost:8080/search');
   });
 
-  it('should allow searching for math tutors after logging in', () => {
+  it('should allow searching for physics tutors after logging in', () => {
     cy.visit('localhost:8080/login');
 
     cy.get('#username').type('foo');
@@ -106,7 +119,8 @@ describe('Search page', () => {
     cy.get('.card-container mat-card').should('have.length.gt', 0);
   });
 
-  it('should display tutor information correctly', () => {
+  it('should display tutor information correctly', () =>
+  {
     cy.visit('localhost:8080/login');
 
     cy.get('#username').type('foo');
@@ -136,7 +150,8 @@ describe('Search page', () => {
     cy.get('.card-container mat-card:first-child mat-card-content mat-chip-set').should('contain', 'Mathematics');
   });
 
-  it('should allow searching for physics tutors after logging in', () => {
+  it('should allow searching for physics tutors after logging in', () =>
+  {
     cy.visit('localhost:8080/login');
 
     cy.get('#username').type('foo');
@@ -154,4 +169,66 @@ describe('Search page', () => {
 
     cy.get('.card-container mat-card').should('have.length.gt', 0);
   });
+
+  it('goes to the right page when clicking the link in the name', () =>
+  {
+    cy.visit('localhost:8080/login');
+
+    cy.get('#username').type('foo');
+    cy.get('#password').type('bar');
+
+    cy.get('form').submit();
+
+    cy.url().should('include', 'localhost:8080');
+
+    cy.visit('localhost:8080/search');
+
+    cy.get('#subject').type('Math');
+
+    cy.get('button[color="primary"]').click();
+
+    cy.get('.card-container mat-card').should('have.length.gt', 0);
+
+    cy.get('.card-container mat-card:first-child a').click();
+
+    cy.url().should('include', '/users/1');
+  });
 });
+
+describe('Search profile pages', () =>
+{
+  it('displays correct tutor information when student views tutor profile', () =>
+  {
+    cy.visit('localhost:8080/login');
+
+    cy.get('#username').type('foo');
+    cy.get('#password').type('bar');
+
+    cy.get('form').submit();
+
+    cy.url().should('include', 'localhost:8080');
+
+    cy.visit('localhost:8080/search');
+
+    cy.get('#subject').type('Math');
+
+    cy.get('button[color="primary"]').click();
+
+    cy.get('.card-container mat-card').should('have.length.gt', 0);
+
+    cy.get('.card-container mat-card:first-child a').click();
+
+    cy.get('#title1').should('contain', 'Math Teacher');
+    cy.get('#full-name').should('contain', 'foo bar');
+    cy.get('#rating-number').should('contain', '6');
+    cy.get('#addTutor').should('exist');
+    cy.get('#profile-picture').should('have.attr', 'src', '/assets/img/avatar.webp');
+    cy.get('.about').should('exist');
+    cy.get('.about').should('contain', 'I like math');
+    cy.get('.price').should('exist');
+    cy.get('.price').should('contain', '$23/hr');
+    cy.get('.contact').should('exist');
+    cy.get('.contact').should('contain', '1234567890');
+    cy.get('.courses').should('exist');
+  });
+})
