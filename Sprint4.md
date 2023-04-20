@@ -129,7 +129,7 @@ Adds a subject to the user with the corresponding `id`. The JSON in the request 
 Replaces all of the subjects from the user with the matching `id` with those in the request body. The JSON in the request body should be a list of subjects formatted like so:
 ```json
 [
-  {"name": "Math},
+  {"name": "Math"},
   {"name": "Reading"}
 ]
 ```
