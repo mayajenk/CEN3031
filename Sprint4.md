@@ -41,8 +41,6 @@
   - Added prices and rates attribute to the tutors
   - Added functionality to create a connection between a student and tutor 
 
-
-
 ## Unit Tests
 ### Backend
 Tests can be found in `backend/connections_test.go`.
@@ -89,7 +87,7 @@ Tests can be found in `backend/users_test.go`.
 - Unit tests
   - A unit test for each component and service can be found in its corresponding `.spec` file. Run `ng test` in the `frontend` folder to see the results. 
 
-## Backend Documentation
+## Updated Backend Documentation
 ### POST `/api/connection`
 Adds a connection between the specified users. The request body should should contain JSON formatted like so:
 ```json
@@ -118,3 +116,158 @@ where the reviewer is the user that made the review, and the reviewee is the use
 
 ### DELETE `/api/review/{id}`
 Deletes the review with the specified `id`. 
+
+### POST `/api/users/{id}/subjects`
+Adds a subject to the user with the corresponding `id`. The JSON in the request body should be formatted like so:
+```json
+{
+  "name": "Math"
+}
+```
+
+### PUT `/api/users/{id}/subjects`
+Replaces all of the subjects from the user with the matching `id` with those in the request body. The JSON in the request body should be a list of subjects formatted like so:
+```json
+[
+  {"name": "Math},
+  {"name": "Reading"}
+]
+```
+
+### DELETE `/api/users/{id}/subjects`
+Deletes all of the subjects from the user with the matching `id`.
+
+### GET `/api/search?subject={subject_name}`
+Returns a list of tutors who teach `subject_name`.
+
+## Previous Backend Documentation
+
+### POST `/api/logout`
+Gets the `session` cookie from the request and removes the corresponding session from the backend, logging the user out.
+
+### GET `/api/user`
+Gets the `session` cookie from the request and returns the JSON representation of the user. If the user is a student, the JSON response will be in this format:
+```json
+{
+  "id": 1,
+  "username": "foo",
+  "password": "bar",
+  "first_name": "Foo",
+  "last_name": "Bar",
+  "is_tutor": false,
+  "rating": 10.0,
+  "email": "foo@bar.com",
+  "phone": "000-000-0000",
+  "about": "foo bar, foo bar. Foo foo foo, foo bar bar.",
+  "grade": 1
+}
+```
+If the user is a tutor, the JSON response will be in this format:
+
+```json
+{
+  "id": 1,
+  "username": "foo",
+  "password": "bar",
+  "first_name": "Foo",
+  "last_name": "Bar",
+  "is_tutor": true,
+  "rating": 10.0,
+  "subjects":[
+    {"name": "math"},
+    {"name": "reading"}
+  ],
+  "email": "foo@bar.com",
+  "phone": "000-000-0000",
+  "about": "foo bar, foo bar. Foo foo foo, foo bar bar."
+}
+```
+
+### GET `/api/users`
+Returns a list of all users in JSON. Example response format:
+```json
+[
+  {
+    "username": "foo",
+    "password": "bar",
+    "first_name": "John",
+    "last_name": "Doe",
+    "is_tutor": false,
+    "rating": 7.0,
+    "subjects": [
+      {"name": "Intro to Software Engineering"},
+      {"name": "Programming Language Concepts"}
+    ],
+    "email": "johndoe@example.com",
+    "phone": "123-456-7890",
+    "about": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "grade": 13
+  },
+]
+```
+
+### POST `/api/users`
+Adds a new user to the database. The request body should contain JSON formatted like so: 
+```json
+{
+    "username": "myUsername",
+    "password": "myPassword",
+    "is_tutor": true
+}
+```
+
+The response body will contain the JSON representation of the user.
+
+### GET `/api/users/{id}`
+Returns data for a user with the corresponding `id`. The response body will contain JSON in this format:
+```json
+{
+  "username": "foo",
+  "password": "bar",
+  "first_name": "John",
+  "last_name": "Doe",
+  "is_tutor": false,
+  "rating": 7.0,
+  "subjects": [
+    {"name": "Intro to Software Engineering"},
+    {"name": "Programming Language Concepts"}
+  ],
+  "email": "johndoe@example.com",
+  "phone": "123-456-7890",
+  "about": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+  "grade": 13 
+}
+```
+
+### PUT `/api/users/{id}`
+Updates user data for the user with the corresponding `id`. The request body should contain have the same JSON format as the above GET request, with each parameter being optional (e.g. you may include `rating` and `email`, and exclude all other properties).
+
+The response body will contain the JSON representation of the user, as in the above GET request.
+
+### DELETE `/api/users/{id}`
+Deletes the user with the corresponding `id`. The response body will contain the JSON representation of the user that was deleted, as in the above GET request.
+
+### POST `/api/login`
+Sends a login request to the backend. The request body should contain JSON in this format:
+```json
+{
+  "username": "foo",
+  "password": "bar"
+}
+```
+
+If the login is successful, the user will receive a cookie with a `session-name` attribute to identify the session, and the response will contain the following body:
+```json
+{
+  "status": 200,
+  "message": "Successfully logged in."
+}
+```
+
+If the login was unsuccessful, the response will contain the following body with the appropriate error and error message:
+```json
+{
+  "status": 401,
+  "message": "Username or password was incorrect."
+}
+```
